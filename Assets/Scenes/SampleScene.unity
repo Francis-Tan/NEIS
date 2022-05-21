@@ -637,6 +637,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Wall (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 5931894171408550742, guid: 07965623900e49141a20d732bb916f59, type: 3}
+      propertyPath: m_BodyType
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 7736449434614441023, guid: 07965623900e49141a20d732bb916f59, type: 3}
       propertyPath: m_RootOrder
       value: 1

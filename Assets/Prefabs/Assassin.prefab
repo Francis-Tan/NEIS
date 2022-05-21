@@ -149,3 +149,5 @@ MonoBehaviour:
   player: {fileID: 8160669020383938614, guid: f68a15d0bc7684a4ca28479113bf7e57, type: 3}
   moveSpeed: 10
   appearSpeed: 0.7
+  dmg: 3
+  startTimeBtwSwings: 0.15

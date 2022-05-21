@@ -30,12 +30,12 @@ public class Gunner : MonoBehaviour
         float angle = Vector2.SignedAngle(Vector2.right, directionToPlayer);
         transform.eulerAngles = new Vector3(0, 0, angle);
 
-        if (timeTillNextShot <= 0) {
+        if (timeTillNextShot > 0) {
+            timeTillNextShot -= Time.fixedDeltaTime;
+        } else {
             GameObject bullet = Instantiate(projectile, transform.position + directionToPlayer, Quaternion.identity);
             Physics2D.IgnoreCollision(bullet.GetComponent<BoxCollider2D>(), GetComponent<BoxCollider2D>());
             timeTillNextShot = startTimeBtwShots;
-        } else {
-            timeTillNextShot -= Time.fixedDeltaTime;
         }
     }
 }
