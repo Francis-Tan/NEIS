@@ -138,3 +138,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 13
   health: 10
+  maxmana: 10
+  stablengthfactor: 1
+  stabradius: 0.1
+  TimeBtwAttacks: 0

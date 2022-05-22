@@ -8,8 +8,8 @@ public class Bullet : MonoBehaviour
     private Rigidbody2D rb; //rigidbody movement is to avoid moving in a rotated transform after rotation
     private Vector3 directionToPlayer;
     private Vector2 directionToPlayer2; //the x, y component of above
-    public float moveSpeed;
-    public int dmg;
+    public float moveSpeed = 16;
+    public int dmg = 1;
 
     private void Start() {
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>(); //instance, not prefab

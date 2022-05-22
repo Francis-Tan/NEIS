@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: -6799445893861319943}
   - component: {fileID: 5401370016174367945}
   - component: {fileID: 3058963882975524999}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Gunner
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -132,7 +132,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 1.3, y: 1.3}
   m_EdgeRadius: 0
 --- !u!114 &3058963882975524999
 MonoBehaviour:
@@ -146,7 +146,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8817e48f8c8794547bddd06a5925a613, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mana: 3
   player: {fileID: 8160669020383938614, guid: f68a15d0bc7684a4ca28479113bf7e57, type: 3}
   moveSpeed: 0
-  startTimeBtwShots: 0.2
+  TimeBtwAttacks: 0.2
   projectile: {fileID: 1122531938607003758, guid: a90866e982df14247b94afeff46f4c02, type: 3}
