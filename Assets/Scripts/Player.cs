@@ -11,7 +11,7 @@ public class Player : MonoBehaviour {
     public int maxmana = 10;
     private bool attacking;
     public float stablengthfactor = 1;
-    public float stabradius = 2;
+    public float stabradius = 0.1f;
     private Transform hitArea;
     public float TimeBtwAttacks = 0;
     private float attackCooldown;

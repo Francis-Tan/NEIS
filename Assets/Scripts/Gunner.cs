@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class Gunner : Enemy
 {
-    public float moveSpeed = 0;
     public GameObject projectile;
     public int mana = 3;
 
@@ -13,11 +12,19 @@ public class Gunner : Enemy
          bc = GetComponent<BoxCollider2D>();
     }
 
-    private void FixedUpdate() { MoveAndFacePlayer(moveSpeed); }
+    private void FixedUpdate() {
+        if (attackCooldown > 0) {    
+            attackCooldown -= Time.fixedDeltaTime;
+        } else {
+            attack();
+            attackCooldown = TimeBtwAttacks;
+        }
+        float angle = Vector2.SignedAngle(Vector2.up, player.transform.position - transform.position);
+        transform.eulerAngles = new Vector3(0, 0, angle);
+    }
 
     protected override void attack() { 
-        GameObject bullet = Instantiate(projectile, transform.position + directionToPlayer, Quaternion.identity);
-        Physics2D.IgnoreCollision(bullet.GetComponent<BoxCollider2D>(), GetComponent<BoxCollider2D>());
+        GameObject bullet = Instantiate(projectile, transform.position + directionToPlayer, transform.rotation);
     }
 
     public override int Die() { 

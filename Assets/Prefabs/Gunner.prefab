@@ -107,7 +107,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 3
 --- !u!61 &5401370016174367945
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -146,8 +146,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8817e48f8c8794547bddd06a5925a613, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mana: 3
   player: {fileID: 8160669020383938614, guid: f68a15d0bc7684a4ca28479113bf7e57, type: 3}
-  moveSpeed: 0
   TimeBtwAttacks: 0.2
   projectile: {fileID: 1122531938607003758, guid: a90866e982df14247b94afeff46f4c02, type: 3}
+  mana: 3

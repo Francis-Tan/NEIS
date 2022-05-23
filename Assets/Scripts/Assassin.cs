@@ -8,8 +8,7 @@ public class Assassin : Enemy
     public float moveSpeed = 10, appearSpeed = 0.7f; //toggle rate of movement and visibility
     public int dmg = 3;
     public int mana = 2;
-    private void Start()
-    {
+    private void Start() {
         rb = GetComponent<Rigidbody2D>();
         bc = GetComponent<BoxCollider2D>();
         suitcolor = GetComponent<SpriteRenderer>().material.color;
@@ -20,7 +19,19 @@ public class Assassin : Enemy
     private void FixedUpdate() { //consider lateupdate if it could be useful
         suitcolor.a += appearSpeed * Time.fixedDeltaTime;
         GetComponent<SpriteRenderer>().material.color = suitcolor;
-        MoveAndFacePlayer(moveSpeed);
+        
+        directionToPlayer = (player.transform.position - transform.position).normalized;
+        deltapos = new Vector2(directionToPlayer.x, directionToPlayer.y) * moveSpeed * Time.fixedDeltaTime;
+        if (bc.Distance(player.GetComponent<Collider2D>()).distance > deltapos.magnitude) {
+            rb.MovePosition(rb.position + deltapos);
+        } else if (attackCooldown > 0) {    
+            attackCooldown -= Time.fixedDeltaTime;
+        } else {
+            attack();
+            attackCooldown = TimeBtwAttacks;
+        }
+        float angle = Vector2.SignedAngle(Vector2.right, directionToPlayer);
+        transform.eulerAngles = new Vector3(0, 0, angle);
     }
 
     protected override void attack() { player.GetComponent<Player>().takeDamage(dmg); }

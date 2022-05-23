@@ -12,22 +12,6 @@ public abstract class Enemy : MonoBehaviour
     protected Vector2 deltapos; //the change in position
     public float TimeBtwAttacks = 0.2f;
     protected float attackCooldown = 0.2f;
-
-    protected void MoveAndFacePlayer(float moveSpeed) {
-        directionToPlayer = (player.transform.position - transform.position).normalized;
-        deltapos = new Vector2(directionToPlayer.x, directionToPlayer.y) * moveSpeed * Time.fixedDeltaTime;
-        if (bc.Distance(player.GetComponent<Collider2D>()).distance > deltapos.magnitude) {
-            rb.MovePosition(rb.position + deltapos);
-        } else if (attackCooldown > 0) {    
-            attackCooldown -= Time.fixedDeltaTime;
-        } else {
-            attack();
-            attackCooldown = TimeBtwAttacks;
-        }
-        float angle = Vector2.SignedAngle(Vector2.right, directionToPlayer);
-        transform.eulerAngles = new Vector3(0, 0, angle);
-    }
-
     protected abstract void attack();
     public abstract int Die();
 }
