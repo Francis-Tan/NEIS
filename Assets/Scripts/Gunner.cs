@@ -24,7 +24,7 @@ public class Gunner : Enemy
     }
 
     protected override void attack() { 
-        GameObject bullet = Instantiate(projectile, transform.position + directionToPlayer, transform.rotation);
+        Instantiate(projectile, transform.position + directionToPlayer, transform.rotation);
     }
 
     public override int Die() { 

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public abstract class Enemy : MonoBehaviour
 {
-    protected int health = 2;
+    protected bool not_hit = true;
     public GameObject player;
     protected Rigidbody2D rb; //rigidbody movement better for collision
     protected BoxCollider2D bc; //to detect whether it will collide with player - might replace with raycast box
@@ -13,5 +13,11 @@ public abstract class Enemy : MonoBehaviour
     public float TimeBtwAttacks = 0.2f;
     protected float attackCooldown = 0.2f;
     protected abstract void attack();
+    public void takeDamage() {   
+        if (not_hit) {  
+            not_hit = false;
+            //instantiate visual effect
+        } else Die();
+    }
     public abstract int Die();
 }

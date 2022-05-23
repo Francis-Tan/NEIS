@@ -140,5 +140,9 @@ MonoBehaviour:
   health: 10
   maxmana: 10
   stablengthfactor: 1
-  stabradius: 0.1
+  stabradius: 0.2
   TimeBtwAttacks: 0
+  guncost: 2
+  burstcost: 4
+  grapplecost: 2
+  projectile: {fileID: 1395363514749417121, guid: b1285a0604250f342929a8936a3c92da, type: 3}

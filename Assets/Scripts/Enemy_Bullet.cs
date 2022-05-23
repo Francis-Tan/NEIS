@@ -2,17 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Bullet : MonoBehaviour
+public class Enemy_Bullet : MonoBehaviour
 {
-    private Player player;
     private Rigidbody2D rb; //rigidbody movement is to avoid moving in a rotated transform after rotation
     private Vector2 directionToPlayer;
     public float moveSpeed = 16;
     public int dmg = 1;
 
     private void Start() {
-        player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>(); //instance, not prefab
         rb = GetComponent<Rigidbody2D>();
+        Player player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>(); //instance, not prefab
         directionToPlayer = (player.transform.position - transform.position).normalized;
     }
 
