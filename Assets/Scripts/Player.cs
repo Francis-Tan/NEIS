@@ -55,6 +55,7 @@ public class Player : MonoBehaviour {
                 transform.rotation)
                 .GetComponent<Player_Bullet>().dir = direction.normalized;
                 currentmana -= guncost;
+                Debug.Log("mana = " + currentmana);
             }
         }
         if (burst) {} //some usage of OverlapCircleAll

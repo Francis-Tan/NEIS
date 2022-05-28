@@ -13,6 +13,11 @@ public class Gunner : Enemy
     }
 
     private void FixedUpdate() {
+        directionToPlayer = (player.transform.position - transform.position).normalized;
+        deltapos = new Vector2(directionToPlayer.x, directionToPlayer.y) * moveSpeed * Time.fixedDeltaTime;
+        if (bc.Distance(player.GetComponent<Collider2D>()).distance > deltapos.magnitude) {
+            rb.MovePosition(rb.position + deltapos);
+        } 
         if (attackCooldown > 0) {    
             attackCooldown -= Time.fixedDeltaTime;
         } else {

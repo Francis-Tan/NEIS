@@ -5,7 +5,7 @@ using UnityEngine;
 public class Assassin : Enemy
 {
     private Color suitcolor; //to change visibility
-    public float moveSpeed = 10, appearSpeed = 0.7f; //toggle rate of movement and visibility
+    public float appearSpeed = 0.7f; //toggle rate of movement and visibility
     public int dmg = 3;
     public int mana = 2;
     private void Start() {

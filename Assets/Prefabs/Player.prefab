@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 8160669020383938603}
   - component: {fileID: 8160669020383938600}
   - component: {fileID: 8160669020383938601}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -139,7 +139,7 @@ MonoBehaviour:
   moveSpeed: 13
   health: 10
   maxmana: 10
-  stablengthfactor: 1
+  stablength: 1
   stabradius: 0.2
   TimeBtwAttacks: 0
   guncost: 2
