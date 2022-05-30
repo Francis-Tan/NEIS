@@ -4,21 +4,31 @@ using UnityEngine;
 
 public class Assassin : Enemy
 {
-    private Color suitcolor; //to change visibility
-    public float appearSpeed = 0.7f; //toggle rate of movement and visibility
+    private SpriteRenderer sr; //to change visibility
     public int dmg = 3;
     public int mana = 2;
+
+    const string
+        Assassin_idle = "Assassin_idle",
+        Assassin_disappear = "Assassin_disappear",
+        Assassin_reappear = "Assassin_reappear",
+        Assassin_move = "Assassin_move",
+        Assassin_stab = "Assassin_stab",
+        Assassin_hit = "Assassin_hit",
+        Assassin_die = "Assassin_die";
+
     private void Start() {
+        animator = GetComponentInChildren<Animator>();
         rb = GetComponent<Rigidbody2D>();
-        bc = GetComponent<BoxCollider2D>();
-        suitcolor = GetComponent<SpriteRenderer>().material.color;
-        suitcolor.a = 0;
-        GetComponent<SpriteRenderer>().material.color = suitcolor;
+        sr = GetComponentInChildren<SpriteRenderer>(); //.material.color;
+        //suitcolor.a = 0;
+        //GetComponent<SpriteRenderer>().material.color = suitcolor;
     }
 
     private void FixedUpdate() { //consider lateupdate if it could be useful
-        suitcolor.a += appearSpeed * Time.fixedDeltaTime;
-        GetComponent<SpriteRenderer>().material.color = suitcolor;
+        ChangeAnimationState(Assassin_idle);
+        //suitcolor.a += appearSpeed * Time.fixedDeltaTime;
+        //GetComponent<SpriteRenderer>().material.color = suitcolor;
         
         directionToPlayer = (player.transform.position - transform.position).normalized;
         deltapos = new Vector2(directionToPlayer.x, directionToPlayer.y) * moveSpeed * Time.fixedDeltaTime;
@@ -30,11 +40,13 @@ public class Assassin : Enemy
             attack();
             attackCooldown = TimeBtwAttacks;
         }
-        float angle = Vector2.SignedAngle(Vector2.right, directionToPlayer);
-        transform.eulerAngles = new Vector3(0, 0, angle);
+        sr.flipX = directionToPlayer.x >= 0;
     }
 
-    protected override void attack() { player.GetComponent<Player>().takeDamage(dmg); }
+    protected override void attack() {
+        ChangeAnimationState(Assassin_stab);
+        player.GetComponent<Player>().takeDamage(dmg); 
+    }
 
     public override int Die() { 
         //Instantiate()

@@ -6,6 +6,17 @@ public class Drone_Pulse : MonoBehaviour
 {
     public int dmg = 3;
     public float detonate_time;
+
+    private Animator animator;
+    private string currentState;
+    const string
+        DP_idle = "DP_idle",
+        DP_explode = "DP_explode";
+
+    private void Awake()
+    {
+        animator = GetComponent<Animator>();
+    }
     private void FixedUpdate() {
         detonate_time -= Time.fixedDeltaTime;
         if (detonate_time <= 0) {

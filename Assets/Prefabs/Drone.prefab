@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 6950804792811384334}
   - component: {fileID: 8807142437907401717}
   - component: {fileID: 4673503668563403352}
+  - component: {fileID: 1392056561731743808}
   m_Layer: 3
   m_Name: Drone
   m_TagString: Enemy
@@ -28,8 +29,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4347197717655165044}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 10.9613, y: 8.1718, z: 0.26475528}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 10.952, y: 8.1718, z: 0.26475528}
+  m_LocalScale: {x: 0.24018416, y: 0.50038445, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -76,11 +77,11 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -5177388603050735206, guid: 8884154dfe85442a3a3578be807dbcdf, type: 3}
-  m_Color: {r: 0.15557136, g: 0.8962264, b: 0.8560076, a: 1}
+  m_Sprite: {fileID: 21300000, guid: dbf77700224642445a350f551be430fc, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
-  m_DrawMode: 2
+  m_DrawMode: 0
   m_Size: {x: 1.3330221, y: 1.2409534}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
@@ -121,18 +122,18 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.0042147636, y: 0.0037634373}
+  m_Offset: {x: -0.032658577, y: -0.0050860643}
   m_SpriteTilingProperty:
-    border: {x: 0.25, y: 0.25, z: 0.25, w: 0.25}
+    border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
+    oldSize: {x: 5.55, y: 2.48}
     newSize: {x: 1.3330221, y: 1.2409534}
     adaptiveTilingThreshold: 0.5
-    drawMode: 2
+    drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1.4202108, y: 1.3013091}
+  m_Size: {x: 5.697365, y: 2.664098}
   m_EdgeRadius: 0
 --- !u!114 &4673503668563403352
 MonoBehaviour:
@@ -152,3 +153,23 @@ MonoBehaviour:
   projectile: {fileID: 778448831368172586, guid: 29ce9b1867251dd49a5b9886672dd146, type: 3}
   mana: 2
   downtime: 5
+--- !u!95 &1392056561731743808
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4347197717655165044}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: a6f3d086556578a43acdd597d9b9378d, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0

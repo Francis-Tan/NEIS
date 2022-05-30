@@ -9,10 +9,17 @@ public class Enemy_Bullet : MonoBehaviour
     public float moveSpeed = 16;
     public int dmg = 1;
 
-    private void Start() {
+    private Animator animator;
+    private string currentState;
+    const string
+        EB_move = "EB_move",
+        EB_explode = "EB_explode";
+
+    private void Awake() {
         rb = GetComponent<Rigidbody2D>();
         Player player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>(); //instance, not prefab
         directionToPlayer = (player.transform.position - transform.position).normalized;
+        animator = GetComponent<Animator>();
     }
 
     private void FixedUpdate() {

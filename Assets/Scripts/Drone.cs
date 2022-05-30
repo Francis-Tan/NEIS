@@ -10,14 +10,19 @@ public class Drone : Enemy
     private bool isdown = false;
     public float downtime;
     private float timetillup;
-    private SpriteRenderer sr;
-    private Color original_color;
 
-    private void Awake() {
-        bc = GetComponent<BoxCollider2D>();
+    const string
+        Drone_hovering = "Drone_hovering",
+        Drone_move = "Drone_move",
+        Drone_shoot = "Drone_shoot",
+        Drone_deactivating = "Drone_deactivating",
+        Drone_recharging = "Drone_recharging",
+        Drone_reactivating = "Drone_reactivating",
+        Drone_hit = "Drone_hit",
+        Drone_die = "Drone_die";
+
+    private void Start() {
         bc.enabled = false;
-        sr = GetComponent<SpriteRenderer>(); 
-        original_color = sr.material.color;
         timetillup = downtime;
     }
     private void FixedUpdate() {
@@ -25,8 +30,8 @@ public class Drone : Enemy
             timetillup -= Time.fixedDeltaTime;
             if (timetillup <= 0) {
                 isdown = false;
+                ChangeAnimationState(Drone_hovering);
                 timetillup = downtime;
-                sr.material.color = original_color;
                 bc.enabled = false;
             }
         } else if (attackCooldown > 0) {    
@@ -37,13 +42,11 @@ public class Drone : Enemy
             ammo--;
         } else {    
             isdown = true;
+            ChangeAnimationState(Drone_reactivating);
             attackCooldown = TimeBtwAttacks;
             ammo = 3;
-            sr.material.color = Color.gray;
             bc.enabled = true;
         }
-        float angle = Vector2.SignedAngle(Vector2.up, player.transform.position - transform.position);
-        transform.eulerAngles = new Vector3(0, 0, angle);
     }
 
     protected override void attack() { 

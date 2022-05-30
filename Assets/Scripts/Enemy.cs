@@ -13,6 +13,21 @@ public abstract class Enemy : MonoBehaviour
     protected Vector2 deltapos; //the change in position
     public float TimeBtwAttacks = 0.2f;
     protected float attackCooldown = 0.2f;
+    protected Animator animator;
+    private string currentState;
+
+    private void Awake()
+    {
+        bc = GetComponent<BoxCollider2D>();
+        animator = GetComponent<Animator>();
+    }
+
+    protected void ChangeAnimationState(string newState)
+    {
+        if (currentState == newState) return;
+        animator.Play(newState);
+        currentState = newState;
+    }
     protected abstract void attack();
     public virtual void takeDamage() {   
         if (not_hit) {  

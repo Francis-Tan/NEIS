@@ -8,8 +8,21 @@ public class Player_Bullet : MonoBehaviour
     public Vector2 dir;
     public float moveSpeed = 20;
 
-    private void Start() {
+    private Animator animator;
+    private string currentState;
+    const string
+        PB_move = "PB_move",
+        PB_explode = "PB_explode";
+
+    private void Awake() {
         rb = GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>();
+    }
+    private void ChangeAnimationState(string newState)
+    {
+        if (currentState == newState) return;
+        animator.Play(newState);
+        currentState = newState;
     }
 
     private void FixedUpdate() {
