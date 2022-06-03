@@ -14,9 +14,11 @@ public class Player_Bullet : MonoBehaviour
         PB_move = "PB_move",
         PB_explode = "PB_explode";
 
-    private void Awake() {
+    private void Awake() 
+    {
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
+        dir = moveSpeed * (Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position).normalized;
     }
     private void ChangeAnimationState(string newState)
     {
@@ -25,19 +27,23 @@ public class Player_Bullet : MonoBehaviour
         currentState = newState;
     }
 
-    private void FixedUpdate() {
-        rb.MovePosition(rb.position + dir * moveSpeed * Time.fixedDeltaTime);
+    private void FixedUpdate() 
+    {
+        rb.MovePosition(rb.position + Time.fixedDeltaTime * dir);
     }
 
-    private void OnCollisionEnter2D(Collision2D other) { 
+    private void OnCollisionEnter2D(Collision2D other) 
+    { 
         GameObject runinto = other.gameObject;
-        if (runinto.CompareTag("Enemy")) {
-            //Instantiate(bulletexplode, transform.position, transform.rotation);
-            Destroy(gameObject); 
+        if (runinto.CompareTag("Enemy")) 
+        {
+            //ChangeAnimationState(PB_explode);
             runinto.GetComponent<Enemy>().takeDamage();
+            Destroy(gameObject); 
         }
-        if (runinto.CompareTag("Blocking")) { 
-            //Instantiate(bulletexplode, transform.position, transform.rotation);
+        else if (runinto.CompareTag("Blocking")) 
+        {
+            //ChangeAnimationState(PB_explode);
             Destroy(gameObject); 
         }
     }

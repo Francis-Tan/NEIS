@@ -18,29 +18,42 @@ public class Drone : Enemy
         Drone_deactivating = "Drone_deactivating",
         Drone_recharging = "Drone_recharging",
         Drone_reactivating = "Drone_reactivating",
-        Drone_hit = "Drone_hit",
+        Drone_floorhit = "Drone_floorhit",
         Drone_die = "Drone_die";
 
-    private void Start() {
+    private void Start() 
+    {
+        player = Player.GetInstance();
+        bc = GetComponent<BoxCollider2D>();
+        animator = GetComponent<Animator>();
         bc.enabled = false;
         timetillup = downtime;
     }
-    private void FixedUpdate() {
-        if (isdown) {
+    private void FixedUpdate() 
+    {
+        if (isdown)
+        {
             timetillup -= Time.fixedDeltaTime;
-            if (timetillup <= 0) {
+            if (timetillup <= 0)
+            {
                 isdown = false;
                 ChangeAnimationState(Drone_hovering);
                 timetillup = downtime;
                 bc.enabled = false;
             }
-        } else if (attackCooldown > 0) {    
+        }
+        else if (attackCooldown > 0)
+        {
             attackCooldown -= Time.fixedDeltaTime;
-        } else if (ammo > 0) {
+        }
+        else if (ammo > 0)
+        {
             attack();
             attackCooldown = TimeBtwAttacks;
             ammo--;
-        } else {    
+        }
+        else
+        {
             isdown = true;
             ChangeAnimationState(Drone_reactivating);
             attackCooldown = TimeBtwAttacks;
@@ -49,17 +62,22 @@ public class Drone : Enemy
         }
     }
 
-    protected override void attack() { 
+    protected override void attack() 
+    {
+        //ChangeAnimationState(Drone_shoot);
         Instantiate(projectile, player.transform.position, Quaternion.identity);
     }
 
-    public override void takeDamage() { 
-        if (isdown) base.takeDamage();
+    protected override void playhitanimation()
+    {
+        ChangeAnimationState(Drone_floorhit);
     }
 
-    public override int Die() {
-        if (isdown) {
-            //Instantiate()
+    public override int Die() 
+    {
+        if (isdown) 
+        {
+            ChangeAnimationState(Drone_die);
             Destroy(gameObject);
             return mana;
         }

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Assassin : Enemy
 {
-    private SpriteRenderer sr; //to change visibility
+    private SpriteRenderer sr; //change sprite direction
     public int dmg = 3;
     public int mana = 2;
 
@@ -17,7 +17,10 @@ public class Assassin : Enemy
         Assassin_hit = "Assassin_hit",
         Assassin_die = "Assassin_die";
 
-    private void Start() {
+    private void Start() 
+    {
+        player = Player.GetInstance();
+        bc = GetComponent<BoxCollider2D>();
         animator = GetComponentInChildren<Animator>();
         rb = GetComponent<Rigidbody2D>();
         sr = GetComponentInChildren<SpriteRenderer>(); //.material.color;
@@ -25,31 +28,44 @@ public class Assassin : Enemy
         //GetComponent<SpriteRenderer>().material.color = suitcolor;
     }
 
-    private void FixedUpdate() { //consider lateupdate if it could be useful
+    private void FixedUpdate() 
+    {
         ChangeAnimationState(Assassin_idle);
         //suitcolor.a += appearSpeed * Time.fixedDeltaTime;
         //GetComponent<SpriteRenderer>().material.color = suitcolor;
         
         directionToPlayer = (player.transform.position - transform.position).normalized;
-        deltapos = new Vector2(directionToPlayer.x, directionToPlayer.y) * moveSpeed * Time.fixedDeltaTime;
-        if (bc.Distance(player.GetComponent<Collider2D>()).distance > deltapos.magnitude) {
+        deltapos = moveSpeed * Time.fixedDeltaTime * new Vector2(directionToPlayer.x, directionToPlayer.y);
+        if (bc.Distance(player.GetComponent<Collider2D>()).distance > deltapos.magnitude)
+        {
             rb.MovePosition(rb.position + deltapos);
-        } else if (attackCooldown > 0) {    
+        }
+        else if (attackCooldown > 0)
+        {
             attackCooldown -= Time.fixedDeltaTime;
-        } else {
+        }
+        else
+        {
             attack();
             attackCooldown = TimeBtwAttacks;
         }
         sr.flipX = directionToPlayer.x >= 0;
     }
 
-    protected override void attack() {
+    protected override void attack() 
+    {
         ChangeAnimationState(Assassin_stab);
         player.GetComponent<Player>().takeDamage(dmg); 
     }
 
-    public override int Die() { 
-        //Instantiate()
+    protected override void playhitanimation()
+    {
+        ChangeAnimationState(Assassin_hit);
+    }
+
+    public override int Die() 
+    {
+        ChangeAnimationState(Assassin_die);
         Destroy(gameObject);
         return mana;
     }

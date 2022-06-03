@@ -12,20 +12,26 @@ public class Gunner : Enemy
 
     const string
         Gunner_idle = "Gunner_idle",
-        Gunner_move = "Gunner_move",
+        Gunner_aiming = "Gunner_aiming",
         Gunner_shoot = "Gunner_shoot",
         Gunner_reloadidle = "Gunner_reloadidle",
         Gunner_reloadmove = "Gunner_reloadmove",
         Gunner_hit = "Gunner_hit",
         Gunner_die = "Gunner_die";
 
-    private void Start() {
-         rb = GetComponent<Rigidbody2D>();
+    private void Start() 
+    {
+        player = Player.GetInstance();
+        bc = GetComponent<BoxCollider2D>();
+        animator = GetComponent<Animator>();
+        rb = GetComponent<Rigidbody2D>();
     }
 
-    private void FixedUpdate() {
+    private void FixedUpdate() 
+    {
         if (shooting_time > 0)
         {
+            //ChangeAnimationState(Gunner_aiming);
             shooting_time -= Time.fixedDeltaTime;
             if (attackCooldown > 0)
             {
@@ -39,29 +45,41 @@ public class Gunner : Enemy
             float angle = Vector2.SignedAngle(Vector2.up, player.transform.position - transform.position);
             transform.eulerAngles = new Vector3(0, 0, angle);
         }
-        else if (reload_time > 0) {
+        else if (reload_time > 0) 
+        {
+            //ChangeAnimationState(Gunner_reloadidle);
             reload_time -= Time.fixedDeltaTime;
             directionToPlayer = (player.transform.position - transform.position).normalized;
-            deltapos = new Vector2(directionToPlayer.x, directionToPlayer.y) * moveSpeed * Time.fixedDeltaTime;
+            deltapos = moveSpeed * Time.fixedDeltaTime * new Vector2(directionToPlayer.x, directionToPlayer.y);
             if (bc.Distance(player.GetComponent<Collider2D>()).distance > deltapos.magnitude)
             {
+                //ChangeAnimationState(Gunner_reloadmove);
                 rb.MovePosition(rb.position - deltapos);
             }
             float angle = Vector2.SignedAngle(Vector2.up, player.transform.position - transform.position);
             transform.eulerAngles = new Vector3(0, 0, angle);
-        } else
+        } 
+        else
         {
+            //ChangeAnimationState(Gunner_idle or Gunner_reloaddone);
             attackCooldown = TimeBtwAttacks;
             shooting_time = 3f;
             reload_time = 1f;
         }
     }
 
-    protected override void attack() { 
+    protected override void attack() 
+    {
+        //ChangeAnimationState(Gunner_shoot);
         Instantiate(projectile, firepoint.position, firepoint.rotation);
     }
 
-    public override int Die() { 
+    protected override void playhitanimation()
+    {
+        ChangeAnimationState(Gunner_hit);
+    }
+    public override int Die() 
+    { 
         //Instantiate()
         Destroy(gameObject);
         return mana;

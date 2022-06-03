@@ -5,7 +5,7 @@ using UnityEngine;
 public class Enemy_Bullet : MonoBehaviour
 {
     private Rigidbody2D rb; //rigidbody movement is to avoid moving in a rotated transform after rotation
-    private Vector2 directionToPlayer;
+    private Vector2 dir;
     public float moveSpeed = 16;
     public int dmg = 1;
 
@@ -15,26 +15,30 @@ public class Enemy_Bullet : MonoBehaviour
         EB_move = "EB_move",
         EB_explode = "EB_explode";
 
-    private void Awake() {
+    private void Awake() 
+    {
         rb = GetComponent<Rigidbody2D>();
-        Player player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>(); //instance, not prefab
-        directionToPlayer = (player.transform.position - transform.position).normalized;
+        dir = moveSpeed * (Player.GetInstance().transform.position - transform.position).normalized;
         animator = GetComponent<Animator>();
     }
 
-    private void FixedUpdate() {
-        rb.MovePosition(rb.position + directionToPlayer * moveSpeed * Time.fixedDeltaTime);
+    private void FixedUpdate() 
+    {
+        rb.MovePosition(rb.position + dir * Time.fixedDeltaTime);
     }
 
-    private void OnCollisionEnter2D(Collision2D other) { 
+    private void OnCollisionEnter2D(Collision2D other) 
+    { 
         GameObject runinto = other.gameObject;
-        if (runinto.CompareTag("Player")) { 
-            runinto.GetComponent<Player>().takeDamage(dmg); 
-            //Instantiate(bulletexplode, transform.position, transform.rotation);
+        if (runinto.CompareTag("Player")) 
+        {
+            //ChangeAnimationState(EB_explode);
+            runinto.GetComponent<Player>().takeDamage(dmg);
             Destroy(gameObject); 
         }
-        if (runinto.CompareTag("Blocking")) { 
-            //Instantiate(bulletexplode, transform.position, transform.rotation);
+        else if (runinto.CompareTag("Blocking")) 
+        {
+            //ChangeAnimationState(EB_explode);
             Destroy(gameObject); 
         }
     }

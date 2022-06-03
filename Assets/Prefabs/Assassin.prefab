@@ -28,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 300808703671178588}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -0.6, y: 1.2, z: 0.043922525}
-  m_LocalScale: {x: 2.2742999, y: 2.2159324, z: 1}
+  m_LocalScale: {x: 0.5757972, y: 0.56101996, z: 0.2531756}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8824842191063087065}
@@ -94,10 +94,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4eaa270cb19295842a674d2d18ce3876, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 8160669020383938614, guid: f68a15d0bc7684a4ca28479113bf7e57, type: 3}
   moveSpeed: 11
   TimeBtwAttacks: 0.25
-  appearSpeed: 0.7
   dmg: 3
   mana: 2
 --- !u!1 &1457224597753543295
@@ -195,7 +193,7 @@ Animator:
   m_GameObject: {fileID: 1457224597753543295}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 19d3ac2da173d304384fbad7c246f6ec, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0

@@ -5,22 +5,17 @@ using UnityEngine;
 public abstract class Enemy : MonoBehaviour
 {
     protected bool not_hit = true;
-    public GameObject player;
+    protected GameObject player;
     protected Rigidbody2D rb; //rigidbody movement better for collision
-    protected BoxCollider2D bc; //to detect whether it will collide with player - might replace with raycast box
+    protected BoxCollider2D bc; //for detecting collisions with player - could replace with raycast box
     public float moveSpeed;
     protected Vector3 directionToPlayer;
-    protected Vector2 deltapos; //the change in position
+    protected Vector2 deltapos; //change in positon
     public float TimeBtwAttacks = 0.2f;
     protected float attackCooldown = 0.2f;
+
     protected Animator animator;
     private string currentState;
-
-    private void Awake()
-    {
-        bc = GetComponent<BoxCollider2D>();
-        animator = GetComponent<Animator>();
-    }
 
     protected void ChangeAnimationState(string newState)
     {
@@ -29,11 +24,16 @@ public abstract class Enemy : MonoBehaviour
         currentState = newState;
     }
     protected abstract void attack();
-    public virtual void takeDamage() {   
-        if (not_hit) {  
+    public virtual void takeDamage() 
+    {
+        if (not_hit)
+        {
+            playhitanimation();
             not_hit = false;
-            //instantiate visual effect
-        } else Die();
+        }
+        else { Die(); }
     }
+
+    protected abstract void playhitanimation();
     public abstract int Die();
 }

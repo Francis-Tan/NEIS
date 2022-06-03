@@ -28,9 +28,9 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4347197717655165044}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 10.952, y: 8.1718, z: 0.26475528}
-  m_LocalScale: {x: 0.24018416, y: 0.50038445, z: 1}
+  m_LocalScale: {x: 0.6001241, y: 1.2502606, z: 2.4986}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -147,7 +147,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 50cbce63e7061404da924ae115a8d0fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 0}
   moveSpeed: 5
   TimeBtwAttacks: 2
   projectile: {fileID: 778448831368172586, guid: 29ce9b1867251dd49a5b9886672dd146, type: 3}
@@ -163,7 +162,7 @@ Animator:
   m_GameObject: {fileID: 4347197717655165044}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: a6f3d086556578a43acdd597d9b9378d, type: 2}
+  m_Controller: {fileID: 9100000, guid: ec160979fc5a3fe45ac98b10de282de2, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0

@@ -17,11 +17,15 @@ public class Drone_Pulse : MonoBehaviour
     {
         animator = GetComponent<Animator>();
     }
-    private void FixedUpdate() {
+    private void FixedUpdate() 
+    {
         detonate_time -= Time.fixedDeltaTime;
-        if (detonate_time <= 0) {
+        if (detonate_time <= 0) 
+        {
+            //ChangeAnimationState(DP_explode);
             Collider2D player = Physics2D.OverlapCircle(transform.position, 7f, 256);
-            if (player != null) {
+            if (player != null)
+            {
                 player.gameObject.GetComponent<Player>().takeDamage(dmg);
             }
             Destroy(gameObject);
