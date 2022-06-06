@@ -4,6 +4,7 @@ using UnityEngine;
 
 public abstract class Enemy : MonoBehaviour
 {
+    public int mana;
     protected bool not_hit = true;
     protected GameObject player;
     protected Rigidbody2D rb; //rigidbody movement better for collision
@@ -35,5 +36,9 @@ public abstract class Enemy : MonoBehaviour
     }
 
     protected abstract void playhitanimation();
-    public abstract int Die();
+    public int getmana()
+    {
+        return mana;
+    }
+    public abstract void Die();
 }

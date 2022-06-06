@@ -6,7 +6,6 @@ public class Assassin : Enemy
 {
     private SpriteRenderer sr; //change sprite direction
     public int dmg = 3;
-    public int mana = 2;
 
     const string
         Assassin_idle = "Assassin_idle",
@@ -19,6 +18,7 @@ public class Assassin : Enemy
 
     private void Start() 
     {
+        mana = 2;
         player = Player.GetInstance();
         bc = GetComponent<BoxCollider2D>();
         animator = GetComponentInChildren<Animator>();
@@ -63,10 +63,9 @@ public class Assassin : Enemy
         ChangeAnimationState(Assassin_hit);
     }
 
-    public override int Die() 
+    public override void Die() 
     {
         ChangeAnimationState(Assassin_die);
         Destroy(gameObject);
-        return mana;
     }
 }

@@ -97,7 +97,9 @@ public class Player : MonoBehaviour
                     stabradius, 8); //1000 in binary so only layer 3 colliders are seen
                     if (hitenemy != null)
                     {
-                        currentmana += hitenemy.gameObject.GetComponent<Enemy>().Die();
+                        Enemy deadenemy = hitenemy.gameObject.GetComponent<Enemy>();
+                        currentmana += deadenemy.getmana();
+                        deadenemy.Die();
                         if (currentmana > maxmana) currentmana = maxmana;
                         Debug.Log("mana = " + currentmana);
                     }

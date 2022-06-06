@@ -5,7 +5,6 @@ using UnityEngine;
 public class Drone : Enemy
 {
     public GameObject projectile;
-    public int mana = 2;
     private int ammo = 3;
     private bool isdown = false;
     public float downtime;
@@ -23,6 +22,7 @@ public class Drone : Enemy
 
     private void Start() 
     {
+        mana = 2;
         player = Player.GetInstance();
         bc = GetComponent<BoxCollider2D>();
         animator = GetComponent<Animator>();
@@ -73,14 +73,9 @@ public class Drone : Enemy
         ChangeAnimationState(Drone_floorhit);
     }
 
-    public override int Die() 
+    public override void Die() 
     {
-        if (isdown) 
-        {
-            ChangeAnimationState(Drone_die);
-            Destroy(gameObject);
-            return mana;
-        }
-        return 0;
+        ChangeAnimationState(Drone_die);
+        Destroy(gameObject);
     }
 }

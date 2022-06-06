@@ -4,9 +4,7 @@ using UnityEngine;
 
 public class Gunner : Enemy
 {
-    public Transform firepoint;
-    public GameObject projectile;
-    public int mana = 3;
+    public gbullet_pooler gbullet_pooler;
     public float shooting_time = 3f;
     public float reload_time = 1f;
 
@@ -21,6 +19,7 @@ public class Gunner : Enemy
 
     private void Start() 
     {
+        mana = 3;
         player = Player.GetInstance();
         bc = GetComponent<BoxCollider2D>();
         animator = GetComponent<Animator>();
@@ -71,17 +70,18 @@ public class Gunner : Enemy
     protected override void attack() 
     {
         //ChangeAnimationState(Gunner_shoot);
-        Instantiate(projectile, firepoint.position, firepoint.rotation);
+        gbullet_pooler.FireBullet();
+        
     }
 
     protected override void playhitanimation()
     {
         ChangeAnimationState(Gunner_hit);
     }
-    public override int Die() 
-    { 
-        //Instantiate()
+    public override void Die() 
+    {
+        ChangeAnimationState(Gunner_die);
+        gbullet_pooler.Die();
         Destroy(gameObject);
-        return mana;
     }
 }

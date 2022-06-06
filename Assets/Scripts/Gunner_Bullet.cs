@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Enemy_Bullet : MonoBehaviour
+public class Gunner_Bullet : MonoBehaviour
 {
     private Rigidbody2D rb; //rigidbody movement is to avoid moving in a rotated transform after rotation
     private Vector2 dir;
@@ -17,9 +17,16 @@ public class Enemy_Bullet : MonoBehaviour
 
     private void Awake() 
     {
-        rb = GetComponent<Rigidbody2D>();
         dir = moveSpeed * (Player.GetInstance().transform.position - transform.position).normalized;
+        rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
+    }
+
+    public void reset(Vector3 position, Quaternion rotation)
+    {
+        transform.position = position;
+        transform.rotation = rotation;
+        dir = moveSpeed * (Player.GetInstance().transform.position - transform.position).normalized;
     }
 
     private void FixedUpdate() 
@@ -34,12 +41,12 @@ public class Enemy_Bullet : MonoBehaviour
         {
             //ChangeAnimationState(EB_explode);
             runinto.GetComponent<Player>().takeDamage(dmg);
-            Destroy(gameObject); 
+            gameObject.SetActive(false);
         }
         else if (runinto.CompareTag("Blocking")) 
         {
             //ChangeAnimationState(EB_explode);
-            Destroy(gameObject); 
+            gameObject.SetActive(false);
         }
     }
 }
