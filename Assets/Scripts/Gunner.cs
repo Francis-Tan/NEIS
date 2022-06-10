@@ -13,7 +13,7 @@ public class Gunner : Enemy
         Gunner_aiming = "Gunner_aiming",
         Gunner_shoot = "Gunner_shoot",
         Gunner_reloadidle = "Gunner_reloadidle",
-        Gunner_reloadmove = "Gunner_reloadmove",
+        Gunner_reloadmove = "Gunner_reloadmove", //to remove/replace
         Gunner_hit = "Gunner_hit",
         Gunner_die = "Gunner_die";
 
@@ -48,13 +48,6 @@ public class Gunner : Enemy
         {
             //ChangeAnimationState(Gunner_reloadidle);
             reload_time -= Time.fixedDeltaTime;
-            directionToPlayer = (player.transform.position - transform.position).normalized;
-            deltapos = moveSpeed * Time.fixedDeltaTime * new Vector2(directionToPlayer.x, directionToPlayer.y);
-            if (bc.Distance(player.GetComponent<Collider2D>()).distance > deltapos.magnitude)
-            {
-                //ChangeAnimationState(Gunner_reloadmove);
-                rb.MovePosition(rb.position - deltapos);
-            }
             float angle = Vector2.SignedAngle(Vector2.up, player.transform.position - transform.position);
             transform.eulerAngles = new Vector3(0, 0, angle);
         } 
@@ -81,7 +74,7 @@ public class Gunner : Enemy
     public override void Die() 
     {
         ChangeAnimationState(Gunner_die);
-        gbullet_pooler.Die();
         Destroy(gameObject);
+        gbullet_pooler.Die();
     }
 }

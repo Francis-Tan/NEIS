@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 public class Player : MonoBehaviour 
 {
     // GetInstance must be called on start, otherwise that object may awake before player
@@ -141,6 +142,7 @@ public class Player : MonoBehaviour
         {
             ChangeAnimationState(Player_die);
             Destroy(gameObject);
+            SceneManager.LoadScene(2);
         }
     }
 }
