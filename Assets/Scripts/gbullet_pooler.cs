@@ -46,7 +46,8 @@ public class gbullet_pooler : MonoBehaviour
     public void Die() {
         for (int i = 0; i < bullets.Count; ++i)
         {
-            Destroy(bullets[i].gameObject);
+            if (bullets[i].gameObject.activeSelf) bullets[i].destroy = true;
+            else Destroy(bullets[i].gameObject);
         }
         Destroy(gameObject);
     }

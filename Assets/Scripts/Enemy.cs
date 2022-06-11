@@ -6,6 +6,7 @@ public abstract class Enemy : MonoBehaviour
 {
     public int mana;
     protected bool not_hit = true;
+    public GameObject hiticon;
     protected GameObject player;
     protected Rigidbody2D rb; //rigidbody movement better for collision
     protected BoxCollider2D bc; //for detecting collisions with player - could replace with raycast box
@@ -18,6 +19,12 @@ public abstract class Enemy : MonoBehaviour
     protected Animator animator;
     private string currentState;
 
+    private void Awake()
+    {
+        Color c = hiticon.GetComponent<SpriteRenderer>().material.color;
+        c.a = 0;
+        hiticon.GetComponent<SpriteRenderer>().material.color = c;
+    }
     protected void ChangeAnimationState(string newState)
     {
         if (currentState == newState) return;
@@ -31,6 +38,9 @@ public abstract class Enemy : MonoBehaviour
         {
             playhitanimation();
             not_hit = false;
+            Color c = hiticon.GetComponent<SpriteRenderer>().material.color;
+            c.a = 1;
+            hiticon.GetComponent<SpriteRenderer>().material.color = c;
         }
         else { Die(); }
     }

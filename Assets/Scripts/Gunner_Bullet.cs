@@ -8,6 +8,7 @@ public class Gunner_Bullet : MonoBehaviour
     private Vector2 dir;
     public float moveSpeed = 16;
     public int dmg = 1;
+    public bool destroy = false;
 
     private Animator animator;
     private string currentState;
@@ -41,12 +42,14 @@ public class Gunner_Bullet : MonoBehaviour
         {
             //ChangeAnimationState(EB_explode);
             runinto.GetComponent<Player>().takeDamage(dmg);
-            gameObject.SetActive(false);
+            if (destroy) Destroy(gameObject);
+            else gameObject.SetActive(false);
         }
         else if (runinto.CompareTag("Blocking")) 
         {
             //ChangeAnimationState(EB_explode);
-            gameObject.SetActive(false);
+            if (destroy) Destroy(gameObject);
+            else gameObject.SetActive(false);
         }
     }
 }

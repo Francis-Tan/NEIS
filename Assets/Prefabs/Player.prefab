@@ -239,7 +239,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 13
-  health: 10
+  health: 1000
   maxmana: 10
   attackpoint: {fileID: 4865906067203039791}
   stabradius: 50

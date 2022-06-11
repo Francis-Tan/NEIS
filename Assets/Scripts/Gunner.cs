@@ -7,6 +7,7 @@ public class Gunner : Enemy
     public gbullet_pooler gbullet_pooler;
     public float shooting_time = 3f;
     public float reload_time = 1f;
+    private Vector3 hiticonpos;
 
     const string
         Gunner_idle = "Gunner_idle",
@@ -19,6 +20,7 @@ public class Gunner : Enemy
 
     private void Start() 
     {
+        hiticonpos = hiticon.transform.position;
         mana = 3;
         player = Player.GetInstance();
         bc = GetComponent<BoxCollider2D>();
@@ -58,6 +60,7 @@ public class Gunner : Enemy
             shooting_time = 3f;
             reload_time = 1f;
         }
+        hiticon.transform.position = hiticonpos;
     }
 
     protected override void attack() 

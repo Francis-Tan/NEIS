@@ -12,13 +12,13 @@ public class Player : MonoBehaviour
     public int health = 10;
     private int currentmana;
     public int maxmana = 10;
-    private bool attacking;
     private int attacktype;
     public Transform attackpoint;
     public float stabradius = 0.4f;
     public float TimeBtwAttacks = 0;
     private float attackCooldown;
-    public int guncost = 2, burstcost = 4, grapplecost = 2;
+    public Skill_Icon gun, burst, grapple;
+    private int guncost, burstcost, grapplecost;
     public GameObject projectile;
 
     private Animator animator;
@@ -49,6 +49,9 @@ public class Player : MonoBehaviour
         attackCooldown = TimeBtwAttacks;
         currentmana = 0;
         animator = GetComponent<Animator>();
+        guncost = gun.skillcost;
+        burstcost = burst.skillcost; 
+        grapplecost = grapple.skillcost;
     }
 
     public static GameObject GetInstance()
@@ -66,19 +69,55 @@ public class Player : MonoBehaviour
     {	
         input_velocity.x = Input.GetAxisRaw("Horizontal");
         input_velocity.y = Input.GetAxisRaw("Vertical");
-        attacking = Input.GetMouseButtonDown(0);
         //on pressing a skill's button, deactivate skill if we're using skill, else go to skill
         if (Input.GetKeyDown(KeyCode.Q))
         {
-            attacktype = attacktype == 1 ? 0 : 1;
+            if (attacktype == 1)
+            {
+                gun.pressed(false);
+                attacktype = 0;
+            } 
+            else
+            {
+                gun.pressed(true);
+                burst.pressed(false);
+                grapple.pressed(false);
+                attacktype = 1;
+            }
         }
         else if (Input.GetKeyDown(KeyCode.E))
         {
-            attacktype = attacktype == 2 ? 0 : 2;
+            if (attacktype == 2)
+            {
+                burst.pressed(false);
+                attacktype = 0;
+            }
+            else
+            {
+                gun.pressed(false);
+                burst.pressed(true);
+                grapple.pressed(false);
+                attacktype = 2;
+            }
         }
         else if (Input.GetKeyDown(KeyCode.R))
         {
-            attacktype = attacktype == 3 ? 0 : 3;
+            if (attacktype == 3)
+            {
+                grapple.pressed(false);
+                attacktype = 0;
+            }
+            else
+            {
+                gun.pressed(false);
+                burst.pressed(false);
+                grapple.pressed(true);
+                attacktype = 3;
+            }
+        }
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            updateMana(maxmana - currentmana);
         }
     }
 
@@ -87,7 +126,7 @@ public class Player : MonoBehaviour
         ChangeAnimationState(input_velocity == Vector2.zero ? Player_idle : Player_move);
         Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Vector2 direction = mousePosition - transform.position;
-        if (attacking) 
+        if (Input.GetKeyDown(KeyCode.Mouse0)) 
         {
             if (attacktype == 0)
             {
@@ -98,35 +137,39 @@ public class Player : MonoBehaviour
                     stabradius, 8); //1000 in binary so only layer 3 colliders are seen
                     if (hitenemy != null)
                     {
-                        Enemy deadenemy = hitenemy.gameObject.GetComponent<Enemy>();
-                        currentmana += deadenemy.getmana();
-                        deadenemy.Die();
-                        if (currentmana > maxmana) currentmana = maxmana;
-                        Debug.Log("mana = " + currentmana);
+                        Enemy enemy = hitenemy.gameObject.GetComponent<Enemy>();
+                        updateMana(enemy.getmana());
+                        enemy.Die();
+
                     }
                     attackCooldown = TimeBtwAttacks;
                 }
             }
             else if (attacktype == 1)
             {
-                if (currentmana < guncost)
-                {
-                    Debug.Log("Need " + guncost + " mana to shoot");
-                }
-                else
+                if (currentmana >= guncost && gun.isready())
                 {
                     Instantiate(projectile, attackpoint.position, transform.rotation);
-                    currentmana -= guncost;
-                    Debug.Log("mana = " + currentmana);
+                    updateMana(-guncost);
+                    gun.reset();
                 }
             }
-            else if (attacktype == 2) 
+            else if (attacktype == 2 && burst.isready()) 
             {
-                //some usage of OverlapCircleAll
+                if (currentmana >= burstcost)
+                {
+                    //some usage of OverlapCircleAll
+                    updateMana(-burstcost);
+                    burst.reset();
+                }
             }
             else 
             {
-                
+                if (currentmana >= grapplecost && grapple.isready())
+                {
+                    updateMana(-grapplecost);
+                    grapple.reset();
+                }
             }
         } 
         
@@ -137,12 +180,20 @@ public class Player : MonoBehaviour
     public void takeDamage(int dmg) 
     {   
         health -= dmg;
-        Debug.Log("Player health: " + health);
+        HealthBar.sethealth(health);
         if (health <= 0) 
         {
             ChangeAnimationState(Player_die);
             Destroy(gameObject);
             SceneManager.LoadScene(2);
         }
+    }
+
+    private void updateMana(int amt)
+    {
+        ManaBar.setmana(currentmana = Mathf.Min(currentmana + amt, maxmana));
+        gun.updatesprite(currentmana);
+        burst.updatesprite(currentmana);
+        grapple.updatesprite(currentmana);
     }
 }
