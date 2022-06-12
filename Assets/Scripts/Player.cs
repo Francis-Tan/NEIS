@@ -6,6 +6,7 @@ public class Player : MonoBehaviour
 {
     // GetInstance must be called on start, otherwise that object may awake before player
     private static GameObject instance;
+    private SpriteRenderer sr;
     private Rigidbody2D rb; //rigidbody movement better for collision
     public float moveSpeed = 13; //toggle rate of movement
     private Vector2 input_velocity;
@@ -44,6 +45,7 @@ public class Player : MonoBehaviour
         {
             Destroy(instance);
         }
+        sr = GetComponent<SpriteRenderer>();
         rb = GetComponent<Rigidbody2D>();
         input_velocity = Vector2.zero;  
         attackCooldown = TimeBtwAttacks;
@@ -66,7 +68,7 @@ public class Player : MonoBehaviour
     }
 
     private void Update() 
-    {	
+    {
         input_velocity.x = Input.GetAxisRaw("Horizontal");
         input_velocity.y = Input.GetAxisRaw("Vertical");
         //on pressing a skill's button, deactivate skill if we're using skill, else go to skill
@@ -119,14 +121,13 @@ public class Player : MonoBehaviour
         {
             updateMana(maxmana - currentmana);
         }
-    }
 
-    private void FixedUpdate() 
-    {
+
+
         ChangeAnimationState(input_velocity == Vector2.zero ? Player_idle : Player_move);
-        Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        Vector2 direction = mousePosition - transform.position;
-        if (Input.GetKeyDown(KeyCode.Mouse0)) 
+        attackpoint.RotateAround(transform.position, Vector3.forward,
+            Vector2.SignedAngle(attackpoint.position - transform.position, Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position));
+        if (Input.GetMouseButtonDown(0))
         {
             if (attacktype == 0)
             {
@@ -154,7 +155,7 @@ public class Player : MonoBehaviour
                     gun.reset();
                 }
             }
-            else if (attacktype == 2 && burst.isready()) 
+            else if (attacktype == 2 && burst.isready())
             {
                 if (currentmana >= burstcost)
                 {
@@ -163,7 +164,7 @@ public class Player : MonoBehaviour
                     burst.reset();
                 }
             }
-            else 
+            else
             {
                 if (currentmana >= grapplecost && grapple.isready())
                 {
@@ -171,22 +172,26 @@ public class Player : MonoBehaviour
                     grapple.reset();
                 }
             }
-        } 
-        
-        float angle = Vector2.SignedAngle(Vector2.right, direction);
-        transform.eulerAngles = new Vector3(0, 0, angle);
+        }
         rb.MovePosition(rb.position + input_velocity * moveSpeed * Time.fixedDeltaTime);
+        sr.flipX = Camera.main.ScreenToWorldPoint(Input.mousePosition).x < transform.position.x;
     }
+
     public void takeDamage(int dmg) 
     {   
         health -= dmg;
         HealthBar.sethealth(health);
         if (health <= 0) 
         {
+            enabled = false;
             ChangeAnimationState(Player_die);
-            Destroy(gameObject);
-            SceneManager.LoadScene(2);
         }
+    }
+
+    public void gameover()
+    {
+        SceneManager.LoadScene(2);
+        Destroy(gameObject);
     }
 
     private void updateMana(int amt)
