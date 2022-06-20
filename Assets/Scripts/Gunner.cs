@@ -7,7 +7,8 @@ public class Gunner : Enemy
     public gbullet_pooler gbullet_pooler;
     public float shooting_time = 3f;
     public float reload_time = 1f;
-    private Vector3 hiticonpos;
+    private Vector3 hiticonpos, stuniconpos;
+    private Quaternion stuniconrot;
 
     const string
         Gunner_idle = "Gunner_idle",
@@ -21,6 +22,8 @@ public class Gunner : Enemy
     private void Start() 
     {
         hiticonpos = hiticon.transform.position;
+        stuniconpos = stunicon.transform.position;
+        stuniconrot = stunicon.transform.rotation;
         mana = 3;
         player = Player.GetInstance();
         bc = GetComponent<BoxCollider2D>();
@@ -28,7 +31,7 @@ public class Gunner : Enemy
         rb = GetComponent<Rigidbody2D>();
     }
 
-    private void FixedUpdate() 
+    protected override void behaviour() 
     {
         if (shooting_time > 0)
         {
@@ -61,6 +64,8 @@ public class Gunner : Enemy
             reload_time = 1f;
         }
         hiticon.transform.position = hiticonpos;
+        stunicon.transform.position = stuniconpos;
+        stunicon.transform.rotation = stuniconrot;
     }
 
     protected override void attack() 

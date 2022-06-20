@@ -23,17 +23,12 @@ public class Assassin : Enemy
         bc = GetComponent<BoxCollider2D>();
         animator = GetComponentInChildren<Animator>();
         rb = GetComponent<Rigidbody2D>();
-        sr = GetComponentInChildren<SpriteRenderer>(); //.material.color;
-        //suitcolor.a = 0;
-        //GetComponent<SpriteRenderer>().material.color = suitcolor;
+        sr = GetComponentInChildren<SpriteRenderer>();
     }
 
-    private void FixedUpdate() 
+    protected override void behaviour() 
     {
         ChangeAnimationState(Assassin_idle);
-        //suitcolor.a += appearSpeed * Time.fixedDeltaTime;
-        //GetComponent<SpriteRenderer>().material.color = suitcolor;
-        
         directionToPlayer = (player.transform.position - transform.position).normalized;
         deltapos = moveSpeed * Time.fixedDeltaTime * new Vector2(directionToPlayer.x, directionToPlayer.y);
         if (bc.Distance(player.GetComponent<Collider2D>()).distance > deltapos.magnitude)

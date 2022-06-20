@@ -8,7 +8,7 @@ public class Player : MonoBehaviour
     private static GameObject instance;
     private SpriteRenderer sr;
     private Rigidbody2D rb; //rigidbody movement better for collision
-    public float moveSpeed = 13; //toggle rate of movement
+    public float moveSpeed = 13;
     private Vector2 input_velocity;
     public int health = 10;
     private int currentmana;
@@ -21,6 +21,7 @@ public class Player : MonoBehaviour
     public Skill_Icon gun, burst, grapple;
     private int guncost, burstcost, grapplecost;
     public GameObject projectile;
+    public Transform burstvisual;
 
     private Animator animator;
     private string currentState;
@@ -54,6 +55,9 @@ public class Player : MonoBehaviour
         guncost = gun.skillcost;
         burstcost = burst.skillcost; 
         grapplecost = grapple.skillcost;
+        Color c = burstvisual.GetComponent<SpriteRenderer>().material.color;
+        c.a = 0;
+        burstvisual.GetComponent<SpriteRenderer>().material.color = c;
     }
 
     public static GameObject GetInstance()
@@ -71,6 +75,8 @@ public class Player : MonoBehaviour
     {
         input_velocity.x = Input.GetAxisRaw("Horizontal");
         input_velocity.y = Input.GetAxisRaw("Vertical");
+        Vector3 mousepos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        mousepos.z = Camera.main.transform.position.z + Camera.main.nearClipPlane;
         //on pressing a skill's button, deactivate skill if we're using skill, else go to skill
         if (Input.GetKeyDown(KeyCode.Q))
         {
@@ -121,12 +127,22 @@ public class Player : MonoBehaviour
         {
             updateMana(maxmana - currentmana);
         }
-
+        Color c = burstvisual.GetComponent<SpriteRenderer>().material.color;
+        if (attacktype == 2)
+        {
+            c.a = 1;
+            burstvisual.position = mousepos;
+        }
+        else
+        {
+            c.a = 0;
+        }
+        burstvisual.GetComponent<SpriteRenderer>().material.color = c;
 
 
         ChangeAnimationState(input_velocity == Vector2.zero ? Player_idle : Player_move);
         attackpoint.RotateAround(transform.position, Vector3.forward,
-            Vector2.SignedAngle(attackpoint.position - transform.position, Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position));
+            Vector2.SignedAngle(attackpoint.position - transform.position, mousepos - transform.position));
         if (Input.GetMouseButtonDown(0))
         {
             if (attacktype == 0)
@@ -155,11 +171,15 @@ public class Player : MonoBehaviour
                     gun.reset();
                 }
             }
-            else if (attacktype == 2 && burst.isready())
+            else if (attacktype == 2)
             {
-                if (currentmana >= burstcost)
+                if (currentmana >= burstcost && burst.isready())
                 {
-                    //some usage of OverlapCircleAll
+                    Collider2D[] enemies = Physics2D.OverlapCircleAll(burstvisual.position, 4.35f, 8);
+                    for (int i = 0; i < enemies.Length; ++i)
+                    {
+                        enemies[i].gameObject.gameObject.GetComponent<Enemy>().getstunned();
+                    }
                     updateMana(-burstcost);
                     burst.reset();
                 }
@@ -174,7 +194,7 @@ public class Player : MonoBehaviour
             }
         }
         rb.MovePosition(rb.position + input_velocity * moveSpeed * Time.fixedDeltaTime);
-        sr.flipX = Camera.main.ScreenToWorldPoint(Input.mousePosition).x < transform.position.x;
+        sr.flipX = mousepos.x < transform.position.x;
     }
 
     public void takeDamage(int dmg) 
@@ -183,6 +203,12 @@ public class Player : MonoBehaviour
         HealthBar.sethealth(health);
         if (health <= 0) 
         {
+            Color c = burstvisual.GetComponent<SpriteRenderer>().material.color;
+            c.a = 0;
+            burstvisual.GetComponent<SpriteRenderer>().material.color = c;
+            c = attackpoint.GetComponent<SpriteRenderer>().material.color;
+            c.a = 0;
+            attackpoint.GetComponent<SpriteRenderer>().material.color = c;
             enabled = false;
             ChangeAnimationState(Player_die);
         }
