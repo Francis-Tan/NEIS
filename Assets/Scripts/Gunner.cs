@@ -31,7 +31,7 @@ public class Gunner : Enemy
         rb = GetComponent<Rigidbody2D>();
     }
 
-    protected override void behaviour() 
+    protected override void unstunned_behaviour() 
     {
         if (shooting_time > 0)
         {

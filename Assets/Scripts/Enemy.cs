@@ -39,32 +39,36 @@ public abstract class Enemy : MonoBehaviour
     {
         if (stunned)
         {
-            Transform stuntransform = stunicon.GetComponent<Transform>();
-            if (stunduration > 0)
-            {
-                stunduration -= Time.deltaTime;
-                var newscale = stuntransform.localScale;
-                newscale.x = stunscalemax * stunduration / 1.75f;
-                stuntransform.localScale = newscale;
-            }
-            else
-            {
-                stunduration = 1.75f;
-                Color c = stunicon.GetComponent<SpriteRenderer>().material.color;
-                c.a = 0;
-                stunicon.GetComponent<SpriteRenderer>().material.color = c;
-                var newscale = stuntransform.localScale;
-                newscale.x = stunscalemax;
-                stuntransform.localScale = newscale;
-                stunned = false;
-            }
+            stunned_behaviour();
         }
         else
         {
-            behaviour();
+            unstunned_behaviour();
         }
     }
-    protected abstract void behaviour();
+    private void stunned_behaviour()
+    {
+        Transform stuntransform = stunicon.GetComponent<Transform>();
+        if (stunduration > 0)
+        {
+            stunduration -= Time.deltaTime;
+            var newscale = stuntransform.localScale;
+            newscale.x = stunscalemax * stunduration / 1.75f;
+            stuntransform.localScale = newscale;
+        }
+        else
+        {
+            stunduration = 1.75f;
+            Color c = stunicon.GetComponent<SpriteRenderer>().material.color;
+            c.a = 0;
+            stunicon.GetComponent<SpriteRenderer>().material.color = c;
+            var newscale = stuntransform.localScale;
+            newscale.x = stunscalemax;
+            stuntransform.localScale = newscale;
+            stunned = false;
+        }
+    }
+    protected abstract void unstunned_behaviour();
     protected void ChangeAnimationState(string newState)
     {
         if (currentState == newState) return;
@@ -84,14 +88,12 @@ public abstract class Enemy : MonoBehaviour
         }
         else { Die(); }
     }
-
     protected abstract void playhitanimation();
     public int getmana()
     {
         return mana;
     }
-
-    public void getstunned()
+    public void becomestunned()
     {
         Color c = stunicon.GetComponent<SpriteRenderer>().material.color;
         c.a = 1;

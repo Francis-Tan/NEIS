@@ -26,7 +26,7 @@ public class Assassin : Enemy
         sr = GetComponentInChildren<SpriteRenderer>();
     }
 
-    protected override void behaviour() 
+    protected override void unstunned_behaviour() 
     {
         ChangeAnimationState(Assassin_idle);
         directionToPlayer = (player.transform.position - transform.position).normalized;

@@ -29,7 +29,7 @@ public class Drone : Enemy
         bc.enabled = false;
         timetillup = downtime;
     }
-    protected override void behaviour() 
+    protected override void unstunned_behaviour() 
     {
         if (isdown)
         {

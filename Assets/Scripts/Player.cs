@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 public class Player : MonoBehaviour 
 {
-    // GetInstance must be called on start, otherwise that object may awake before player
+    // GetInstance must be called on start, otherwise the caller may awake before player
     private static GameObject instance;
     private SpriteRenderer sr;
     private Rigidbody2D rb; //rigidbody movement better for collision
@@ -21,13 +21,16 @@ public class Player : MonoBehaviour
     public Skill_Icon gun, burst, grapple;
     private int guncost, burstcost, grapplecost;
     public GameObject projectile;
+    private GunVisual gunvisual;
     public Transform burstvisual;
 
     private Animator animator;
     private string currentState;
     const string
         Player_idle = "Player_idle",
-        Player_move = "Player_move",
+        Player_moveLR = "Player_moveLR",
+        Player_moveU = "Player_moveU",
+        Player_moveD= "Player_moveD",
         Player_stab = "Player_stab",
         Player_hit = "Player_hit",
         Player_die = "Player_die",
@@ -55,7 +58,11 @@ public class Player : MonoBehaviour
         guncost = gun.skillcost;
         burstcost = burst.skillcost; 
         grapplecost = grapple.skillcost;
-        Color c = burstvisual.GetComponent<SpriteRenderer>().material.color;
+        gunvisual = GetComponentInChildren<GunVisual>();
+        Color c = gunvisual.GetComponent<SpriteRenderer>().material.color;
+        c.a = 0;
+        gunvisual.GetComponent<SpriteRenderer>().material.color = c;
+        c = burstvisual.GetComponent<SpriteRenderer>().material.color;
         c.a = 0;
         burstvisual.GetComponent<SpriteRenderer>().material.color = c;
     }
@@ -70,21 +77,38 @@ public class Player : MonoBehaviour
         animator.Play(newState);
         currentState = newState;
     }
-
     private void Update() 
     {
+        Vector3 mousepos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        mousepos.z = Camera.main.transform.position.z + Camera.main.nearClipPlane; //to make burstvisual be in the right z-pos
         input_velocity.x = Input.GetAxisRaw("Horizontal");
         input_velocity.y = Input.GetAxisRaw("Vertical");
-        Vector3 mousepos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        mousepos.z = Camera.main.transform.position.z + Camera.main.nearClipPlane;
+        attackpoint.RotateAround(transform.position, Vector3.forward,
+            Vector2.SignedAngle(attackpoint.position - transform.position, mousepos - transform.position));
+        rb.MovePosition(rb.position + input_velocity * (moveSpeed * Time.fixedDeltaTime));
+
+        UpdateSkillsandAttacktype();
+        UpdateVisuals(mousepos);
+        Attack();
+    }
+
+    private void UpdateSkillsandAttacktype()
+    {
         //on pressing a skill's button, deactivate skill if we're using skill, else go to skill
-        if (Input.GetKeyDown(KeyCode.Q))
+        if (Input.GetMouseButtonDown(1))
+        {
+            gun.pressed(false);
+            burst.pressed(false);
+            grapple.pressed(false);
+            attacktype = 0;
+        }
+        else if (Input.GetKeyDown(KeyCode.Q))
         {
             if (attacktype == 1)
             {
                 gun.pressed(false);
                 attacktype = 0;
-            } 
+            }
             else
             {
                 gun.pressed(true);
@@ -127,7 +151,40 @@ public class Player : MonoBehaviour
         {
             updateMana(maxmana - currentmana);
         }
-        Color c = burstvisual.GetComponent<SpriteRenderer>().material.color;
+    }
+    private void UpdateVisuals(Vector3 mousepos)
+    {
+        sr.flipX = mousepos.x < transform.position.x;
+        gunvisual.GetComponent<SpriteRenderer>().flipY = mousepos.x < transform.position.x;
+        if (input_velocity.x == 0)
+        {
+            if (input_velocity.y > 0)
+            {
+                ChangeAnimationState(Player_moveU);
+            }
+            else if (input_velocity.y < 0)
+            {
+                ChangeAnimationState(Player_moveD);
+            }
+            else
+            {
+                ChangeAnimationState(Player_idle);
+            }
+        }
+        else
+        {
+            ChangeAnimationState(Player_moveLR);
+        }
+
+        Color c = attackpoint.GetComponent<SpriteRenderer>().material.color;
+        c.a = attacktype == 0 ? 1 : 0;
+        attackpoint.GetComponent<SpriteRenderer>().material.color = c;
+        
+        c = gunvisual.GetComponent<SpriteRenderer>().material.color;
+        c.a = attacktype == 1 ? 1 : 0;
+        gunvisual.GetComponent<SpriteRenderer>().material.color = c;
+
+        c = burstvisual.GetComponent<SpriteRenderer>().material.color;
         if (attacktype == 2)
         {
             c.a = 1;
@@ -138,11 +195,9 @@ public class Player : MonoBehaviour
             c.a = 0;
         }
         burstvisual.GetComponent<SpriteRenderer>().material.color = c;
-
-
-        ChangeAnimationState(input_velocity == Vector2.zero ? Player_idle : Player_move);
-        attackpoint.RotateAround(transform.position, Vector3.forward,
-            Vector2.SignedAngle(attackpoint.position - transform.position, mousepos - transform.position));
+    }
+    private void Attack()
+    {
         if (Input.GetMouseButtonDown(0))
         {
             if (attacktype == 0)
@@ -157,7 +212,6 @@ public class Player : MonoBehaviour
                         Enemy enemy = hitenemy.gameObject.GetComponent<Enemy>();
                         updateMana(enemy.getmana());
                         enemy.Die();
-
                     }
                     attackCooldown = TimeBtwAttacks;
                 }
@@ -166,7 +220,8 @@ public class Player : MonoBehaviour
             {
                 if (currentmana >= guncost && gun.isready())
                 {
-                    Instantiate(projectile, attackpoint.position, transform.rotation);
+                    gunvisual.PlayShootAnimation();
+                    Instantiate(projectile, attackpoint.position, Quaternion.identity);
                     updateMana(-guncost);
                     gun.reset();
                 }
@@ -178,7 +233,7 @@ public class Player : MonoBehaviour
                     Collider2D[] enemies = Physics2D.OverlapCircleAll(burstvisual.position, 4.35f, 8);
                     for (int i = 0; i < enemies.Length; ++i)
                     {
-                        enemies[i].gameObject.gameObject.GetComponent<Enemy>().getstunned();
+                        enemies[i].gameObject.gameObject.GetComponent<Enemy>().becomestunned();
                     }
                     updateMana(-burstcost);
                     burst.reset();
@@ -193,8 +248,6 @@ public class Player : MonoBehaviour
                 }
             }
         }
-        rb.MovePosition(rb.position + input_velocity * moveSpeed * Time.fixedDeltaTime);
-        sr.flipX = mousepos.x < transform.position.x;
     }
 
     public void takeDamage(int dmg) 
@@ -203,17 +256,12 @@ public class Player : MonoBehaviour
         HealthBar.sethealth(health);
         if (health <= 0) 
         {
-            Color c = burstvisual.GetComponent<SpriteRenderer>().material.color;
-            c.a = 0;
-            burstvisual.GetComponent<SpriteRenderer>().material.color = c;
-            c = attackpoint.GetComponent<SpriteRenderer>().material.color;
-            c.a = 0;
-            attackpoint.GetComponent<SpriteRenderer>().material.color = c;
             enabled = false;
             ChangeAnimationState(Player_die);
         }
     }
 
+    //called after the player_die animation
     public void gameover()
     {
         SceneManager.LoadScene(2);
