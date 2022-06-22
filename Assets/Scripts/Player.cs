@@ -151,6 +151,10 @@ public class Player : MonoBehaviour
         {
             updateMana(maxmana - currentmana);
         }
+        if (Input.GetKeyDown(KeyCode.G))
+        {
+            takeDamage(health);
+        }
     }
     private void UpdateVisuals(Vector3 mousepos)
     {
@@ -184,7 +188,7 @@ public class Player : MonoBehaviour
         c.a = attacktype == 1 ? 1 : 0;
         gunvisual.GetComponent<SpriteRenderer>().material.color = c;
 
-        c = burstvisual.GetComponent<SpriteRenderer>().material.color;
+        c = currentmana < burstcost ? Color.blue : Color.white;
         if (attacktype == 2)
         {
             c.a = 1;

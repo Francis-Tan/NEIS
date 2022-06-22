@@ -5,7 +5,7 @@ using UnityEngine;
 public class Drone : Enemy
 {
     public GameObject projectile;
-    private int ammo = 3;
+    public int ammo = 3;
     private bool isdown = false;
     public float downtime;
     private float timetillup;
@@ -24,9 +24,8 @@ public class Drone : Enemy
     {
         mana = 2;
         player = Player.GetInstance();
-        bc = GetComponent<BoxCollider2D>();
         animator = GetComponent<Animator>();
-        bc.enabled = false;
+        gameObject.layer = 9; //attackpoint layer
         timetillup = downtime;
     }
     protected override void unstunned_behaviour() 
@@ -39,7 +38,7 @@ public class Drone : Enemy
                 isdown = false;
                 ChangeAnimationState(Drone_hovering);
                 timetillup = downtime;
-                bc.enabled = false;
+                gameObject.layer = 9;
             }
         }
         else if (attackCooldown > 0)
@@ -58,7 +57,7 @@ public class Drone : Enemy
             ChangeAnimationState(Drone_reactivating);
             attackCooldown = TimeBtwAttacks;
             ammo = 3;
-            bc.enabled = true;
+            gameObject.layer = 3;
         }
     }
 

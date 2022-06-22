@@ -18,7 +18,7 @@ public abstract class Enemy : MonoBehaviour
     public float TimeBtwAttacks = 0.2f;
     protected float attackCooldown = 0.2f;
     protected float stunduration = 2f;
-    protected float stunscalemax;
+    protected float stunscalemax; //refers to original scale of the stunbar
 
     protected Animator animator;
     private string currentState;

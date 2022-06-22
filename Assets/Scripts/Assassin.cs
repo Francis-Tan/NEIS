@@ -60,7 +60,20 @@ public class Assassin : Enemy
 
     public override void Die() 
     {
+        enabled = false;
+        Color c = hiticon.GetComponent<SpriteRenderer>().material.color;
+        c.a = 0;
+        hiticon.GetComponent<SpriteRenderer>().material.color = c;
+        c = stunicon.GetComponent<SpriteRenderer>().material.color;
+        c.a = 0;
+        stunicon.GetComponent<SpriteRenderer>().material.color = c;
         ChangeAnimationState(Assassin_die);
+        StartCoroutine(selfdestruct());
+    }
+
+    IEnumerator selfdestruct()
+    {
+        yield return new WaitForSeconds(0.5f);
         Destroy(gameObject);
     }
 }

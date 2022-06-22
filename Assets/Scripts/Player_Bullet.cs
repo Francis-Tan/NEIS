@@ -22,13 +22,9 @@ public class Player_Bullet : MonoBehaviour
         Vector2 playerpos = Player.GetInstance().transform.position;
         dir = (mousepos - playerpos).magnitude > 1.69 ? moveSpeed * (mousepos - tpos).normalized : moveSpeed * (tpos - mousepos).normalized;
         transform.eulerAngles = new Vector3(0, 0, Vector2.SignedAngle(Vector2.right, dir));
+        rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         ChangeAnimationState(pb_start);
-    }
-
-    private void Start2()
-    {
-        rb = GetComponent<Rigidbody2D>();
         ChangeAnimationState(pb_fly);
     }
     private void ChangeAnimationState(string newState)
@@ -48,8 +44,8 @@ public class Player_Bullet : MonoBehaviour
         GameObject runinto = other.gameObject;
         if (runinto.CompareTag("Enemy")) 
         {
-            runinto.GetComponent<Enemy>().takeDamage();
             enabled = false;
+            runinto.GetComponent<Enemy>().takeDamage();
             ChangeAnimationState(pb_explode);
         }
         else if (runinto.CompareTag("Blocking")) 
