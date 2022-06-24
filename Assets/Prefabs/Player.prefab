@@ -363,9 +363,9 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8160669020383938614}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -0.22, y: -2.6, z: 0}
-  m_LocalScale: {x: 1.7501942, y: 1.8011242, z: 1}
+  m_LocalScale: {x: 1.2592406, y: 1.1601934, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4865906067203039791}
@@ -438,7 +438,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 1000000
+  m_Mass: 50
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 0
@@ -460,14 +460,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 13
-  health: 1000
+  health: 50
   maxmana: 10
   attackpoint: {fileID: 4865906067203039791}
-  stabradius: 50
+  stabradius: 0.3
   TimeBtwAttacks: 0
-  gun: {fileID: 959039463, guid: 4e49d67030bafbb4ca94bad45a3dc0be, type: 3}
-  burst: {fileID: 8089270662575347866, guid: 7971bb10b463c8a40a18783f6aee1bb6, type: 3}
-  grapple: {fileID: 1736853438067162333, guid: 77e70e98604530c41a07b672293e715f, type: 3}
+  gun: {fileID: 0}
+  burst: {fileID: 0}
+  grapple: {fileID: 0}
   projectile: {fileID: 1395363514749417121, guid: b1285a0604250f342929a8936a3c92da, type: 3}
   burstvisual: {fileID: 1149790861662533425}
 --- !u!95 &1018491810374817342

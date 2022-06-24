@@ -1,9 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-public class Player : MonoBehaviour 
-{
+public class Player : MonoBehaviour {
     // GetInstance must be called on start, otherwise the caller may awake before player
     private static GameObject instance;
     private SpriteRenderer sr;
@@ -30,7 +27,7 @@ public class Player : MonoBehaviour
         Player_idle = "Player_idle",
         Player_moveLR = "Player_moveLR",
         Player_moveU = "Player_moveU",
-        Player_moveD= "Player_moveD",
+        Player_moveD = "Player_moveD",
         Player_stab = "Player_stab",
         Player_hit = "Player_hit",
         Player_die = "Player_die",
@@ -38,25 +35,23 @@ public class Player : MonoBehaviour
         Player_burst = "Player_burst",
         Player_grapple = "Player_grapple";
 
-    private void Awake() 
-    {
-        if (instance == null)
-        {
+    private void Awake() {
+        if (instance == null) {
             instance = gameObject;
             DontDestroyOnLoad(instance);
         }
-        else if (instance != gameObject)
-        {
-            Destroy(instance);
+        else if (instance != gameObject) {
+            Debug.Log("Player Copy Rejected");
+            Destroy(gameObject);
         }
         sr = GetComponent<SpriteRenderer>();
         rb = GetComponent<Rigidbody2D>();
-        input_velocity = Vector2.zero;  
+        input_velocity = Vector2.zero;
         attackCooldown = TimeBtwAttacks;
         currentmana = 0;
         animator = GetComponent<Animator>();
         guncost = gun.skillcost;
-        burstcost = burst.skillcost; 
+        burstcost = burst.skillcost;
         grapplecost = grapple.skillcost;
         gunvisual = GetComponentInChildren<GunVisual>();
         Color c = gunvisual.GetComponent<SpriteRenderer>().material.color;
@@ -67,8 +62,7 @@ public class Player : MonoBehaviour
         burstvisual.GetComponent<SpriteRenderer>().material.color = c;
     }
 
-    public static GameObject GetInstance()
-    {
+    public static GameObject GetInstance() {
         return instance;
     }
 
@@ -77,8 +71,7 @@ public class Player : MonoBehaviour
         animator.Play(newState);
         currentState = newState;
     }
-    private void Update() 
-    {
+    private void Update() {
         Vector3 mousepos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         mousepos.z = Camera.main.transform.position.z + Camera.main.nearClipPlane; //to make burstvisual be in the right z-pos
         input_velocity.x = Input.GetAxisRaw("Horizontal");
@@ -92,161 +85,128 @@ public class Player : MonoBehaviour
         Attack();
     }
 
-    private void UpdateSkillsandAttacktype()
-    {
+    private void UpdateSkillsandAttacktype() {
         //on pressing a skill's button, deactivate skill if we're using skill, else go to skill
-        if (Input.GetMouseButtonDown(1))
-        {
+        if (Input.GetMouseButtonDown(1)) {
             gun.pressed(false);
             burst.pressed(false);
             grapple.pressed(false);
             attacktype = 0;
         }
-        else if (Input.GetKeyDown(KeyCode.Q))
-        {
-            if (attacktype == 1)
-            {
+        else if (Input.GetKeyDown(KeyCode.Q)) {
+            if (attacktype == 1) {
                 gun.pressed(false);
                 attacktype = 0;
             }
-            else
-            {
+            else {
                 gun.pressed(true);
                 burst.pressed(false);
                 grapple.pressed(false);
                 attacktype = 1;
             }
         }
-        else if (Input.GetKeyDown(KeyCode.E))
-        {
-            if (attacktype == 2)
-            {
+        else if (Input.GetKeyDown(KeyCode.E)) {
+            if (attacktype == 2) {
                 burst.pressed(false);
                 attacktype = 0;
             }
-            else
-            {
+            else {
                 gun.pressed(false);
                 burst.pressed(true);
                 grapple.pressed(false);
                 attacktype = 2;
             }
         }
-        else if (Input.GetKeyDown(KeyCode.R))
-        {
-            if (attacktype == 3)
-            {
+        else if (Input.GetKeyDown(KeyCode.R)) {
+            if (attacktype == 3) {
                 grapple.pressed(false);
                 attacktype = 0;
             }
-            else
-            {
+            else {
                 gun.pressed(false);
                 burst.pressed(false);
                 grapple.pressed(true);
                 attacktype = 3;
             }
         }
-        if (Input.GetKeyDown(KeyCode.F))
-        {
+        if (Input.GetKeyDown(KeyCode.F)) {
             updateMana(maxmana - currentmana);
         }
-        if (Input.GetKeyDown(KeyCode.G))
-        {
+        if (Input.GetKeyDown(KeyCode.G)) {
             takeDamage(health);
         }
     }
-    private void UpdateVisuals(Vector3 mousepos)
-    {
+    private void UpdateVisuals(Vector3 mousepos) {
         sr.flipX = mousepos.x < transform.position.x;
         gunvisual.GetComponent<SpriteRenderer>().flipY = mousepos.x < transform.position.x;
-        if (input_velocity.x == 0)
-        {
-            if (input_velocity.y > 0)
-            {
+        if (input_velocity.x == 0) {
+            if (input_velocity.y > 0) {
                 ChangeAnimationState(Player_moveU);
             }
-            else if (input_velocity.y < 0)
-            {
+            else if (input_velocity.y < 0) {
                 ChangeAnimationState(Player_moveD);
             }
-            else
-            {
+            else {
                 ChangeAnimationState(Player_idle);
             }
         }
-        else
-        {
+        else {
             ChangeAnimationState(Player_moveLR);
         }
 
         Color c = attackpoint.GetComponent<SpriteRenderer>().material.color;
         c.a = attacktype == 0 ? 1 : 0;
         attackpoint.GetComponent<SpriteRenderer>().material.color = c;
-        
+
         c = gunvisual.GetComponent<SpriteRenderer>().material.color;
         c.a = attacktype == 1 ? 1 : 0;
         gunvisual.GetComponent<SpriteRenderer>().material.color = c;
 
         c = currentmana < burstcost ? Color.blue : Color.white;
-        if (attacktype == 2)
-        {
+        if (attacktype == 2) {
             c.a = 1;
             burstvisual.position = mousepos;
         }
-        else
-        {
+        else {
             c.a = 0;
         }
         burstvisual.GetComponent<SpriteRenderer>().material.color = c;
     }
-    private void Attack()
-    {
-        if (Input.GetMouseButtonDown(0))
-        {
-            if (attacktype == 0)
-            {
+    private void Attack() {
+        if (Input.GetMouseButtonDown(0)) {
+            if (attacktype == 0) {
                 if (attackCooldown > 0) attackCooldown -= Time.fixedDeltaTime;
-                else
-                {
+                else {
                     Collider2D hitenemy = Physics2D.OverlapCircle(attackpoint.position,
                     stabradius, 8); //1000 in binary so only layer 3 colliders are seen
-                    if (hitenemy != null)
-                    {
+                    if (hitenemy != null) {
                         Enemy enemy = hitenemy.gameObject.GetComponent<Enemy>();
                         updateMana(enemy.getmana());
-                        enemy.Die();
+                        enemy.Death();
                     }
                     attackCooldown = TimeBtwAttacks;
                 }
             }
-            else if (attacktype == 1)
-            {
-                if (currentmana >= guncost && gun.isready())
-                {
+            else if (attacktype == 1) {
+                if (currentmana >= guncost && gun.isready()) {
                     gunvisual.PlayShootAnimation();
                     Instantiate(projectile, attackpoint.position, Quaternion.identity);
                     updateMana(-guncost);
                     gun.reset();
                 }
             }
-            else if (attacktype == 2)
-            {
-                if (currentmana >= burstcost && burst.isready())
-                {
+            else if (attacktype == 2) {
+                if (currentmana >= burstcost && burst.isready()) {
                     Collider2D[] enemies = Physics2D.OverlapCircleAll(burstvisual.position, 4.35f, 8);
-                    for (int i = 0; i < enemies.Length; ++i)
-                    {
+                    for (int i = 0; i < enemies.Length; ++i) {
                         enemies[i].gameObject.gameObject.GetComponent<Enemy>().becomestunned();
                     }
                     updateMana(-burstcost);
                     burst.reset();
                 }
             }
-            else
-            {
-                if (currentmana >= grapplecost && grapple.isready())
-                {
+            else {
+                if (currentmana >= grapplecost && grapple.isready()) {
                     updateMana(-grapplecost);
                     grapple.reset();
                 }
@@ -254,26 +214,23 @@ public class Player : MonoBehaviour
         }
     }
 
-    public void takeDamage(int dmg) 
-    {   
+    public void takeDamage(int dmg) {
         health -= dmg;
         HealthBar.sethealth(health);
-        if (health <= 0) 
-        {
+        if (health <= 0) {
             enabled = false;
             ChangeAnimationState(Player_die);
         }
     }
 
     //called after the player_die animation
-    public void gameover()
-    {
-        SceneManager.LoadScene(2);
+    public void gameover() {
+        SceneManager.LoadScene("GameOver");
         Destroy(gameObject);
+        Destroy(PlayerInfoCanvas.instance);
     }
 
-    private void updateMana(int amt)
-    {
+    private void updateMana(int amt) {
         ManaBar.setmana(currentmana = Mathf.Min(currentmana + amt, maxmana));
         gun.updatesprite(currentmana);
         burst.updatesprite(currentmana);

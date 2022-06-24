@@ -1,10 +1,7 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class Assassin : Enemy
-{
-    private SpriteRenderer sr; //change sprite direction
+public class Assassin : Enemy {
     public int dmg = 3;
 
     const string
@@ -16,50 +13,47 @@ public class Assassin : Enemy
         Assassin_hit = "Assassin_hit",
         Assassin_die = "Assassin_die";
 
-    private void Start() 
-    {
+    public override void Spawn() {
+        Color c = sr.material.color;
+        c.a = 1;
+        sr.material.color = c;
+
         mana = 2;
         player = Player.GetInstance();
         bc = GetComponent<BoxCollider2D>();
         animator = GetComponentInChildren<Animator>();
         rb = GetComponent<Rigidbody2D>();
-        sr = GetComponentInChildren<SpriteRenderer>();
+        gameObject.layer = 3;
+        enabled = true;
     }
 
-    protected override void unstunned_behaviour() 
-    {
+    protected override void unstunned_behaviour() {
         ChangeAnimationState(Assassin_idle);
         directionToPlayer = (player.transform.position - transform.position).normalized;
         deltapos = moveSpeed * Time.fixedDeltaTime * new Vector2(directionToPlayer.x, directionToPlayer.y);
-        if (bc.Distance(player.GetComponent<Collider2D>()).distance > deltapos.magnitude)
-        {
+        if (bc.Distance(player.GetComponent<Collider2D>()).distance > deltapos.magnitude) {
             rb.MovePosition(rb.position + deltapos);
         }
-        else if (attackCooldown > 0)
-        {
+        else if (attackCooldown > 0) {
             attackCooldown -= Time.fixedDeltaTime;
         }
-        else
-        {
+        else {
             attack();
             attackCooldown = TimeBtwAttacks;
         }
         sr.flipX = directionToPlayer.x >= 0;
     }
 
-    protected override void attack() 
-    {
+    protected override void attack() {
         ChangeAnimationState(Assassin_stab);
-        player.GetComponent<Player>().takeDamage(dmg); 
+        player.GetComponent<Player>().takeDamage(dmg);
     }
 
-    protected override void playhitanimation()
-    {
+    protected override void playhitanimation() {
         ChangeAnimationState(Assassin_hit);
     }
 
-    public override void Die() 
-    {
+    public override void Die() {
         enabled = false;
         Color c = hiticon.GetComponent<SpriteRenderer>().material.color;
         c.a = 0;
@@ -71,8 +65,7 @@ public class Assassin : Enemy
         StartCoroutine(selfdestruct());
     }
 
-    IEnumerator selfdestruct()
-    {
+    IEnumerator selfdestruct() {
         yield return new WaitForSeconds(0.5f);
         Destroy(gameObject);
     }

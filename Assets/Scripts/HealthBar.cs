@@ -1,25 +1,20 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-public class HealthBar : MonoBehaviour
-{
+public class HealthBar : MonoBehaviour {
     private Image healthBar;
     private TMP_Text healthText;
     static float health, maxHealth;
     float lerpspeed;
 
-    private void Start()
-    {
+    private void Start() {
         healthBar = GetComponent<Image>();
         healthText = GetComponentInChildren<TMP_Text>();
         maxHealth = Player.GetInstance().GetComponent<Player>().health;
         health = maxHealth;
     }
 
-    private void FixedUpdate()
-    {
+    private void FixedUpdate() {
         healthText.text = health + "/" + maxHealth;
         lerpspeed = 10 * Time.fixedDeltaTime;
 
@@ -28,8 +23,7 @@ public class HealthBar : MonoBehaviour
 
         healthBar.color = Color.Lerp(Color.red, Color.green, health / maxHealth);
     }
-    public static void sethealth(float amt)
-    {
+    public static void sethealth(float amt) {
         health = amt;
     }
 }

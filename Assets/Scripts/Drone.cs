@@ -1,9 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class Drone : Enemy
-{
+public class Drone : Enemy {
     public GameObject projectile;
     public int ammo = 3;
     private bool isdown = false;
@@ -20,39 +17,36 @@ public class Drone : Enemy
         Drone_floorhit = "Drone_floorhit",
         Drone_die = "Drone_die";
 
-    private void Start() 
-    {
+    public override void Spawn() {
+        Color c = sr.material.color;
+        c.a = 1;
+        sr.material.color = c;
+
         mana = 2;
         player = Player.GetInstance();
         animator = GetComponent<Animator>();
-        gameObject.layer = 9; //attackpoint layer
         timetillup = downtime;
+        enabled = true;
     }
-    protected override void unstunned_behaviour() 
-    {
-        if (isdown)
-        {
+    protected override void unstunned_behaviour() {
+        if (isdown) {
             timetillup -= Time.fixedDeltaTime;
-            if (timetillup <= 0)
-            {
+            if (timetillup <= 0) {
                 isdown = false;
                 ChangeAnimationState(Drone_hovering);
                 timetillup = downtime;
                 gameObject.layer = 9;
             }
         }
-        else if (attackCooldown > 0)
-        {
+        else if (attackCooldown > 0) {
             attackCooldown -= Time.fixedDeltaTime;
         }
-        else if (ammo > 0)
-        {
+        else if (ammo > 0) {
             attack();
             attackCooldown = TimeBtwAttacks;
             ammo--;
         }
-        else
-        {
+        else {
             isdown = true;
             ChangeAnimationState(Drone_reactivating);
             attackCooldown = TimeBtwAttacks;
@@ -61,19 +55,16 @@ public class Drone : Enemy
         }
     }
 
-    protected override void attack() 
-    {
+    protected override void attack() {
         //ChangeAnimationState(Drone_shoot);
         Instantiate(projectile, player.transform.position, Quaternion.identity);
     }
 
-    protected override void playhitanimation()
-    {
+    protected override void playhitanimation() {
         ChangeAnimationState(Drone_floorhit);
     }
 
-    public override void Die() 
-    {
+    public override void Die() {
         ChangeAnimationState(Drone_die);
         Destroy(gameObject);
     }
