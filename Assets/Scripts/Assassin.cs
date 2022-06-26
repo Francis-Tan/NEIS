@@ -10,7 +10,6 @@ public class Assassin : Enemy {
         Assassin_reappear = "Assassin_reappear",
         Assassin_move = "Assassin_move",
         Assassin_stab = "Assassin_stab",
-        Assassin_hit = "Assassin_hit",
         Assassin_die = "Assassin_die";
 
     public override void Spawn() {
@@ -19,16 +18,11 @@ public class Assassin : Enemy {
         sr.material.color = c;
 
         mana = 2;
-        player = Player.GetInstance();
-        bc = GetComponent<BoxCollider2D>();
-        animator = GetComponentInChildren<Animator>();
-        rb = GetComponent<Rigidbody2D>();
         gameObject.layer = 3;
         enabled = true;
     }
 
     protected override void unstunned_behaviour() {
-        ChangeAnimationState(Assassin_idle);
         directionToPlayer = (player.transform.position - transform.position).normalized;
         deltapos = moveSpeed * Time.fixedDeltaTime * new Vector2(directionToPlayer.x, directionToPlayer.y);
         if (bc.Distance(player.GetComponent<Collider2D>()).distance > deltapos.magnitude) {
@@ -47,10 +41,11 @@ public class Assassin : Enemy {
     protected override void attack() {
         ChangeAnimationState(Assassin_stab);
         player.GetComponent<Player>().takeDamage(dmg);
-    }
-
-    protected override void playhitanimation() {
-        ChangeAnimationState(Assassin_hit);
+        StartCoroutine(wait());
+        IEnumerator wait() { 
+            yield return new WaitForSeconds(0.15f);
+            if (currentState == Assassin_stab) { ChangeAnimationState(Assassin_idle); }
+        }
     }
 
     public override void Die() {
@@ -63,10 +58,9 @@ public class Assassin : Enemy {
         stunicon.GetComponent<SpriteRenderer>().material.color = c;
         ChangeAnimationState(Assassin_die);
         StartCoroutine(selfdestruct());
-    }
-
-    IEnumerator selfdestruct() {
-        yield return new WaitForSeconds(0.5f);
-        Destroy(gameObject);
+        IEnumerator selfdestruct() {
+            yield return new WaitForSeconds(0.5f);
+            Destroy(gameObject);
+        }
     }
 }

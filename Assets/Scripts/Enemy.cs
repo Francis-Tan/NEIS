@@ -20,13 +20,18 @@ public abstract class Enemy : MonoBehaviour {
     public event EventHandler OnEnemyDeath;
 
     protected Animator animator;
-    private string currentState;
+    protected string currentState;
 
-    private void Awake() {
+    private void Start() {
         enabled = false;
         gameObject.layer = 9; //attackpoint layer
+        player = Player.GetInstance();
+        rb = GetComponent<Rigidbody2D>();
+        bc = GetComponent<BoxCollider2D>();
         sr = GetComponent<SpriteRenderer>();
         if (sr == null) sr = GetComponentInChildren<SpriteRenderer>();
+        animator = GetComponent<Animator>();
+        if (animator == null) animator = GetComponentInChildren<Animator>();
         //you can set the alphas to zero in inspector then get rid of these for later optimisation
 
         Color c = sr.material.color;
@@ -81,14 +86,12 @@ public abstract class Enemy : MonoBehaviour {
     protected abstract void attack();
     public virtual void takeDamage() {
         if (not_hit) {
-            playhitanimation();
             not_hit = false;
             Color c = hiticon.GetComponent<SpriteRenderer>().material.color;
             c.a = 1;
             hiticon.GetComponent<SpriteRenderer>().material.color = c;
         } else { Death(); }
     }
-    protected abstract void playhitanimation();
     public int getmana() {
         return mana;
     }
@@ -100,6 +103,7 @@ public abstract class Enemy : MonoBehaviour {
     }
 
     public void Death() {
+        bc.enabled = false;
         OnEnemyDeath?.Invoke(this, EventArgs.Empty);
         Die();
     }

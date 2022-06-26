@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class Drone : Enemy {
@@ -14,7 +15,6 @@ public class Drone : Enemy {
         Drone_deactivating = "Drone_deactivating",
         Drone_recharging = "Drone_recharging",
         Drone_reactivating = "Drone_reactivating",
-        Drone_floorhit = "Drone_floorhit",
         Drone_die = "Drone_die";
 
     public override void Spawn() {
@@ -23,8 +23,6 @@ public class Drone : Enemy {
         sr.material.color = c;
 
         mana = 2;
-        player = Player.GetInstance();
-        animator = GetComponent<Animator>();
         timetillup = downtime;
         enabled = true;
     }
@@ -38,15 +36,20 @@ public class Drone : Enemy {
                 gameObject.layer = 9;
             }
         }
-        else if (attackCooldown > 0) {
-            attackCooldown -= Time.fixedDeltaTime;
-        }
         else if (ammo > 0) {
-            attack();
-            attackCooldown = TimeBtwAttacks;
-            ammo--;
-        }
-        else {
+            directionToPlayer = (player.transform.position - transform.position).normalized;
+            deltapos = moveSpeed * Time.fixedDeltaTime * new Vector2(directionToPlayer.x, directionToPlayer.y);
+            float distFromPlayer = bc.Distance(player.GetComponent<Collider2D>()).distance;
+            if (distFromPlayer > 9) {
+                rb.MovePosition(rb.position + deltapos);
+            }
+            if (distFromPlayer <= 12 && attackCooldown <= 0) {
+                attack();
+                attackCooldown = TimeBtwAttacks;
+                ammo--;
+            }
+            attackCooldown -= Time.fixedDeltaTime;
+        } else {
             isdown = true;
             ChangeAnimationState(Drone_reactivating);
             attackCooldown = TimeBtwAttacks;
@@ -60,12 +63,12 @@ public class Drone : Enemy {
         Instantiate(projectile, player.transform.position, Quaternion.identity);
     }
 
-    protected override void playhitanimation() {
-        ChangeAnimationState(Drone_floorhit);
-    }
-
     public override void Die() {
         ChangeAnimationState(Drone_die);
-        Destroy(gameObject);
+        StartCoroutine(wait());
+        IEnumerator wait() {
+            yield return new WaitForSeconds(0.35f);
+            Destroy(gameObject);
+        }
     }
 }

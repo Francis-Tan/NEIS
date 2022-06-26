@@ -13,7 +13,6 @@ public class Gunner : Enemy {
         Gunner_shoot = "Gunner_shoot",
         Gunner_reloadidle = "Gunner_reloadidle",
         Gunner_reloadmove = "Gunner_reloadmove", //to remove/replace
-        Gunner_hit = "Gunner_hit",
         Gunner_die = "Gunner_die";
 
     public override void Spawn() {
@@ -25,10 +24,6 @@ public class Gunner : Enemy {
         stuniconpos = stunicon.transform.position;
         stuniconrot = stunicon.transform.rotation;
         mana = 3;
-        player = Player.GetInstance();
-        bc = GetComponent<BoxCollider2D>();
-        animator = GetComponent<Animator>();
-        rb = GetComponent<Rigidbody2D>();
         gameObject.layer = 3;
         enabled = true;
     }
@@ -67,12 +62,8 @@ public class Gunner : Enemy {
     protected override void attack() {
         //ChangeAnimationState(Gunner_shoot);
         gbullet_pooler.FireBullet();
-
     }
 
-    protected override void playhitanimation() {
-        ChangeAnimationState(Gunner_hit);
-    }
     public override void Die() {
         ChangeAnimationState(Gunner_die);
         Destroy(gameObject);

@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 public class Player : MonoBehaviour {
@@ -18,6 +19,7 @@ public class Player : MonoBehaviour {
     public Skill_Icon gun, burst, grapple;
     private int guncost, burstcost, grapplecost;
     public GameObject projectile;
+    private Dagger dagger;
     private GunVisual gunvisual;
     public Transform burstvisual;
 
@@ -36,14 +38,12 @@ public class Player : MonoBehaviour {
         Player_grapple = "Player_grapple";
 
     private void Awake() {
-        if (instance == null) {
-            instance = gameObject;
-            DontDestroyOnLoad(instance);
+        if (instance != null && instance != gameObject) {
+            Debug.Log("Using new player");
+            Destroy(instance);
         }
-        else if (instance != gameObject) {
-            Debug.Log("Player Copy Rejected");
-            Destroy(gameObject);
-        }
+        instance = gameObject;
+        DontDestroyOnLoad(instance);
         sr = GetComponent<SpriteRenderer>();
         rb = GetComponent<Rigidbody2D>();
         input_velocity = Vector2.zero;
@@ -53,6 +53,7 @@ public class Player : MonoBehaviour {
         guncost = gun.skillcost;
         burstcost = burst.skillcost;
         grapplecost = grapple.skillcost;
+        dagger = GetComponentInChildren<Dagger>();
         gunvisual = GetComponentInChildren<GunVisual>();
         Color c = gunvisual.GetComponent<SpriteRenderer>().material.color;
         c.a = 0;
@@ -138,7 +139,8 @@ public class Player : MonoBehaviour {
     }
     private void UpdateVisuals(Vector3 mousepos) {
         sr.flipX = mousepos.x < transform.position.x;
-        gunvisual.GetComponent<SpriteRenderer>().flipY = mousepos.x < transform.position.x;
+        dagger.GetComponent<SpriteRenderer>().flipY = sr.flipX;
+        gunvisual.GetComponent<SpriteRenderer>().flipY = sr.flipX;
         if (input_velocity.x == 0) {
             if (input_velocity.y > 0) {
                 ChangeAnimationState(Player_moveU);
@@ -154,9 +156,9 @@ public class Player : MonoBehaviour {
             ChangeAnimationState(Player_moveLR);
         }
 
-        Color c = attackpoint.GetComponent<SpriteRenderer>().material.color;
+        Color c = dagger.GetComponent<SpriteRenderer>().material.color;
         c.a = attacktype == 0 ? 1 : 0;
-        attackpoint.GetComponent<SpriteRenderer>().material.color = c;
+        dagger.GetComponent<SpriteRenderer>().material.color = c;
 
         c = gunvisual.GetComponent<SpriteRenderer>().material.color;
         c.a = attacktype == 1 ? 1 : 0;
@@ -177,9 +179,16 @@ public class Player : MonoBehaviour {
             if (attacktype == 0) {
                 if (attackCooldown > 0) attackCooldown -= Time.fixedDeltaTime;
                 else {
+                    StartCoroutine(attack());
+                    IEnumerator attack() {
+                        dagger.transform.position += (dagger.transform.position - transform.position).normalized;
+                        yield return new WaitForSeconds(0.1f);
+                        dagger.transform.position -= (dagger.transform.position - transform.position).normalized;
+                    }
                     Collider2D hitenemy = Physics2D.OverlapCircle(attackpoint.position,
                     stabradius, 8); //1000 in binary so only layer 3 colliders are seen
                     if (hitenemy != null) {
+                        dagger.PlayHitAnimation();
                         Enemy enemy = hitenemy.gameObject.GetComponent<Enemy>();
                         updateMana(enemy.getmana());
                         enemy.Death();
@@ -219,6 +228,7 @@ public class Player : MonoBehaviour {
         HealthBar.sethealth(health);
         if (health <= 0) {
             enabled = false;
+            GetComponent<BoxCollider2D>().enabled = false;
             ChangeAnimationState(Player_die);
         }
     }

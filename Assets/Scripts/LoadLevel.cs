@@ -26,6 +26,7 @@ public class LoadLevel : MonoBehaviour
 
     private void Update() {
         if (Input.GetKeyDown(KeyCode.N)) {
+            GetComponent<SpriteRenderer>().enabled = true;
             GetComponent<Collider2D>().enabled = true;
         }
     }
