@@ -24,7 +24,7 @@ public class Teleporter : Enemy {
         sr.material.color = c;
 
         mana = 2;
-        teleportRadius = (bc.size.magnitude + player.GetComponent<BoxCollider2D>().size.magnitude)/2;
+        teleportRadius = (bc.size.magnitude + player.GetComponent<BoxCollider2D>().size.magnitude) / 2;
         pBoxSize = player.GetComponent<BoxCollider2D>().size + 2 * bc.size;
         gameObject.layer = 3;
         enabled = true;
@@ -32,20 +32,20 @@ public class Teleporter : Enemy {
 
     protected override void unstunned_behaviour() {
         if (disappearTimer > 0) { disappearTimer -= Time.fixedDeltaTime; }
-        else if (!sr.enabled) { 
-            appear();
-        }
+        else if (!sr.enabled) { appear(); }
         else if (appearTimer > 0) { attacking_behaviour(); appearTimer -= Time.fixedDeltaTime; }
         else {
             canAttack = false;
-            disappear(); 
-            disappearTimer = timeTillDisappear; 
-            appearTimer = timeTillAppear; 
+            rb.velocity = Vector2.zero;
+            disappear();
+            disappearTimer = timeTillDisappear;
+            appearTimer = timeTillAppear;
         }
     }
 
     private void disappear() {
         bc.enabled = false;
+        hiticon.GetComponent<SpriteRenderer>().enabled = false;
         ChangeAnimationState(Assassin_disappear);
         StartCoroutine(disappear());
         IEnumerator disappear() {
@@ -61,13 +61,14 @@ public class Teleporter : Enemy {
             Physics2D.OverlapBox(player.transform.position, bc.size, 0, 1) == null) {
             //this is supposed to be transform.position, however it leads to annoying ganging-up situations
             sr.enabled = true;
+            hiticon.GetComponent<SpriteRenderer>().enabled = true;
             ChangeAnimationState(Assassin_reappear);
             StartCoroutine(reappear());
             IEnumerator reappear() {
                 yield return new WaitForSeconds(0.4f);
                 bc.enabled = true;
                 if (currentState != Assassin_stab) ChangeAnimationState(Assassin_idle);
-                yield return new WaitForSeconds(0.1f);
+                yield return new WaitForSeconds(0.125f);
                 canAttack = true;
             }
         }

@@ -52,6 +52,7 @@ public abstract class Enemy : MonoBehaviour {
 
     private void FixedUpdate() {
         if (stunned) {
+            rb.velocity = Vector2.zero;
             stunned_behaviour();
         }
         else {

@@ -2,6 +2,11 @@ using UnityEngine;
 
 public class Spawner : MonoBehaviour {
     [SerializeField] private Enemy[] enemies;
+    private LoadLevel loadlevel;
+    private void Start() {
+        loadlevel = LoadLevel.instance;
+        loadlevel.enemycount += enemies.Length;
+    }
 
     private void OnTriggerEnter2D(Collider2D collision) {
         if (collision.GetComponent<Player>() != null) {
@@ -12,8 +17,6 @@ public class Spawner : MonoBehaviour {
     }
 
     private void StartBattle() {
-        LoadLevel loadlevel = LoadLevel.instance;
-        loadlevel.enemycount = enemies.Length;
         foreach (Enemy enemy in enemies) {
             loadlevel.takenoteof(enemy);
             enemy.Spawn();

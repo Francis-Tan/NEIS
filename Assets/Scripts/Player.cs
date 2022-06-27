@@ -16,8 +16,8 @@ public class Player : MonoBehaviour {
     public float stabradius = 0.4f;
     public float TimeBtwAttacks = 0;
     private float attackCooldown;
-    public Skill_Icon gun, burst, grapple;
-    private int guncost, burstcost, grapplecost;
+    public Skill_Icon gun, burst;// grapple;
+    private int guncost, burstcost;// grapplecost;
     public GameObject projectile;
     private Dagger dagger;
     private GunVisual gunvisual;
@@ -52,7 +52,7 @@ public class Player : MonoBehaviour {
         animator = GetComponent<Animator>();
         guncost = gun.skillcost;
         burstcost = burst.skillcost;
-        grapplecost = grapple.skillcost;
+        //grapplecost = grapple.skillcost;
         dagger = GetComponentInChildren<Dagger>();
         gunvisual = GetComponentInChildren<GunVisual>();
         Color c = gunvisual.GetComponent<SpriteRenderer>().material.color;
@@ -91,7 +91,7 @@ public class Player : MonoBehaviour {
         if (Input.GetMouseButtonDown(1)) {
             gun.pressed(false);
             burst.pressed(false);
-            grapple.pressed(false);
+            //grapple.pressed(false);
             attacktype = 0;
         }
         else if (Input.GetKeyDown(KeyCode.Q)) {
@@ -102,7 +102,7 @@ public class Player : MonoBehaviour {
             else {
                 gun.pressed(true);
                 burst.pressed(false);
-                grapple.pressed(false);
+                //grapple.pressed(false);
                 attacktype = 1;
             }
         }
@@ -114,11 +114,11 @@ public class Player : MonoBehaviour {
             else {
                 gun.pressed(false);
                 burst.pressed(true);
-                grapple.pressed(false);
+                //grapple.pressed(false);
                 attacktype = 2;
             }
         }
-        else if (Input.GetKeyDown(KeyCode.R)) {
+        /**else if (Input.GetKeyDown(KeyCode.R)) {
             if (attacktype == 3) {
                 grapple.pressed(false);
                 attacktype = 0;
@@ -135,7 +135,7 @@ public class Player : MonoBehaviour {
         }
         if (Input.GetKeyDown(KeyCode.G)) {
             takeDamage(health);
-        }
+        }*/
     }
     private void UpdateVisuals(Vector3 mousepos) {
         sr.flipX = mousepos.x < transform.position.x;
@@ -214,12 +214,12 @@ public class Player : MonoBehaviour {
                     burst.reset();
                 }
             }
-            else {
+            /**else {
                 if (currentmana >= grapplecost && grapple.isready()) {
                     updateMana(-grapplecost);
                     grapple.reset();
                 }
-            }
+            }*/
         }
     }
 
@@ -228,7 +228,8 @@ public class Player : MonoBehaviour {
         HealthBar.sethealth(health);
         if (health <= 0) {
             enabled = false;
-            GetComponent<BoxCollider2D>().enabled = false;
+            GetComponent<Collider2D>().enabled = false;
+            rb.velocity = Vector2.zero;
             ChangeAnimationState(Player_die);
         }
     }
@@ -244,6 +245,6 @@ public class Player : MonoBehaviour {
         ManaBar.setmana(currentmana = Mathf.Min(currentmana + amt, maxmana));
         gun.updatesprite(currentmana);
         burst.updatesprite(currentmana);
-        grapple.updatesprite(currentmana);
+        //grapple.updatesprite(currentmana);
     }
 }

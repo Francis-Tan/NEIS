@@ -18,7 +18,11 @@ public class Gunner_Bullet : MonoBehaviour {
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
     }
-
+    private void ChangeAnimationState(string newState) {
+        if (currentState == newState) return;
+        animator.Play(newState);
+        currentState = newState;
+    }
     public void reset(Vector3 position, Quaternion rotation) {
         transform.position = position;
         transform.rotation = rotation;

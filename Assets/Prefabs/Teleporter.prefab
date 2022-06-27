@@ -269,7 +269,7 @@ MonoBehaviour:
   stunicon: {fileID: 4502042360955893459}
   moveSpeed: 11
   TimeBtwAttacks: 0.25
-  dmg: 10
+  dmg: 5
 --- !u!1 &8838581152153875497
 GameObject:
   m_ObjectHideFlags: 0

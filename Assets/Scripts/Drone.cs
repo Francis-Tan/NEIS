@@ -31,7 +31,7 @@ public class Drone : Enemy {
             timetillup -= Time.fixedDeltaTime;
             if (timetillup <= 0) {
                 isdown = false;
-                ChangeAnimationState(Drone_hovering);
+                if (currentState == Drone_reactivating) ChangeAnimationState(Drone_hovering);
                 timetillup = downtime;
                 gameObject.layer = 9;
             }
@@ -49,7 +49,8 @@ public class Drone : Enemy {
                 ammo--;
             }
             attackCooldown -= Time.fixedDeltaTime;
-        } else {
+        }
+        else {
             isdown = true;
             ChangeAnimationState(Drone_reactivating);
             attackCooldown = TimeBtwAttacks;
