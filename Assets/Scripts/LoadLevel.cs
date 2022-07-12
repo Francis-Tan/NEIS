@@ -24,17 +24,18 @@ public class LoadLevel : MonoBehaviour
         }
     }
 
-    /**private void Update() {
+    private void Update() {
         if (Input.GetKeyDown(KeyCode.N)) {
             GetComponent<SpriteRenderer>().enabled = true;
             GetComponent<Collider2D>().enabled = true;
         }
-    }*/
+    }
     
     private void OnTriggerEnter2D(Collider2D other) {
         if (other.GetComponent<Player>() != null) {
             Player.GetInstance().transform.position = spawnPosition;
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+            if (SceneManager.GetActiveScene().buildIndex == 4) other.GetComponent<Player>().gameover();
+            else SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
         }
     }
 }

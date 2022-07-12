@@ -5,11 +5,12 @@ public class Player : MonoBehaviour {
     // GetInstance must be called on start, otherwise the caller may awake before player
     private static GameObject instance;
     private SpriteRenderer sr;
+    public static Renderer[] renderers;
     private Rigidbody2D rb; //rigidbody movement better for collision
-    public float moveSpeed = 13;
+    public float moveSpeed = 23;
     private Vector2 input_velocity;
     public int health = 10;
-    private int currentmana;
+    public int currentmana;
     public int maxmana = 10;
     private int attacktype;
     public Transform attackpoint;
@@ -39,12 +40,13 @@ public class Player : MonoBehaviour {
 
     private void Awake() {
         if (instance != null && instance != gameObject) {
-            Debug.Log("Using new player");
+            Debug.Log("Deleting old player found");
             Destroy(instance);
         }
         instance = gameObject;
         DontDestroyOnLoad(instance);
         sr = GetComponent<SpriteRenderer>();
+        renderers = GetComponentsInChildren<Renderer>();
         rb = GetComponent<Rigidbody2D>();
         input_velocity = Vector2.zero;
         attackCooldown = TimeBtwAttacks;
@@ -69,6 +71,7 @@ public class Player : MonoBehaviour {
 
     private void ChangeAnimationState(string newState) {
         if (currentState == newState) return;
+        //Debug.Log(newState);
         animator.Play(newState);
         currentState = newState;
     }
@@ -80,7 +83,6 @@ public class Player : MonoBehaviour {
         attackpoint.RotateAround(transform.position, Vector3.forward,
             Vector2.SignedAngle(attackpoint.position - transform.position, mousepos - transform.position));
         rb.MovePosition(rb.position + input_velocity * (moveSpeed * Time.fixedDeltaTime));
-
         UpdateSkillsandAttacktype();
         UpdateVisuals(mousepos);
         Attack();
@@ -129,13 +131,9 @@ public class Player : MonoBehaviour {
                 grapple.pressed(true);
                 attacktype = 3;
             }
-        }
-        if (Input.GetKeyDown(KeyCode.F)) {
-            updateMana(maxmana - currentmana);
-        }
-        if (Input.GetKeyDown(KeyCode.G)) {
-            takeDamage(health);
         }*/
+        if (Input.GetKeyDown(KeyCode.F)) increaseMana(maxmana - currentmana);
+        if (Input.GetKeyDown(KeyCode.G)) takeDamage(health);
     }
     private void UpdateVisuals(Vector3 mousepos) {
         sr.flipX = mousepos.x < transform.position.x;
@@ -148,7 +146,9 @@ public class Player : MonoBehaviour {
             else if (input_velocity.y < 0) {
                 ChangeAnimationState(Player_moveD);
             }
-            else {
+            else if (enabled) {
+                //check is to prevent overloading animator during death and making
+                //the death animation fall under player_idle
                 ChangeAnimationState(Player_idle);
             }
         }
@@ -190,7 +190,7 @@ public class Player : MonoBehaviour {
                     if (hitenemy != null) {
                         dagger.PlayHitAnimation();
                         Enemy enemy = hitenemy.gameObject.GetComponent<Enemy>();
-                        updateMana(enemy.getmana());
+                        increaseMana(enemy.getmana());
                         enemy.Death();
                     }
                     attackCooldown = TimeBtwAttacks;
@@ -200,7 +200,7 @@ public class Player : MonoBehaviour {
                 if (currentmana >= guncost && gun.isready()) {
                     gunvisual.PlayShootAnimation();
                     Instantiate(projectile, attackpoint.position, Quaternion.identity);
-                    updateMana(-guncost);
+                    increaseMana(-guncost);
                     gun.reset();
                 }
             }
@@ -208,9 +208,9 @@ public class Player : MonoBehaviour {
                 if (currentmana >= burstcost && burst.isready()) {
                     Collider2D[] enemies = Physics2D.OverlapCircleAll(burstvisual.position, 4.35f, 8);
                     for (int i = 0; i < enemies.Length; ++i) {
-                        enemies[i].gameObject.gameObject.GetComponent<Enemy>().becomestunned();
+                        enemies[i].gameObject.GetComponent<Enemy>().becomestunned();
                     }
-                    updateMana(-burstcost);
+                    increaseMana(-burstcost);
                     burst.reset();
                 }
             }
@@ -224,27 +224,47 @@ public class Player : MonoBehaviour {
     }
 
     public void takeDamage(int dmg) {
-        health -= dmg;
-        HealthBar.sethealth(health);
+        HealthBar.sethealth(health -= dmg);
         if (health <= 0) {
             enabled = false;
             GetComponent<Collider2D>().enabled = false;
             rb.velocity = Vector2.zero;
             ChangeAnimationState(Player_die);
+            StartCoroutine(waitForGameOver());
+            IEnumerator waitForGameOver() {
+                yield return new WaitForSeconds(0.65f);
+                gameover();
+            }
         }
     }
 
-    //called after the player_die animation
-    public void gameover() {
-        SceneManager.LoadScene("GameOver");
-        Destroy(gameObject);
-        Destroy(PlayerInfoCanvas.instance);
-    }
-
-    private void updateMana(int amt) {
+    private void increaseMana(int amt) {
         ManaBar.setmana(currentmana = Mathf.Min(currentmana + amt, maxmana));
         gun.updatesprite(currentmana);
         burst.updatesprite(currentmana);
         //grapple.updatesprite(currentmana);
+    }
+
+    public void gameover() {
+        //but then we should reset the canvas or set all skills as ready on start
+        sr.enabled = false;
+        dagger.GetComponent<SpriteRenderer>().enabled = false;
+        gunvisual.GetComponent<SpriteRenderer>().enabled = false;
+        burstvisual.GetComponent<SpriteRenderer>().enabled = false;
+        PlayerInfoCanvas.instance.GetComponent<Canvas>().enabled = false;
+        SceneManager.LoadScene("GameOver");
+    }
+
+    public void spawn(Vector2 pos, int health, int mana) {
+        GetComponent<Collider2D>().enabled = true;
+        rb.velocity = Vector2.zero;
+        transform.position = pos;
+        HealthBar.sethealth(this.health = health);
+        ManaBar.setmana(currentmana = mana);
+        sr.enabled = true;
+        dagger.GetComponent<SpriteRenderer>().enabled = true;
+        gunvisual.GetComponent<SpriteRenderer>().enabled = true;
+        burstvisual.GetComponent<SpriteRenderer>().enabled = true;
+        enabled = true;
     }
 }

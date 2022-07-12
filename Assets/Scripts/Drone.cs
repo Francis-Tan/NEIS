@@ -30,7 +30,9 @@ public class Drone : Enemy {
         if (isdown) {
             timetillup -= Time.fixedDeltaTime;
             if (timetillup <= 0) {
+                rb.isKinematic = false;
                 isdown = false;
+                ammo = 3;
                 if (currentState == Drone_reactivating) ChangeAnimationState(Drone_hovering);
                 timetillup = downtime;
                 gameObject.layer = 9;
@@ -43,19 +45,22 @@ public class Drone : Enemy {
             if (distFromPlayer > 9) {
                 rb.MovePosition(rb.position + deltapos);
             }
-            if (distFromPlayer <= 12 && attackCooldown <= 0) {
+            if (attackCooldown > 0) attackCooldown -= Time.fixedDeltaTime;
+            else {
                 attack();
                 attackCooldown = TimeBtwAttacks;
                 ammo--;
             }
-            attackCooldown -= Time.fixedDeltaTime;
         }
         else {
-            isdown = true;
-            ChangeAnimationState(Drone_reactivating);
-            attackCooldown = TimeBtwAttacks;
-            ammo = 3;
-            gameObject.layer = 3;
+            if (attackCooldown > 0) attackCooldown -= Time.fixedDeltaTime;
+            else {
+                rb.isKinematic = true;
+                isdown = true;
+                ChangeAnimationState(Drone_reactivating);
+                attackCooldown = TimeBtwAttacks;
+                gameObject.layer = 3;
+            }
         }
     }
 

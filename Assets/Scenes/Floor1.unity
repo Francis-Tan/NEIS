@@ -302,7 +302,7 @@ AudioListener:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 519420028}
-  m_Enabled: 1
+  m_Enabled: 0
 --- !u!20 &519420031
 Camera:
   m_ObjectHideFlags: 0
@@ -982,6 +982,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1555915238}
     m_Modifications:
+    - target: {fileID: 959039463, guid: 4e49d67030bafbb4ca94bad45a3dc0be, type: 3}
+      propertyPath: cooldown
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 959039463, guid: 4e49d67030bafbb4ca94bad45a3dc0be, type: 3}
+      propertyPath: skillcost
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8324746745101536314, guid: 4e49d67030bafbb4ca94bad45a3dc0be, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5

@@ -150,6 +150,7 @@ Transform:
   m_Children:
   - {fileID: 3233521212741067328}
   - {fileID: 414248801446506034}
+  - {fileID: 1149790861662533425}
   m_Father: {fileID: 8160669020383938605}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -363,13 +364,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5518474159108916662}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.06, y: 0.32, z: 0}
-  m_LocalScale: {x: 8.726884, y: 8.726884, z: 8.726884}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -4.0750003, y: 0.79999983, z: 0}
+  m_LocalScale: {x: 21.817207, y: 21.81721, z: 21.81721}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 8160669020383938605}
-  m_RootOrder: 1
+  m_Father: {fileID: 4865906067203039791}
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &247638331268898222
 SpriteRenderer:
@@ -453,7 +454,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8160669020383938605}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &9187814688703332285
 SpriteRenderer:
@@ -541,7 +542,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4865906067203039791}
-  - {fileID: 1149790861662533425}
   - {fileID: 151264684318494573}
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -610,7 +610,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 0.0001
+  m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 0
@@ -631,8 +631,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08bb4a9a1dc2a9148881954eabc8c102, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 13
+  moveSpeed: 23
   health: 50
+  currentmana: 0
   maxmana: 10
   attackpoint: {fileID: 4865906067203039791}
   stabradius: 0.3

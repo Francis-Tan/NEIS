@@ -142,7 +142,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 2
+  m_text: 1
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -249,7 +249,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: -8.0582, y: -8.0582}
+  m_AnchoredPosition: {x: -8.058228, y: -8.058228}
   m_SizeDelta: {x: 83.8836, y: 83.8836}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8324746745101536319
@@ -303,7 +303,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   icon: {fileID: 5678087438602071197}
-  skillcost: 2
+  skillcost: 1
   notready: {fileID: 21300000, guid: 441509ebf0c4391448f96ca4c14008ea, type: 3}
   ready: {fileID: 21300000, guid: 86eed8595e1ef2445bfea185703a3bae, type: 3}
-  cooldown: 0.5
+  cooldown: 0.1

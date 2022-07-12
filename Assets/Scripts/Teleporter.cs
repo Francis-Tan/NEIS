@@ -79,11 +79,9 @@ public class Teleporter : Enemy {
         deltapos = moveSpeed * Time.fixedDeltaTime * new Vector2(directionToPlayer.x, directionToPlayer.y);
         if (bc.Distance(player.GetComponent<Collider2D>()).distance > deltapos.magnitude) {
             rb.MovePosition(rb.position + deltapos);
-        }
-        else if (attackCooldown > 0) {
+        } else if (attackCooldown > 0) {
             attackCooldown -= Time.fixedDeltaTime;
-        }
-        else if (canAttack) {
+        } else if (canAttack) {
             attack();
             attackCooldown = TimeBtwAttacks;
         }
@@ -102,6 +100,7 @@ public class Teleporter : Enemy {
 
     public override void Die() {
         enabled = false;
+        rb.velocity = Vector2.zero;
         Color c = hiticon.GetComponent<SpriteRenderer>().material.color;
         c.a = 0;
         hiticon.GetComponent<SpriteRenderer>().material.color = c;

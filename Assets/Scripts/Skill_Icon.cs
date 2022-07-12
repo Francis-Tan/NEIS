@@ -15,7 +15,8 @@ public class Skill_Icon : MonoBehaviour {
         countdownring = GetComponent<Image>();
         costtxt = GetComponentInChildren<TMP_Text>();
         costtxt.text = "" + skillcost;
-        reset();
+        countdownring.fillAmount = 1;
+        timer = cooldown;
     }
     public void FixedUpdate() {
         if (timer < cooldown) {

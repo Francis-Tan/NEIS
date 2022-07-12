@@ -10,6 +10,7 @@ public class Spawner : MonoBehaviour {
 
     private void OnTriggerEnter2D(Collider2D collision) {
         if (collision.GetComponent<Player>() != null) {
+            Destroy(Checkpoint.instance);
             GetComponent<Collider2D>().enabled = false;
             GetComponent<SpriteRenderer>().enabled = false;
             StartBattle();
@@ -21,5 +22,6 @@ public class Spawner : MonoBehaviour {
             loadlevel.takenoteof(enemy);
             enemy.Spawn();
         }
+        Destroy(gameObject);
     }
 }
