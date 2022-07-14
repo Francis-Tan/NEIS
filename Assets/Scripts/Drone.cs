@@ -71,6 +71,7 @@ public class Drone : Enemy {
 
     public override void Die() {
         ChangeAnimationState(Drone_die);
+        AudioManager.instance.PlaySound(Sound.drone_die);
         StartCoroutine(wait());
         IEnumerator wait() {
             yield return new WaitForSeconds(0.35f);

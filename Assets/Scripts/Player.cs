@@ -39,9 +39,8 @@ public class Player : MonoBehaviour {
         Player_grapple = "Player_grapple";
 
     private void Awake() {
-        if (instance != null && instance != gameObject) {
-            Debug.Log("Deleting old player found");
-            Destroy(instance);
+        if (instance != null) {
+            Destroy(gameObject); return;
         }
         instance = gameObject;
         DontDestroyOnLoad(instance);
@@ -181,9 +180,11 @@ public class Player : MonoBehaviour {
                 else {
                     StartCoroutine(attack());
                     IEnumerator attack() {
-                        dagger.transform.position += (dagger.transform.position - transform.position).normalized;
+                        //could use dagger.transform.localPosition which should be marginally faster
+                        //but local scaling weakens effect
+                        attackpoint.transform.position += (attackpoint.transform.position - transform.position).normalized;
                         yield return new WaitForSeconds(0.1f);
-                        dagger.transform.position -= (dagger.transform.position - transform.position).normalized;
+                        attackpoint.transform.position -= (attackpoint.transform.position - transform.position).normalized;
                     }
                     Collider2D hitenemy = Physics2D.OverlapCircle(attackpoint.position,
                     stabradius, 8); //1000 in binary so only layer 3 colliders are seen
@@ -199,6 +200,7 @@ public class Player : MonoBehaviour {
             else if (attacktype == 1) {
                 if (currentmana >= guncost && gun.isready()) {
                     gunvisual.PlayShootAnimation();
+                    AudioManager.instance.PlaySound(Sound.player_gunfire);
                     Instantiate(projectile, attackpoint.position, Quaternion.identity);
                     increaseMana(-guncost);
                     gun.reset();
@@ -246,7 +248,6 @@ public class Player : MonoBehaviour {
     }
 
     public void gameover() {
-        //but then we should reset the canvas or set all skills as ready on start
         sr.enabled = false;
         dagger.GetComponent<SpriteRenderer>().enabled = false;
         gunvisual.GetComponent<SpriteRenderer>().enabled = false;
@@ -261,6 +262,8 @@ public class Player : MonoBehaviour {
         transform.position = pos;
         HealthBar.sethealth(this.health = health);
         ManaBar.setmana(currentmana = mana);
+        gun.initialize(); burst.initialize();
+        gun.updatesprite(mana); burst.updatesprite(mana);
         sr.enabled = true;
         dagger.GetComponent<SpriteRenderer>().enabled = true;
         gunvisual.GetComponent<SpriteRenderer>().enabled = true;

@@ -19,7 +19,6 @@ public class Gunner : Enemy {
         Color c = sr.material.color;
         c.a = 1;
         sr.material.color = c;
-
         hiticonpos = hiticon.transform.position;
         stuniconpos = stunicon.transform.position;
         stuniconrot = stunicon.transform.rotation;
@@ -61,6 +60,7 @@ public class Gunner : Enemy {
 
     protected override void attack() {
         //ChangeAnimationState(Gunner_shoot);
+        AudioManager.instance.PlaySound(Sound.gunner_shoot);
         gbullet_pooler.FireBullet();
     }
 

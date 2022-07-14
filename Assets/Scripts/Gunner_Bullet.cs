@@ -44,6 +44,7 @@ public class Gunner_Bullet : MonoBehaviour {
         }
         else if (runinto.CompareTag("Blocking")) {
             //ChangeAnimationState(EB_explode);
+            AudioManager.instance.PlaySound(Sound.bullet_hitwall);
             if (destroy) Destroy(gameObject);
             else gameObject.SetActive(false);
         }

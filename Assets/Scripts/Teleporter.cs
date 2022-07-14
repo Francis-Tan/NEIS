@@ -22,7 +22,6 @@ public class Teleporter : Enemy {
         Color c = sr.material.color;
         c.a = 1;
         sr.material.color = c;
-
         mana = 2;
         teleportRadius = (bc.size.magnitude + player.GetComponent<BoxCollider2D>().size.magnitude) / 2;
         pBoxSize = player.GetComponent<BoxCollider2D>().size + 2 * bc.size;
@@ -89,6 +88,7 @@ public class Teleporter : Enemy {
     }
 
     protected override void attack() {
+        AudioManager.instance.PlaySound(Sound.assassin_stab);
         ChangeAnimationState(Assassin_stab);
         player.GetComponent<Player>().takeDamage(dmg);
         StartCoroutine(wait());

@@ -270,6 +270,7 @@ MonoBehaviour:
   moveSpeed: 11
   TimeBtwAttacks: 0.25
   dmg: 5
+  stab: {fileID: 8300000, guid: e76c20b30d54f4050a459a896a42d83b, type: 3}
 --- !u!1 &8838581152153875497
 GameObject:
   m_ObjectHideFlags: 0

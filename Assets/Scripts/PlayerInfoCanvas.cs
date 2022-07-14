@@ -6,9 +6,8 @@ public class PlayerInfoCanvas : MonoBehaviour
     public static Renderer[] renderers;
     private void Awake()
     {
-        if (instance != null && instance != gameObject) {
-            Debug.Log("Deleting old canvas found");
-            Destroy(instance);
+        if (instance != null) {
+            Destroy(gameObject); return;
         }
         instance = gameObject;
         renderers = GetComponentsInChildren<Renderer>();

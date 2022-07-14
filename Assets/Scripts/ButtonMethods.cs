@@ -6,7 +6,7 @@ public class ButtonMethods : MonoBehaviour {
      * For each button, We could also set renderer.material.color to colors 
      * in the methods OnMouseEnter() OnMouseExit() OnMouseClick()
      */
-    public static int checkpointIndex = 1, savedHealth, savedMana;
+    public static int checkpointIndex = 1, savedHealth = 50, savedMana = 0;
     public void PlayGame() {
         SceneManager.LoadScene(1);
     }

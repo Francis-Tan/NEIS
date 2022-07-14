@@ -15,15 +15,17 @@ public class Skill_Icon : MonoBehaviour {
         countdownring = GetComponent<Image>();
         costtxt = GetComponentInChildren<TMP_Text>();
         costtxt.text = "" + skillcost;
+        initialize();
+    }
+    public void initialize() {
         countdownring.fillAmount = 1;
         timer = cooldown;
-    }
-    public void FixedUpdate() {
+    } 
+    public void FixedUpdate() { //why not update
         if (timer < cooldown) {
             timer += Time.fixedDeltaTime;
             countdownring.fillAmount = timer / cooldown;
-        }
-        else {
+        } else {
             countdownring.color = Color.white;
         }
     }
