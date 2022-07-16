@@ -16,7 +16,8 @@ public class Player_Bullet : MonoBehaviour {
         Vector2 mousepos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Vector2 tpos = transform.position;
         Vector2 playerpos = Player.GetInstance().transform.position;
-        dir = (mousepos - playerpos).magnitude > 1.69 ? moveSpeed * (mousepos - tpos).normalized : moveSpeed * (tpos - mousepos).normalized;
+        dir = (mousepos - playerpos).SqrMagnitude() >= (tpos - playerpos).SqrMagnitude() ? moveSpeed * (mousepos - tpos).normalized
+            : moveSpeed * (tpos - mousepos).normalized;
         transform.eulerAngles = new Vector3(0, 0, Vector2.SignedAngle(Vector2.right, dir));
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();

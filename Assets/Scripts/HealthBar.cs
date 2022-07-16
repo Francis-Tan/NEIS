@@ -2,13 +2,12 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 public class HealthBar : MonoBehaviour {
-    private Image healthBar;
+    public Image healthBar;
     private TMP_Text healthText;
     static float health, maxHealth;
     float lerpspeed;
 
     private void Start() {
-        healthBar = GetComponent<Image>();
         healthText = GetComponentInChildren<TMP_Text>();
         maxHealth = Player.GetInstance().GetComponent<Player>().health;
         health = maxHealth;

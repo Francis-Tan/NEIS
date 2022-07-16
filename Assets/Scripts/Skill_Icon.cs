@@ -2,49 +2,42 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 public class Skill_Icon : MonoBehaviour {
-    private Image countdownring;
-    public Image icon;
-    private TMP_Text costtxt;
     public int skillcost;
+    public Image timerRing;
+    public Image icon;
     public Sprite notready;
     public Sprite ready;
     public float cooldown = 1f;
     private float timer;
 
     private void Start() {
-        countdownring = GetComponent<Image>();
-        costtxt = GetComponentInChildren<TMP_Text>();
-        costtxt.text = "" + skillcost;
         initialize();
     }
     public void initialize() {
-        countdownring.fillAmount = 1;
-        timer = cooldown;
+        timerRing.fillAmount = 0;
+        timer = 0;
     } 
     public void FixedUpdate() { //why not update
-        if (timer < cooldown) {
-            timer += Time.fixedDeltaTime;
-            countdownring.fillAmount = timer / cooldown;
-        } else {
-            countdownring.color = Color.white;
+        if (timer > 0) {
+            timer -= Time.fixedDeltaTime;
+            timerRing.fillAmount = timer / cooldown;
         }
     }
 
     public void pressed(bool activating) {
-        costtxt.color = activating ? Color.magenta : Color.white;
+        icon.sprite = activating ? ready : notready;
     }
 
     public void reset() {
-        countdownring.fillAmount = 0;
-        countdownring.color = Color.blue;
-        timer = 0;
+        timerRing.fillAmount = 1;
+        timer = cooldown;
     }
 
     public void updatesprite(int mana) {
-        icon.sprite = mana < skillcost ? notready : ready;
+        //timerRing.color = mana < skillcost ? Color.black : Color.white;
     }
 
     public bool isready() {
-        return timer >= cooldown;
+        return timer <= 0;
     }
 }

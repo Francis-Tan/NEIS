@@ -208,6 +208,7 @@ public class Player : MonoBehaviour {
             }
             else if (attacktype == 2) {
                 if (currentmana >= burstcost && burst.isready()) {
+                    StartCoroutine(Camera.main.GetComponent<CameraEffects>().Shake());
                     Collider2D[] enemies = Physics2D.OverlapCircleAll(burstvisual.position, 4.35f, 8);
                     for (int i = 0; i < enemies.Length; ++i) {
                         enemies[i].gameObject.GetComponent<Enemy>().becomestunned();
@@ -241,7 +242,7 @@ public class Player : MonoBehaviour {
     }
 
     private void increaseMana(int amt) {
-        ManaBar.setmana(currentmana = Mathf.Min(currentmana + amt, maxmana));
+        ManaBar.instance.updateBars(currentmana = Mathf.Min(currentmana + amt, maxmana));
         gun.updatesprite(currentmana);
         burst.updatesprite(currentmana);
         //grapple.updatesprite(currentmana);
@@ -261,7 +262,7 @@ public class Player : MonoBehaviour {
         rb.velocity = Vector2.zero;
         transform.position = pos;
         HealthBar.sethealth(this.health = health);
-        ManaBar.setmana(currentmana = mana);
+        ManaBar.instance.updateBars(currentmana = mana);
         gun.initialize(); burst.initialize();
         gun.updatesprite(mana); burst.updatesprite(mana);
         sr.enabled = true;

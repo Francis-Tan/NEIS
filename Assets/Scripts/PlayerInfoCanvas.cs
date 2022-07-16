@@ -7,7 +7,8 @@ public class PlayerInfoCanvas : MonoBehaviour
     private void Awake()
     {
         if (instance != null) {
-            Destroy(gameObject); return;
+            Destroy(gameObject); 
+            return;
         }
         instance = gameObject;
         renderers = GetComponentsInChildren<Renderer>();
