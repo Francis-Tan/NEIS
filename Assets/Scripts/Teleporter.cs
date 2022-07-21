@@ -43,6 +43,7 @@ public class Teleporter : Enemy {
     }
 
     private void disappear() {
+        AudioManager.instance.PlaySound(Sound.assassin_disappear);
         bc.enabled = false;
         hiticon.GetComponent<SpriteRenderer>().enabled = false;
         ChangeAnimationState(Assassin_disappear);
@@ -58,7 +59,8 @@ public class Teleporter : Enemy {
                 + new Vector3(Mathf.Cos(angle), Mathf.Sin(angle)) * teleportRadius;
         if (Mathf.Abs(transform.position.x) < 21 && Mathf.Abs(transform.position.y) < 14 &&
             Physics2D.OverlapBox(player.transform.position, bc.size, 0, 1) == null) {
-            //this is supposed to be transform.position, however it leads to annoying ganging-up situations
+            //player.transform.position should be transform.position, however it leads to annoying ganging-up situations
+            AudioManager.instance.PlaySound(Sound.assassin_appear);
             sr.enabled = true;
             hiticon.GetComponent<SpriteRenderer>().enabled = true;
             ChangeAnimationState(Assassin_reappear);
@@ -66,7 +68,7 @@ public class Teleporter : Enemy {
             IEnumerator reappear() {
                 yield return new WaitForSeconds(0.4f);
                 bc.enabled = true;
-                if (currentState != Assassin_stab) ChangeAnimationState(Assassin_idle);
+                ChangeAnimationState(Assassin_idle);
                 yield return new WaitForSeconds(0.125f);
                 canAttack = true;
             }
@@ -95,6 +97,7 @@ public class Teleporter : Enemy {
         IEnumerator wait() {
             yield return new WaitForSeconds(0.15f);
             if (currentState == Assassin_stab) { ChangeAnimationState(Assassin_idle); }
+            //check makes it smoother (changes can be sudden otherwise, idk why) and ensures death anim plays
         }
     }
 
@@ -107,6 +110,7 @@ public class Teleporter : Enemy {
         c = stunicon.GetComponent<SpriteRenderer>().material.color;
         c.a = 0;
         stunicon.GetComponent<SpriteRenderer>().material.color = c;
+        AudioManager.instance.PlaySound(Sound.assassin_die);
         ChangeAnimationState(Assassin_die);
         StartCoroutine(selfdestruct());
         IEnumerator selfdestruct() {

@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class Drone : Enemy {
     public GameObject projectile;
+    public SpriteRenderer shield;
     public int ammo = 3;
     private bool isdown = false;
     public float downtime;
@@ -25,17 +26,23 @@ public class Drone : Enemy {
         mana = 2;
         timetillup = downtime;
         enabled = true;
+        shield.enabled = true;
+        //rb.isKinematic = true;
+        gameObject.layer = 0;
+        gameObject.tag = "Blocking";
     }
     protected override void unstunned_behaviour() {
         if (isdown) {
             timetillup -= Time.fixedDeltaTime;
             if (timetillup <= 0) {
-                rb.isKinematic = false;
+                //rb.isKinematic = false;
                 isdown = false;
+                shield.enabled = true;
                 ammo = 3;
                 if (currentState == Drone_reactivating) ChangeAnimationState(Drone_hovering);
                 timetillup = downtime;
-                gameObject.layer = 9;
+                gameObject.layer = 0;
+                gameObject.tag = "Blocking";
             }
         }
         else if (ammo > 0) {
@@ -55,11 +62,13 @@ public class Drone : Enemy {
         else {
             if (attackCooldown > 0) attackCooldown -= Time.fixedDeltaTime;
             else {
-                rb.isKinematic = true;
+                //rb.isKinematic = true;
                 isdown = true;
+                shield.enabled = false;
                 ChangeAnimationState(Drone_reactivating);
                 attackCooldown = TimeBtwAttacks;
                 gameObject.layer = 3;
+                gameObject.tag = "Enemy";
             }
         }
     }
@@ -70,6 +79,7 @@ public class Drone : Enemy {
     }
 
     public override void Die() {
+        hiticon.GetComponent<SpriteRenderer>().enabled = false;
         ChangeAnimationState(Drone_die);
         AudioManager.instance.PlaySound(Sound.drone_die);
         StartCoroutine(wait());

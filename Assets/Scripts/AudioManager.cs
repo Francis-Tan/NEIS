@@ -1,10 +1,24 @@
 using UnityEngine;
 public enum Sound {
-    gunner_shoot,
+    //player_stab,
     player_gunfire,
+    //player_noammo?
     bullet_hitwall,
     player_bullet_hitenemy,
+    player_burst,
+    //player_die
+    gunner_shoot,
+    //gunner_bullet_hitplayer,
+    //gunner_reload ?
+    gunner_die,
+    assassin_disappear,
+    assassin_appear,
     assassin_stab,
+    assassin_die,
+    //drone_aura,
+    //explosion_hitplayer,
+    //drone_deactivate,
+    //drone_activate,
     drone_die,
     enter_checkpoint
 }
@@ -25,6 +39,7 @@ public class AudioManager : MonoBehaviour
         public float pitch = 1f;
 
         public void initialize() {
+            //sound = (Sound) Sound.Parse(typeof(Sound), clip.name);
             speaker = instance.gameObject.AddComponent<AudioSource>();
             resetSpeaker();
         }

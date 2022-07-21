@@ -208,6 +208,7 @@ public class Player : MonoBehaviour {
             }
             else if (attacktype == 2) {
                 if (currentmana >= burstcost && burst.isready()) {
+                    AudioManager.instance.PlaySound(Sound.player_burst);
                     StartCoroutine(Camera.main.GetComponent<CameraEffects>().Shake());
                     Collider2D[] enemies = Physics2D.OverlapCircleAll(burstvisual.position, 4.35f, 8);
                     for (int i = 0; i < enemies.Length; ++i) {
@@ -244,7 +245,7 @@ public class Player : MonoBehaviour {
     private void increaseMana(int amt) {
         ManaBar.instance.updateBars(currentmana = Mathf.Min(currentmana + amt, maxmana));
         gun.updatesprite(currentmana);
-        burst.updatesprite(currentmana);
+        burst.updatesprite(currentmana); 
         //grapple.updatesprite(currentmana);
     }
 

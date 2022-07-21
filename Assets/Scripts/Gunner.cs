@@ -65,6 +65,8 @@ public class Gunner : Enemy {
     }
 
     public override void Die() {
+        hiticon.GetComponent<SpriteRenderer>().enabled = false;
+        AudioManager.instance.PlaySound(Sound.gunner_die);
         ChangeAnimationState(Gunner_die);
         Destroy(gameObject);
         gbullet_pooler.Die();
