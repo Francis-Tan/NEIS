@@ -22,7 +22,6 @@ public class Gunner : Enemy {
         hiticonpos = hiticon.transform.position;
         stuniconpos = stunicon.transform.position;
         stuniconrot = stunicon.transform.rotation;
-        mana = 3;
         gameObject.layer = 3;
         enabled = true;
     }

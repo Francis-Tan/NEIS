@@ -33,10 +33,6 @@ public class Skill_Icon : MonoBehaviour {
         timer = cooldown;
     }
 
-    public void updatesprite(int mana) {
-        //timerRing.color = mana < skillcost ? Color.black : Color.white;
-    }
-
     public bool isready() {
         return timer <= 0;
     }

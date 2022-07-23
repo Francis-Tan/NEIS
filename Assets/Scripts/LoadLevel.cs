@@ -1,12 +1,11 @@
 using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-public class LoadLevel : MonoBehaviour
-{
+public class LoadLevel : MonoBehaviour {
     public static LoadLevel instance;
     public Vector2 spawnPosition;
     public int enemycount;
-
+    //should be able to cache this
     private void Awake() {
         GetComponent<Collider2D>().enabled = false;
         GetComponent<SpriteRenderer>().enabled = false;
@@ -18,24 +17,31 @@ public class LoadLevel : MonoBehaviour
     }
 
     private void UpdateLift(object sender, EventArgs e) {
-        if (--enemycount == 0) {
-            GetComponent<SpriteRenderer>().enabled = true;
-            GetComponent<Collider2D>().enabled = true;
-        }
+        if (--enemycount == 0) enable();
     }
 
     private void Update() {
-        if (Input.GetKeyDown(KeyCode.N)) {
-            GetComponent<SpriteRenderer>().enabled = true;
-            GetComponent<Collider2D>().enabled = true;
-        }
+        if (Input.GetKeyDown(KeyCode.N)) enable();
+    }
+
+    public void enable() {
+        GetComponent<SpriteRenderer>().enabled = true;
+        GetComponent<Collider2D>().enabled = true;
     }
     
     private void OnTriggerEnter2D(Collider2D other) {
         if (other.GetComponent<Player>() != null) {
             Player.GetInstance().transform.position = spawnPosition;
-            if (SceneManager.GetActiveScene().buildIndex == 4) other.GetComponent<Player>().gameover();
-            else SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+            int sceneIndex = SceneManager.GetActiveScene().buildIndex;
+            if (sceneIndex == SceneManager.sceneCountInBuildSettings - 2) other.GetComponent<Player>().gameover();
+            else {
+                if (sceneIndex == 1) {
+                    ButtonMethods.checkpointIndex = 2;
+                    ButtonMethods.savedHealth = 50;
+                    ButtonMethods.savedMana = 0;
+                }
+                SceneManager.LoadScene(sceneIndex + 1);
+            }
         }
     }
 }

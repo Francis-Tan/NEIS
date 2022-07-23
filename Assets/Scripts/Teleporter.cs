@@ -4,7 +4,7 @@ using UnityEngine;
 public class Teleporter : Enemy {
     public int dmg = 3;
     private float teleportRadius;
-    private Vector2 pBoxSize;
+    //private Vector2 pBoxSize;
     private float timeTillDisappear = 1f;
     private float timeTillAppear = 1f;
     private float disappearTimer;
@@ -22,9 +22,8 @@ public class Teleporter : Enemy {
         Color c = sr.material.color;
         c.a = 1;
         sr.material.color = c;
-        mana = 2;
         teleportRadius = (bc.size.magnitude + player.GetComponent<BoxCollider2D>().size.magnitude) / 2;
-        pBoxSize = player.GetComponent<BoxCollider2D>().size + 2 * bc.size;
+        //pBoxSize = player.GetComponent<BoxCollider2D>().size + 2 * bc.size;
         gameObject.layer = 3;
         enabled = true;
     }
@@ -59,7 +58,8 @@ public class Teleporter : Enemy {
                 + new Vector3(Mathf.Cos(angle), Mathf.Sin(angle)) * teleportRadius;
         if (Mathf.Abs(transform.position.x) < 21 && Mathf.Abs(transform.position.y) < 14 &&
             Physics2D.OverlapBox(player.transform.position, bc.size, 0, 1) == null) {
-            //player.transform.position should be transform.position, however it leads to annoying ganging-up situations
+            //if location within level boundary (should update those) and there are 
+            //no colliders (nothing is on layer 1) overlapping with a box around the player, appear there
             AudioManager.instance.PlaySound(Sound.assassin_appear);
             sr.enabled = true;
             hiticon.GetComponent<SpriteRenderer>().enabled = true;

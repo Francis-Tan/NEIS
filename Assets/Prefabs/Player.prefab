@@ -632,6 +632,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08bb4a9a1dc2a9148881954eabc8c102, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  inTutorial: 0
+  skillLevel: 2
   moveSpeed: 23
   health: 50
   currentmana: 0

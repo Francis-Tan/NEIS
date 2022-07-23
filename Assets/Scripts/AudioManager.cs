@@ -6,7 +6,7 @@ public enum Sound {
     bullet_hitwall,
     player_bullet_hitenemy,
     player_burst,
-    //player_die
+    player_die,
     gunner_shoot,
     //gunner_bullet_hitplayer,
     //gunner_reload ?
@@ -17,8 +17,8 @@ public enum Sound {
     assassin_die,
     //drone_aura,
     //explosion_hitplayer,
-    //drone_deactivate,
-    //drone_activate,
+    drone_deactivate,
+    drone_activate,
     drone_die,
     enter_checkpoint
 }
@@ -26,6 +26,7 @@ public class AudioManager : MonoBehaviour
 {
     public static AudioManager instance;
     public SFX[] soundEffects;
+    public bool inTutorial;
 
     [System.Serializable]
     public class SFX {
@@ -44,7 +45,8 @@ public class AudioManager : MonoBehaviour
             resetSpeaker();
         }
 
-        public void resetSpeaker() { 
+        public void resetSpeaker() {
+            speaker.clip = clip;
             speaker.volume = volume;
             speaker.pitch = pitch;
         }
@@ -60,7 +62,7 @@ public class AudioManager : MonoBehaviour
             return;
         }
         instance = this;
-        DontDestroyOnLoad(gameObject);
+        if (!inTutorial) DontDestroyOnLoad(gameObject);
         foreach (SFX s in soundEffects) s.initialize();
     }
 

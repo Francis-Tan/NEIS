@@ -17,7 +17,6 @@ public class Assassin : Enemy {
         c.a = 1;
         sr.material.color = c;
 
-        mana = 2;
         gameObject.layer = 3;
         enabled = true;
     }

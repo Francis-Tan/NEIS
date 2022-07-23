@@ -3,6 +3,8 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 public class Player : MonoBehaviour {
     // GetInstance must be called on start, otherwise the caller may awake before player
+    public bool inTutorial;
+    public int skillLevel; //0 means only dagger, 1 means gun, 2 means all
     private static GameObject instance;
     private SpriteRenderer sr;
     public static Renderer[] renderers;
@@ -43,7 +45,7 @@ public class Player : MonoBehaviour {
             Destroy(gameObject); return;
         }
         instance = gameObject;
-        DontDestroyOnLoad(instance);
+        if (!inTutorial) DontDestroyOnLoad(instance);
         sr = GetComponent<SpriteRenderer>();
         renderers = GetComponentsInChildren<Renderer>();
         rb = GetComponent<Rigidbody2D>();
@@ -62,6 +64,10 @@ public class Player : MonoBehaviour {
         c = burstvisual.GetComponent<SpriteRenderer>().material.color;
         c.a = 0;
         burstvisual.GetComponent<SpriteRenderer>().material.color = c;
+        if (inTutorial) {
+            gun = null;
+            burst = null;
+        }
     }
 
     public static GameObject GetInstance() {
@@ -90,24 +96,24 @@ public class Player : MonoBehaviour {
     private void UpdateSkillsandAttacktype() {
         //on pressing a skill's button, deactivate skill if we're using skill, else go to skill
         if (Input.GetMouseButtonDown(1)) {
-            gun.pressed(false);
-            burst.pressed(false);
+            if (skillLevel >= 1) gun.pressed(false);
+            if (skillLevel >= 2) burst.pressed(false);
             //grapple.pressed(false);
             attacktype = 0;
         }
-        else if (Input.GetKeyDown(KeyCode.Q)) {
+        else if (skillLevel >= 1 && Input.GetKeyDown(KeyCode.Q)) {
             if (attacktype == 1) {
                 gun.pressed(false);
                 attacktype = 0;
             }
             else {
                 gun.pressed(true);
-                burst.pressed(false);
+                if (skillLevel == 2) burst.pressed(false);
                 //grapple.pressed(false);
                 attacktype = 1;
             }
         }
-        else if (Input.GetKeyDown(KeyCode.E)) {
+        else if (skillLevel >= 2 && Input.GetKeyDown(KeyCode.E)) {
             if (attacktype == 2) {
                 burst.pressed(false);
                 attacktype = 0;
@@ -228,26 +234,34 @@ public class Player : MonoBehaviour {
     }
 
     public void takeDamage(int dmg) {
-        HealthBar.sethealth(health -= dmg);
+        health = inTutorial ? Mathf.Max(health - dmg, 1) : health -= dmg;
+        HealthBar.sethealth(health);
         if (health <= 0) {
+            AudioManager.instance.PlaySound(Sound.player_die);
             enabled = false;
             GetComponent<Collider2D>().enabled = false;
             rb.velocity = Vector2.zero;
             ChangeAnimationState(Player_die);
             StartCoroutine(waitForGameOver());
             IEnumerator waitForGameOver() {
-                yield return new WaitForSeconds(0.65f);
+                yield return new WaitForSeconds(0.575f);
                 gameover();
             }
         }
     }
 
-    private void increaseMana(int amt) {
+    public void increaseMana(int amt) {
         ManaBar.instance.updateBars(currentmana = Mathf.Min(currentmana + amt, maxmana));
-        gun.updatesprite(currentmana);
-        burst.updatesprite(currentmana); 
-        //grapple.updatesprite(currentmana);
     }
+
+    /**public void switchToDagger() {
+        gun.pressed(false);
+        burst.pressed(false);
+        attacktype = 0;
+        Vector3 mousepos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        mousepos.z = Camera.main.transform.position.z + Camera.main.nearClipPlane;
+        UpdateVisuals(mousepos);
+    }*/
 
     public void gameover() {
         sr.enabled = false;
@@ -265,7 +279,6 @@ public class Player : MonoBehaviour {
         HealthBar.sethealth(this.health = health);
         ManaBar.instance.updateBars(currentmana = mana);
         gun.initialize(); burst.initialize();
-        gun.updatesprite(mana); burst.updatesprite(mana);
         sr.enabled = true;
         dagger.GetComponent<SpriteRenderer>().enabled = true;
         gunvisual.GetComponent<SpriteRenderer>().enabled = true;

@@ -5,7 +5,7 @@ public class Drone : Enemy {
     public GameObject projectile;
     public SpriteRenderer shield;
     public int ammo = 3;
-    private bool isdown = false;
+    private bool down = false;
     public float downtime;
     private float timetillup;
 
@@ -23,7 +23,6 @@ public class Drone : Enemy {
         c.a = 1;
         sr.material.color = c;
 
-        mana = 2;
         timetillup = downtime;
         enabled = true;
         shield.enabled = true;
@@ -32,11 +31,13 @@ public class Drone : Enemy {
         gameObject.tag = "Blocking";
     }
     protected override void unstunned_behaviour() {
-        if (isdown) {
+        rb.velocity = Vector2.zero;
+        if (down) {
             timetillup -= Time.fixedDeltaTime;
             if (timetillup <= 0) {
                 //rb.isKinematic = false;
-                isdown = false;
+                AudioManager.instance.PlaySound(Sound.drone_activate);
+                down = false;
                 shield.enabled = true;
                 ammo = 3;
                 if (currentState == Drone_reactivating) ChangeAnimationState(Drone_hovering);
@@ -49,11 +50,9 @@ public class Drone : Enemy {
             directionToPlayer = (player.transform.position - transform.position).normalized;
             deltapos = moveSpeed * Time.fixedDeltaTime * new Vector2(directionToPlayer.x, directionToPlayer.y);
             float distFromPlayer = bc.Distance(player.GetComponent<Collider2D>()).distance;
-            if (distFromPlayer > 9) {
-                rb.MovePosition(rb.position + deltapos);
-            }
+            if (distFromPlayer > 9) rb.MovePosition(rb.position + deltapos);
             if (attackCooldown > 0) attackCooldown -= Time.fixedDeltaTime;
-            else {
+            else if (distFromPlayer <= 13) {
                 attack();
                 attackCooldown = TimeBtwAttacks;
                 ammo--;
@@ -63,7 +62,8 @@ public class Drone : Enemy {
             if (attackCooldown > 0) attackCooldown -= Time.fixedDeltaTime;
             else {
                 //rb.isKinematic = true;
-                isdown = true;
+                AudioManager.instance.PlaySound(Sound.drone_deactivate);
+                down = true;
                 shield.enabled = false;
                 ChangeAnimationState(Drone_reactivating);
                 attackCooldown = TimeBtwAttacks;
@@ -79,6 +79,7 @@ public class Drone : Enemy {
     }
 
     public override void Die() {
+        rb.velocity = Vector2.zero;
         hiticon.GetComponent<SpriteRenderer>().enabled = false;
         ChangeAnimationState(Drone_die);
         AudioManager.instance.PlaySound(Sound.drone_die);

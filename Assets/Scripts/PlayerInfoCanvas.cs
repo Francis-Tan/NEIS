@@ -4,6 +4,7 @@ public class PlayerInfoCanvas : MonoBehaviour
 {
     public static GameObject instance;
     public static Renderer[] renderers;
+    public bool inTutorial;
     private void Awake()
     {
         if (instance != null) {
@@ -12,6 +13,6 @@ public class PlayerInfoCanvas : MonoBehaviour
         }
         instance = gameObject;
         renderers = GetComponentsInChildren<Renderer>();
-        DontDestroyOnLoad(instance);
+        if (!inTutorial) DontDestroyOnLoad(instance);
     }
 }

@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 public abstract class Enemy : MonoBehaviour {
-    public int mana;
+    private int mana = 2;
     protected bool not_hit = true;
     protected bool stunned = false;
     public GameObject hiticon;

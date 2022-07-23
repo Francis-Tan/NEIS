@@ -13,7 +13,8 @@ public class HealthBar : MonoBehaviour {
         health = maxHealth;
     }
 
-    private void FixedUpdate() {
+    private void FixedUpdate() { 
+        //should update only when health changes
         healthText.text = health + "/" + maxHealth;
         lerpspeed = 10 * Time.fixedDeltaTime;
 
