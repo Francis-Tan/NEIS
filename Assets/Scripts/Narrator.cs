@@ -9,25 +9,20 @@ public class Narrator : MonoBehaviour
     private int maxDialougeReached = 0;
     public Spawner[] spawners;
     private int currSpawner = 0;
-    public StatusTile manaRefiller;
+    public StatusTile HPRefiller, manaRefiller;
     public Checkpoint checkpoint;
     public Skill_Icon gun, burst;
     private int currDialouge = 0;
     Player player;
 
-
-    private void Awake() {
+    private void Start() {
         tmp = GetComponent<TextMeshProUGUI>();
         tmp.text = Dialouge[0];
         player = Player.GetInstance().GetComponent<Player>();
-        foreach (Spawner s in spawners) {
-            s.GetComponent<Collider2D>().enabled = false;
-            s.GetComponent<SpriteRenderer>().enabled = false;
-        }
         ++LoadLevel.instance.enemycount;
     }
 
-    void Update() {
+    private void Update() {
         if (Input.GetKeyDown(KeyCode.Alpha3) && currDialouge < Dialouge.Length - 1) {
             tmp.text = Dialouge[++currDialouge];
             if (currDialouge > maxDialougeReached) {
@@ -38,6 +33,7 @@ public class Narrator : MonoBehaviour
                         spawnSpawner();
                         break;
                     case 4:
+                        HPRefiller.enable();
                         manaRefiller.enable();
                         break;
                     case 5:
@@ -70,6 +66,10 @@ public class Narrator : MonoBehaviour
                         spawnCheckpoint();
                         break;
                     case 12:
+                        Destroy(HPRefiller.gameObject);
+                        Destroy(manaRefiller.gameObject);
+                        break;
+                    case 13:
                         //allow player to go to floor 1
                         if (--LoadLevel.instance.enemycount == 0) LoadLevel.instance.enable();
                         break;

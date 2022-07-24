@@ -279,7 +279,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8817e48f8c8794547bddd06a5925a613, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mana: 3
   hiticon: {fileID: 2743710348694631491}
   stunicon: {fileID: 3588998365743088571}
   moveSpeed: 5
@@ -287,7 +286,6 @@ MonoBehaviour:
   gbullet_pooler: {fileID: 2987281670581822420}
   shooting_time: 3
   reload_time: 1
-  gunner_shoot: {fileID: 8300000, guid: cfe159e00034e4ec598c9fa31faaff78, type: 3}
 --- !u!95 &-2158769537096515466
 Animator:
   serializedVersion: 4

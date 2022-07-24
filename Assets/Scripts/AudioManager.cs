@@ -2,7 +2,7 @@ using UnityEngine;
 public enum Sound {
     //player_stab,
     player_gunfire,
-    //player_noammo?
+    player_noammo,
     bullet_hitwall,
     player_bullet_hitenemy,
     player_burst,

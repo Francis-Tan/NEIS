@@ -24,7 +24,7 @@ public abstract class Enemy : MonoBehaviour {
 
     private void Start() {
         enabled = false;
-        gameObject.layer = 9; //attackpoint layer
+        gameObject.layer = 9; //can use 7 or 9
         player = Player.GetInstance();
         rb = GetComponent<Rigidbody2D>();
         bc = GetComponent<BoxCollider2D>();

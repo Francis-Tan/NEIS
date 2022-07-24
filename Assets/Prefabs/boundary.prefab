@@ -106,6 +106,18 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 3719547752614632088}
     m_Modifications:
+    - target: {fileID: 4920280977487546313, guid: 07965623900e49141a20d732bb916f59, type: 3}
+      propertyPath: m_Color.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4920280977487546313, guid: 07965623900e49141a20d732bb916f59, type: 3}
+      propertyPath: m_Color.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4920280977487546313, guid: 07965623900e49141a20d732bb916f59, type: 3}
+      propertyPath: m_Color.r
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5093223900573577491, guid: 07965623900e49141a20d732bb916f59, type: 3}
       propertyPath: m_Name
       value: Wall (2)
@@ -180,6 +192,18 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 3719547752614632088}
     m_Modifications:
+    - target: {fileID: 4920280977487546313, guid: 07965623900e49141a20d732bb916f59, type: 3}
+      propertyPath: m_Color.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4920280977487546313, guid: 07965623900e49141a20d732bb916f59, type: 3}
+      propertyPath: m_Color.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4920280977487546313, guid: 07965623900e49141a20d732bb916f59, type: 3}
+      propertyPath: m_Color.r
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5093223900573577491, guid: 07965623900e49141a20d732bb916f59, type: 3}
       propertyPath: m_Name
       value: Wall
@@ -250,6 +274,18 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 7211971223329105424}
     m_Modifications:
+    - target: {fileID: 4920280977487546313, guid: 07965623900e49141a20d732bb916f59, type: 3}
+      propertyPath: m_Color.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4920280977487546313, guid: 07965623900e49141a20d732bb916f59, type: 3}
+      propertyPath: m_Color.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4920280977487546313, guid: 07965623900e49141a20d732bb916f59, type: 3}
+      propertyPath: m_Color.r
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5093223900573577491, guid: 07965623900e49141a20d732bb916f59, type: 3}
       propertyPath: m_Name
       value: Wall (2)
@@ -324,6 +360,18 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 7211971223329105424}
     m_Modifications:
+    - target: {fileID: 4920280977487546313, guid: 07965623900e49141a20d732bb916f59, type: 3}
+      propertyPath: m_Color.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4920280977487546313, guid: 07965623900e49141a20d732bb916f59, type: 3}
+      propertyPath: m_Color.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4920280977487546313, guid: 07965623900e49141a20d732bb916f59, type: 3}
+      propertyPath: m_Color.r
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5093223900573577491, guid: 07965623900e49141a20d732bb916f59, type: 3}
       propertyPath: m_Name
       value: Wall

@@ -187,13 +187,13 @@ public class Player : MonoBehaviour {
                     StartCoroutine(attack());
                     IEnumerator attack() {
                         //could use dagger.transform.localPosition which should be marginally faster
-                        //but local scaling weakens effect
+                        //but local scaling shortens stab length
                         attackpoint.transform.position += (attackpoint.transform.position - transform.position).normalized;
                         yield return new WaitForSeconds(0.1f);
                         attackpoint.transform.position -= (attackpoint.transform.position - transform.position).normalized;
                     }
                     Collider2D hitenemy = Physics2D.OverlapCircle(attackpoint.position,
-                    stabradius, 8); //1000 in binary so only layer 3 colliders are seen
+                    stabradius, 8); //8 in binary so only sees layer 3 colliders
                     if (hitenemy != null) {
                         dagger.PlayHitAnimation();
                         Enemy enemy = hitenemy.gameObject.GetComponent<Enemy>();
@@ -210,6 +210,8 @@ public class Player : MonoBehaviour {
                     Instantiate(projectile, attackpoint.position, Quaternion.identity);
                     increaseMana(-guncost);
                     gun.reset();
+                } else {
+                    AudioManager.instance.PlaySound(Sound.player_noammo);
                 }
             }
             else if (attacktype == 2) {
@@ -234,18 +236,21 @@ public class Player : MonoBehaviour {
     }
 
     public void takeDamage(int dmg) {
-        health = inTutorial ? Mathf.Max(health - dmg, 1) : health -= dmg;
-        HealthBar.sethealth(health);
-        if (health <= 0) {
-            AudioManager.instance.PlaySound(Sound.player_die);
-            enabled = false;
-            GetComponent<Collider2D>().enabled = false;
-            rb.velocity = Vector2.zero;
-            ChangeAnimationState(Player_die);
-            StartCoroutine(waitForGameOver());
-            IEnumerator waitForGameOver() {
-                yield return new WaitForSeconds(0.575f);
-                gameover();
+        if (health > 0) { //assassins can cause death sound to play multiple times
+            health = inTutorial ? Mathf.Max(health - dmg, 1) : health - dmg;
+            if (health > 50) health = 50;
+            HealthBar.sethealth(health);
+            if (health <= 0) {
+                AudioManager.instance.PlaySound(Sound.player_die);
+                enabled = false;
+                GetComponent<Collider2D>().enabled = false;
+                rb.velocity = Vector2.zero;
+                ChangeAnimationState(Player_die);
+                StartCoroutine(waitForGameOver());
+                IEnumerator waitForGameOver() {
+                    yield return new WaitForSeconds(0.575f);
+                    gameover();
+                }
             }
         }
     }
