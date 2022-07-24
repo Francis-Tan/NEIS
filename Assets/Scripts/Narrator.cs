@@ -54,22 +54,22 @@ public class Narrator : MonoBehaviour
                         player.burst = burst;
                         ++player.skillLevel;
                         break;
-                    case 9:
+                    case 10:
                         //spawn gunners and assassins
                         spawnSpawner();
                         break;
-                    case 10:
+                    case 11:
                         //spawn 3 drones
                         spawnSpawner();
                         break;
-                    case 11:
+                    case 12:
                         spawnCheckpoint();
                         break;
-                    case 12:
+                    case 13:
                         Destroy(HPRefiller.gameObject);
                         Destroy(manaRefiller.gameObject);
                         break;
-                    case 13:
+                    case 14:
                         //allow player to go to floor 1
                         if (--LoadLevel.instance.enemycount == 0) LoadLevel.instance.enable();
                         break;

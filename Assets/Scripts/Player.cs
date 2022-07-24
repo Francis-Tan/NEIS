@@ -101,8 +101,7 @@ public class Player : MonoBehaviour {
             if (skillLevel >= 2) burst.pressed(false);
             //grapple.pressed(false);
             attacktype = 0;
-        }
-        else if (skillLevel >= 1 && Input.GetKeyDown(KeyCode.Q)) {
+        } else if (skillLevel >= 1 && Input.GetKeyDown(KeyCode.Q)) {
             if (attacktype == 1) {
                 gun.pressed(false);
                 attacktype = 0;
