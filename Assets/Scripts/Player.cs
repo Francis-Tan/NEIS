@@ -24,7 +24,7 @@ public class Player : MonoBehaviour {
     public GameObject projectile;
     private Dagger dagger;
     private GunVisual gunvisual;
-    public Transform burstvisual;
+    private BurstVisual burstvisual;
 
     private Animator animator;
     private string currentState;
@@ -61,6 +61,7 @@ public class Player : MonoBehaviour {
         Color c = gunvisual.GetComponent<SpriteRenderer>().material.color;
         c.a = 0;
         gunvisual.GetComponent<SpriteRenderer>().material.color = c;
+        burstvisual = GetComponentInChildren<BurstVisual>();
         c = burstvisual.GetComponent<SpriteRenderer>().material.color;
         c.a = 0;
         burstvisual.GetComponent<SpriteRenderer>().material.color = c;
@@ -169,15 +170,11 @@ public class Player : MonoBehaviour {
         c.a = attacktype == 1 ? 1 : 0;
         gunvisual.GetComponent<SpriteRenderer>().material.color = c;
 
-        c = currentmana < burstcost ? Color.blue : Color.white;
-        if (attacktype == 2) {
-            c.a = 1;
-            burstvisual.position = mousepos;
-        }
-        else {
-            c.a = 0;
-        }
+        c = burstvisual.GetComponent<SpriteRenderer>().material.color;
+        c.a = attacktype == 2 ? 1 : 0;
         burstvisual.GetComponent<SpriteRenderer>().material.color = c;
+        burstvisual.transform.rotation = Quaternion.identity;
+        if (attacktype == 2) burstvisual.transform.position = mousepos;
     }
     private void Attack() {
         if (Input.GetMouseButtonDown(0)) {
@@ -216,13 +213,14 @@ public class Player : MonoBehaviour {
             }
             else if (attacktype == 2) {
                 if (currentmana >= burstcost && burst.isready()) {
+                    increaseMana(-burstcost);
+                    burstvisual.PlayAttackAnimation();
                     AudioManager.instance.PlaySound(Sound.player_burst);
                     StartCoroutine(Camera.main.GetComponent<CameraEffects>().Shake());
-                    Collider2D[] enemies = Physics2D.OverlapCircleAll(burstvisual.position, 4.35f, 8);
+                    Collider2D[] enemies = Physics2D.OverlapCircleAll(burstvisual.transform.position, 4.35f, 8);
                     for (int i = 0; i < enemies.Length; ++i) {
                         enemies[i].gameObject.GetComponent<Enemy>().becomestunned();
                     }
-                    increaseMana(-burstcost);
                     burst.reset();
                 }
             }
@@ -257,6 +255,7 @@ public class Player : MonoBehaviour {
 
     public void increaseMana(int amt) {
         ManaBar.instance.updateBars(currentmana = Mathf.Min(currentmana + amt, maxmana));
+        burstvisual.updateSprite(currentmana);
     }
 
     /**public void switchToDagger() {

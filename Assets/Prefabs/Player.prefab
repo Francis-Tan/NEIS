@@ -350,6 +350,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1149790861662533425}
   - component: {fileID: 247638331268898222}
+  - component: {fileID: 375674883066507759}
+  - component: {fileID: 4808801962335995420}
   m_Layer: 8
   m_Name: BurstVisual
   m_TagString: Untagged
@@ -366,7 +368,7 @@ Transform:
   m_GameObject: {fileID: 5518474159108916662}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -4.0750003, y: 0.79999983, z: 0}
-  m_LocalScale: {x: 21.817207, y: 21.81721, z: 21.81721}
+  m_LocalScale: {x: 4.2, y: 4.2, z: 21.81721}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4865906067203039791}
@@ -413,7 +415,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: -1
-  m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
+  m_Sprite: {fileID: 21300000, guid: b24d742d4c420da4f85be6b86261f419, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -424,6 +426,38 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!95 &375674883066507759
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5518474159108916662}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 501a532fca6699149acde985e191757c, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &4808801962335995420
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5518474159108916662}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0bd9e5b0c25af6c4eaa2cceb7a51b143, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7410067004798571889
 GameObject:
   m_ObjectHideFlags: 0
@@ -644,7 +678,6 @@ MonoBehaviour:
   gun: {fileID: 0}
   burst: {fileID: 0}
   projectile: {fileID: 1395363514749417121, guid: b1285a0604250f342929a8936a3c92da, type: 3}
-  burstvisual: {fileID: 1149790861662533425}
 --- !u!95 &1018491810374817342
 Animator:
   serializedVersion: 4

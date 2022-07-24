@@ -3307,7 +3307,7 @@ MonoBehaviour:
   - Press E to switch to stun or from stun, switch back to dagger
   - Each use costs 5 mana, stuns every enemy caught for a while, and doesn't give
     mana (but dagger does)
-  - Drones shoot aoe attacks that explode after some time. They are invincible when
+  - Drones shoot AOE attacks that explode after some time. They are invincible when
     shielded, but it deactivates for a short while after 3 shots
   - Yellow hexagons are checkpoints, step on them and when you die, you return to
     that floor with the health and mana you had before
