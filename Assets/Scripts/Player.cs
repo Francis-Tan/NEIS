@@ -136,9 +136,9 @@ public class Player : MonoBehaviour {
                 grapple.pressed(true);
                 attacktype = 3;
             }
-        }*/
+        }
         if (Input.GetKeyDown(KeyCode.F)) increaseMana(maxmana - currentmana);
-        if (Input.GetKeyDown(KeyCode.G)) takeDamage(health);
+        if (Input.GetKeyDown(KeyCode.G)) takeDamage(health);*/
     }
     private void UpdateVisuals(Vector3 mousepos) {
         sr.flipX = mousepos.x < transform.position.x;

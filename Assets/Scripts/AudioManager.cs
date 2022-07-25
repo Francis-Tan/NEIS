@@ -66,11 +66,11 @@ public class AudioManager : MonoBehaviour
         foreach (SFX s in soundEffects) s.initialize();
     }
 
-    private void Update() {
+    /**private void Update() {
         if (Input.GetKeyDown(KeyCode.Z)) {
             foreach (SFX s in soundEffects) s.resetSpeaker();
         }
-    }
+    }*/
 
     public void PlaySound(Sound sound) {
         soundEffects[(int)sound].PlayOnce();

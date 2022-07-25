@@ -4,10 +4,8 @@ using UnityEngine.SceneManagement;
 public class Checkpoint : MonoBehaviour
 {
     public static GameObject instance;
+    public CheckPointButton checkPointButton;
     private void Awake() {
-        if (ButtonMethods.checkpointIndex == SceneManager.GetActiveScene().buildIndex) {
-            Destroy(gameObject);
-        }
         instance = gameObject;
     }
     private void OnTriggerEnter2D(Collider2D collision) {

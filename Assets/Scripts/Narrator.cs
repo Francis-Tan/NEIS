@@ -5,6 +5,7 @@ using System.Collections;
 public class Narrator : MonoBehaviour
 {
     private TextMeshProUGUI tmp;
+    public TextMeshProUGUI backButton, forwardButton;
     public string[] Dialouge;
     private int maxDialougeReached = 0;
     public Spawner[] spawners;
@@ -20,11 +21,16 @@ public class Narrator : MonoBehaviour
         tmp.text = Dialouge[0];
         player = Player.GetInstance().GetComponent<Player>();
         ++LoadLevel.instance.enemycount;
+        backButton.enabled = false;
     }
 
     private void Update() {
         if (Input.GetKeyDown(KeyCode.Alpha3) && currDialouge < Dialouge.Length - 1) {
             tmp.text = Dialouge[++currDialouge];
+
+            if (currDialouge == Dialouge.Length - 1) forwardButton.enabled = false;
+            else if (currDialouge == 1) backButton.enabled = true;
+            
             if (currDialouge > maxDialougeReached) {
                 maxDialougeReached = currDialouge;
                 switch (currDialouge) {
@@ -69,7 +75,7 @@ public class Narrator : MonoBehaviour
                         Destroy(HPRefiller.gameObject);
                         Destroy(manaRefiller.gameObject);
                         break;
-                    case 14:
+                    case 15:
                         //allow player to go to floor 1
                         if (--LoadLevel.instance.enemycount == 0) LoadLevel.instance.enable();
                         break;
@@ -77,6 +83,11 @@ public class Narrator : MonoBehaviour
             }
         } else if (Input.GetKeyDown(KeyCode.Alpha2) && currDialouge > 0) {
             tmp.text = Dialouge[--currDialouge];
+
+
+
+            if (currDialouge == Dialouge.Length - 2) forwardButton.enabled = true;
+            else if (currDialouge == 0) backButton.enabled = false;
         }
     }
 
