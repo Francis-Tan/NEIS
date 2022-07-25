@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerInfoCanvas : MonoBehaviour
 {
@@ -8,7 +9,7 @@ public class PlayerInfoCanvas : MonoBehaviour
     private void Awake()
     {
         if (instance != null) {
-            Destroy(gameObject); 
+            Destroy(SceneManager.GetActiveScene().buildIndex == 1 ? instance : gameObject); 
             return;
         }
         instance = gameObject;

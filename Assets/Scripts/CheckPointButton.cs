@@ -1,20 +1,30 @@
 using UnityEngine;
 using UnityEngine.UI; //for Button class
+using UnityEngine.SceneManagement; //for SceneManager
+using TMPro; //for TextMeshProUGUI
+using UnityEngine.EventSystems;
 
-public class CheckPointButton : MonoBehaviour
-{
-    private Button button;
-    private int CheckPointIndex, savedHP, savedMana;
-    
-    public void UpdateCheckPoint(int hp, int mana) {
-        savedHP = hp;
-        savedMana = mana;
-        //activate button if inactive
+public class CheckPointButton : MonoBehaviour, IPointerDownHandler {
+    public int FloorNumber;
+    private int CheckPointIndex;
+    private CheckPointManager.PlayerData playerData;
+
+    private void Awake() {
+        TextMeshProUGUI txtMP = GetComponent<TextMeshProUGUI>();
+        CheckPointIndex = FloorNumber + 1;
+        playerData = CheckPointManager.GetPlayerDataAtCheckpoint(CheckPointIndex);
+        if (playerData == null) {
+            GetComponent<Button>().interactable = false;
+            txtMP.color = new Color(160, 160, 160);
+        }
     }
 
-    public void OnMouseClick() {
-        /**SceneManager.LoadScene(CheckPointIndex);
-        Player.GetInstance().GetComponent<Player>().spawn(new Vector2(-10.65f, 6.73f), savedHP, savedMana);
-        PlayerInfoCanvas.instance.GetComponent<Canvas>().enabled = true*/
+    public void OnPointerDown(PointerEventData eventData) {
+        if (playerData != null) {
+            SceneManager.LoadScene(CheckPointIndex);
+            Player.GetInstance().GetComponent<Player>().spawn(new Vector2(-10.65f, 6.73f), 
+                    playerData.hp, playerData.mana);
+            PlayerInfoCanvas.instance.GetComponent<Canvas>().enabled = true;
+        }
     }
 }

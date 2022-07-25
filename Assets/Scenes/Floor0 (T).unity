@@ -1169,6 +1169,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 447578515896123370, guid: 70cf3c64cc1597641b5a555b5758d14a, type: 3}
+      propertyPath: inTutorial
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 491139680934126192, guid: 70cf3c64cc1597641b5a555b5758d14a, type: 3}
       propertyPath: m_Name
       value: Checkpoint

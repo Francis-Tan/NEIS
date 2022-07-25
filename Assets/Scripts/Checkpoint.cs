@@ -4,7 +4,7 @@ using UnityEngine.SceneManagement;
 public class Checkpoint : MonoBehaviour
 {
     public static GameObject instance;
-    public CheckPointButton checkPointButton;
+    public bool inTutorial = false;
     private void Awake() {
         instance = gameObject;
     }
@@ -12,9 +12,12 @@ public class Checkpoint : MonoBehaviour
         Player player = collision.GetComponent<Player>();
         if (player != null) {
             AudioManager.instance.PlaySound(Sound.enter_checkpoint);
-            ButtonMethods.checkpointIndex = SceneManager.GetActiveScene().buildIndex;
-            ButtonMethods.savedHealth = player.health;
-            ButtonMethods.savedMana = player.currentmana;
+
+            if (!inTutorial) CheckPointManager.UpdateCheckpoint(
+                SceneManager.GetActiveScene().buildIndex, 
+                player.health,
+                player.currentmana);
+            
             GetComponent<Collider2D>().enabled = false;
             GetComponent<SpriteRenderer>().enabled = false;
         }
