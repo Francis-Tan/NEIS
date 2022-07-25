@@ -29,7 +29,8 @@ public class gbullet_pooler : MonoBehaviour {
 
     public void FireBullet() {
         Gunner_Bullet bullet = GetInactiveBullet();
-        bullet.reset(transform.position, transform.rotation);
+        bullet.transform.position = transform.position;
+        bullet.resetDirection();
         bullet.gameObject.SetActive(true);
     }
 
