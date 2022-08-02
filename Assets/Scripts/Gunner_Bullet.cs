@@ -1,7 +1,7 @@
 using UnityEngine;
 
 public class Gunner_Bullet : MonoBehaviour {
-    private Rigidbody2D rb; //rigidbody movement is to avoid moving in a rotated transform after rotation
+    private Rigidbody2D rb; //rigidbody movement is to avoid moving in a rotated transform after rotation (old comment)
     private Vector2 dir = Vector2.down, newdir;
     public float moveSpeed = 16;
     public int dmg = 1;
@@ -13,17 +13,19 @@ public class Gunner_Bullet : MonoBehaviour {
         EB_move = "EB_move",
         EB_explode = "EB_explode";
 
+    private void ChangeAnimationState(string newState) {
+        if (currentState == newState) return;
+        animator.Play(newState);
+        currentState = newState;
+    }
+
     private void Awake() {
         resetDirection();
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         ChangeAnimationState(EB_move);
     }
-    private void ChangeAnimationState(string newState) {
-        if (currentState == newState) return;
-        animator.Play(newState);
-        currentState = newState;
-    }
+    
     public void resetDirection() {
         newdir = moveSpeed * (Player.GetInstance().transform.position - transform.position).normalized;
         transform.RotateAround(transform.position, Vector3.forward,
@@ -36,13 +38,14 @@ public class Gunner_Bullet : MonoBehaviour {
     }
 
     private void OnCollisionEnter2D(Collision2D other) {
-        //would be more efficient to check layers
+        //would be faster to check layers
+        //i guess collider should be turned off during EB_explode
+        //but code runs so fast it didn't matter
         GameObject runinto = other.gameObject;
         if (runinto.CompareTag("Player")) {
             ChangeAnimationState(EB_explode);
             runinto.GetComponent<Player>().takeDamage(dmg);
-        }
-        else if (runinto.CompareTag("Blocking")) {
+        } else if (runinto.CompareTag("Blocking")) {
             ChangeAnimationState(EB_explode);
             AudioManager.instance.PlaySound(Sound.bullet_hitwall);
         }
@@ -50,7 +53,7 @@ public class Gunner_Bullet : MonoBehaviour {
 
     //called by EB_explode
     private void deactivate() {
-        ChangeAnimationState(EB_move); //events don't stop animator
+        ChangeAnimationState(EB_move); // w/o this EB_explode and the call are repeated
         if (destroy) {
             Destroy(gameObject);
         } else {

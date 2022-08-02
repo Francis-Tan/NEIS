@@ -11,9 +11,9 @@ public class Skill_Icon : MonoBehaviour {
     private float timer;
 
     private void Start() {
-        initialize();
+        Initialize();
     }
-    public void initialize() {
+    public void Initialize() {
         timerRing.fillAmount = 0;
         timer = 0;
     } 

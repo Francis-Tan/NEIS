@@ -12,7 +12,7 @@ public class ButtonMethods : MonoBehaviour {
     }*/
 
     public void GoToLevelSelect() {
-        CheckPointManager.UpdateCheckpoint(2, 50, 0);
+        CheckPointManager.UpdateCheckpoint(1, 50, 0); //put this in player awake if carrying around everywhere
         SceneManager.LoadScene(SceneManager.sceneCountInBuildSettings - 1);
     }
 

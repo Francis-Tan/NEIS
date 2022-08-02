@@ -13,17 +13,17 @@ public class CheckPointManager : MonoBehaviour {
     private static PlayerData[] savedData = new PlayerData[(SceneManager.sceneCountInBuildSettings - 2)/2];
 
     //sceneindex refers to the scene index in build settings
-    public static void UpdateCheckpoint(int sceneindex, int hp, int mana) {
-        PlayerData pd = savedData[sceneindex / 2 - 1];
+    public static void UpdateCheckpoint(int floornumber, int hp, int mana) {
+        PlayerData pd = savedData[(floornumber - 1)/2];
         if (pd == null) {
-            savedData[sceneindex / 2 - 1] = new PlayerData(hp, mana);
+            savedData[(floornumber - 1) / 2] = new PlayerData(hp, mana);
         } else {
             pd.hp = hp;
             pd.mana = mana;
         }
     }
 
-    public static PlayerData GetPlayerDataAtCheckpoint(int sceneindex) {
-        return savedData[sceneindex / 2 - 1];
+    public static PlayerData GetPlayerDataAtFloor(int floornumber) {
+        return savedData[(floornumber - 1) / 2];
     }
 }

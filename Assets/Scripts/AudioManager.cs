@@ -25,11 +25,11 @@ public enum Sound {
 public class AudioManager : MonoBehaviour
 {
     public static AudioManager instance;
-    public SFX[] soundEffects;
+    public AudioPlayer[] soundEffects;
     public bool inTutorial;
 
     [System.Serializable]
-    public class SFX {
+    public class AudioPlayer {
         public Sound sound;
         public AudioClip clip;
         [HideInInspector]
@@ -39,13 +39,13 @@ public class AudioManager : MonoBehaviour
         [Range(.1f, 3f)]
         public float pitch = 1f;
 
-        public void initialize() {
+        public void Initialize() {
             //sound = (Sound) Sound.Parse(typeof(Sound), clip.name);
             speaker = instance.gameObject.AddComponent<AudioSource>();
-            resetSpeaker();
+            Reset();
         }
 
-        public void resetSpeaker() {
+        public void Reset() {
             speaker.clip = clip;
             speaker.volume = volume;
             speaker.pitch = pitch;
@@ -63,14 +63,14 @@ public class AudioManager : MonoBehaviour
         }
         instance = this;
         if (!inTutorial) DontDestroyOnLoad(gameObject);
-        foreach (SFX s in soundEffects) s.initialize();
+        foreach (AudioPlayer ap in soundEffects) ap.Initialize();
     }
 
-    /**private void Update() {
+    private void Update() {
         if (Input.GetKeyDown(KeyCode.Z)) {
-            foreach (SFX s in soundEffects) s.resetSpeaker();
+            foreach (AudioPlayer ap in soundEffects) ap.Reset();
         }
-    }*/
+    }
 
     public void PlaySound(Sound sound) {
         soundEffects[(int)sound].PlayOnce();

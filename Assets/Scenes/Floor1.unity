@@ -2439,6 +2439,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 568053426841899888, guid: 65fbdcbc1cfebcb4db9443c6c4c1d3d8, type: 3}
+      propertyPath: BGM.Array.size
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 568053426841899889, guid: 65fbdcbc1cfebcb4db9443c6c4c1d3d8, type: 3}
       propertyPath: m_RootOrder
       value: 17

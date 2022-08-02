@@ -20,9 +20,9 @@ public class LoadLevel : MonoBehaviour {
         if (--enemycount == 0) enable();
     }
 
-    /**private void Update() {
+    private void Update() {
         if (Input.GetKeyDown(KeyCode.N)) enable();
-    }*/
+    }
 
     public void enable() {
         GetComponent<SpriteRenderer>().enabled = true;
@@ -36,7 +36,7 @@ public class LoadLevel : MonoBehaviour {
             if (nextSceneIndex == 2) {
                 SceneManager.LoadScene(0);
             } else if (nextSceneIndex == SceneManager.sceneCountInBuildSettings - 1) {
-                other.GetComponent<Player>().gameover();
+                other.GetComponent<Player>().LoadLevelSelect();
             } else {
                 SceneManager.LoadScene(nextSceneIndex);
             }

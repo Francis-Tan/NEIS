@@ -3,8 +3,8 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 public class Player : MonoBehaviour {
     // GetInstance must be called on start, otherwise the caller may awake before player
-    public bool inTutorial;
-    public int skillLevel; //0 means only dagger, 1 means gun, 2 means all
+    public bool canDie;
+    public int skillLevel; // 0: dagger, 1: += gun, 2: += stun
     private static GameObject instance;
     private SpriteRenderer sr;
     public static Renderer[] renderers;
@@ -19,8 +19,8 @@ public class Player : MonoBehaviour {
     public float stabradius = 0.4f;
     public float TimeBtwAttacks = 0;
     private float attackCooldown;
-    public Skill_Icon gun, burst;// grapple;
-    private int guncost, burstcost;// grapplecost;
+    public Skill_Icon gun, burst;
+    private int guncost, burstcost;
     public GameObject projectile;
     private Dagger dagger;
     private GunVisual gunvisual;
@@ -45,7 +45,7 @@ public class Player : MonoBehaviour {
             Destroy(gameObject); return;
         }
         instance = gameObject;
-        if (!inTutorial) DontDestroyOnLoad(instance);
+        if (skillLevel > 0) DontDestroyOnLoad(instance);
         sr = GetComponent<SpriteRenderer>();
         renderers = GetComponentsInChildren<Renderer>();
         rb = GetComponent<Rigidbody2D>();
@@ -55,7 +55,6 @@ public class Player : MonoBehaviour {
         animator = GetComponent<Animator>();
         guncost = gun.skillcost;
         burstcost = burst.skillcost;
-        //grapplecost = grapple.skillcost;
         dagger = GetComponentInChildren<Dagger>();
         gunvisual = GetComponentInChildren<GunVisual>();
         Color c = gunvisual.GetComponent<SpriteRenderer>().material.color;
@@ -65,7 +64,7 @@ public class Player : MonoBehaviour {
         c = burstvisual.GetComponent<SpriteRenderer>().material.color;
         c.a = 0;
         burstvisual.GetComponent<SpriteRenderer>().material.color = c;
-        if (inTutorial) {
+        if (skillLevel == 0) {
             gun = null;
             burst = null;
         }
@@ -89,56 +88,39 @@ public class Player : MonoBehaviour {
         attackpoint.RotateAround(transform.position, Vector3.forward,
             Vector2.SignedAngle(attackpoint.position - transform.position, mousepos - transform.position));
         rb.MovePosition(rb.position + input_velocity * (moveSpeed * Time.fixedDeltaTime));
-        UpdateSkillsandAttacktype();
+        UpdateSkills();
         UpdateVisuals(mousepos);
-        Attack();
+        if (Input.GetMouseButtonDown(0)) Attack();
     }
 
-    private void UpdateSkillsandAttacktype() {
-        //on pressing a skill's button, deactivate skill if we're using skill, else go to skill
+    private void UpdateSkills() {
+        //if we're not using that skill and we press its button, equip it
+        //if we press that button again, go back to dagger
         if (Input.GetMouseButtonDown(1)) {
             if (skillLevel >= 1) gun.pressed(false);
             if (skillLevel >= 2) burst.pressed(false);
-            //grapple.pressed(false);
             attacktype = 0;
         } else if (skillLevel >= 1 && Input.GetKeyDown(KeyCode.Q)) {
             if (attacktype == 1) {
                 gun.pressed(false);
                 attacktype = 0;
-            }
-            else {
+            } else {
                 gun.pressed(true);
-                if (skillLevel == 2) burst.pressed(false);
-                //grapple.pressed(false);
+                if (skillLevel >= 2) burst.pressed(false);
                 attacktype = 1;
             }
-        }
-        else if (skillLevel >= 2 && Input.GetKeyDown(KeyCode.E)) {
+        } else if (skillLevel >= 2 && Input.GetKeyDown(KeyCode.E)) {
             if (attacktype == 2) {
                 burst.pressed(false);
                 attacktype = 0;
-            }
-            else {
+            } else {
                 gun.pressed(false);
                 burst.pressed(true);
-                //grapple.pressed(false);
                 attacktype = 2;
             }
         }
-        /**else if (Input.GetKeyDown(KeyCode.R)) {
-            if (attacktype == 3) {
-                grapple.pressed(false);
-                attacktype = 0;
-            }
-            else {
-                gun.pressed(false);
-                burst.pressed(false);
-                grapple.pressed(true);
-                attacktype = 3;
-            }
-        }
         if (Input.GetKeyDown(KeyCode.F)) increaseMana(maxmana - currentmana);
-        if (Input.GetKeyDown(KeyCode.G)) takeDamage(health);*/
+        if (Input.GetKeyDown(KeyCode.G)) Die();
     }
     private void UpdateVisuals(Vector3 mousepos) {
         sr.flipX = mousepos.x < transform.position.x;
@@ -153,7 +135,7 @@ public class Player : MonoBehaviour {
             }
             else if (enabled) {
                 //check is to prevent overloading animator during death and making
-                //the death animation fall under player_idle
+                //the death animation play under player_idle state
                 ChangeAnimationState(Player_idle);
             }
         }
@@ -176,79 +158,58 @@ public class Player : MonoBehaviour {
         if (attacktype == 2) burstvisual.transform.position = mousepos;
     }
     private void Attack() {
-        if (Input.GetMouseButtonDown(0)) {
-            if (attacktype == 0) {
-                if (attackCooldown > 0) attackCooldown -= Time.fixedDeltaTime;
-                else {
-                    StartCoroutine(attack());
-                    IEnumerator attack() {
-                        //could use dagger.transform.localPosition which should be marginally faster
-                        //but local scaling shortens stab length
-                        attackpoint.transform.position += (attackpoint.transform.position - transform.position).normalized;
-                        yield return new WaitForSeconds(0.1f);
-                        attackpoint.transform.position -= (attackpoint.transform.position - transform.position).normalized;
-                    }
-                    Collider2D hitenemy = Physics2D.OverlapCircle(attackpoint.position,
-                    stabradius, 8); //8 in binary so only sees layer 3 colliders
-                    if (hitenemy != null) {
-                        dagger.PlayHitAnimation();
-                        Enemy enemy = hitenemy.gameObject.GetComponent<Enemy>();
-                        increaseMana(enemy.getmana());
-                        enemy.Death();
-                    }
-                    attackCooldown = TimeBtwAttacks;
-                }
-            }
-            else if (attacktype == 1) {
-                if (currentmana >= guncost && gun.isready()) {
-                    gunvisual.PlayShootAnimation();
-                    AudioManager.instance.PlaySound(Sound.player_gunfire);
-                    Instantiate(projectile, attackpoint.position, Quaternion.identity);
-                    increaseMana(-guncost);
-                    gun.reset();
-                } else {
-                    AudioManager.instance.PlaySound(Sound.player_noammo);
-                }
-            }
-            else if (attacktype == 2) {
-                if (currentmana >= burstcost && burst.isready()) {
-                    increaseMana(-burstcost);
-                    burstvisual.PlayAttackAnimation();
-                    AudioManager.instance.PlaySound(Sound.player_burst);
-                    StartCoroutine(Camera.main.GetComponent<CameraEffects>().Shake());
-                    Collider2D[] enemies = Physics2D.OverlapCircleAll(burstvisual.transform.position, 4.35f, 8);
-                    for (int i = 0; i < enemies.Length; ++i) {
-                        enemies[i].gameObject.GetComponent<Enemy>().becomestunned();
-                    }
-                    burst.reset();
-                }
-            }
-            /**else {
-                if (currentmana >= grapplecost && grapple.isready()) {
-                    updateMana(-grapplecost);
-                    grapple.reset();
-                }
-            }*/
-        }
+           if (attacktype == 0) {
+               if (attackCooldown > 0) attackCooldown -= Time.fixedDeltaTime;
+               else {
+                   StartCoroutine(attack());
+                   IEnumerator attack() {
+                       //could use dagger.transform.localPosition which should be marginally faster
+                       //but local scaling shortens stab length
+                       attackpoint.transform.position += (attackpoint.transform.position - transform.position).normalized;
+                       yield return new WaitForSeconds(0.1f);
+                       attackpoint.transform.position -= (attackpoint.transform.position - transform.position).normalized;
+                   }
+                   Collider2D hitenemy = Physics2D.OverlapCircle(attackpoint.position,
+                   stabradius, 8); //8 in binary so only sees layer 3 colliders
+                   if (hitenemy != null) {
+                       dagger.PlayHitAnimation();
+                       Enemy enemy = hitenemy.gameObject.GetComponent<Enemy>();
+                       increaseMana(enemy.getmana());
+                       enemy.Death();
+                   }
+                   attackCooldown = TimeBtwAttacks;
+               }
+           } else if (attacktype == 1) {
+               if (currentmana >= guncost && gun.isready()) {
+                   gunvisual.PlayShootAnimation();
+                   AudioManager.instance.PlaySound(Sound.player_gunfire);
+                   Instantiate(projectile, attackpoint.position, Quaternion.identity);
+                   increaseMana(-guncost);
+                   gun.reset();
+               } else {
+                   AudioManager.instance.PlaySound(Sound.player_noammo);
+               }
+           } else {
+               if (currentmana >= burstcost && burst.isready()) {
+                   increaseMana(-burstcost);
+                   burstvisual.PlayAttackAnimation();
+                   AudioManager.instance.PlaySound(Sound.player_burst);
+                   StartCoroutine(Camera.main.GetComponent<CameraEffects>().Shake());
+                   Collider2D[] enemies = Physics2D.OverlapCircleAll(burstvisual.transform.position, 4.35f, 8);
+                   for (int i = 0; i < enemies.Length; ++i) {
+                       enemies[i].gameObject.GetComponent<Enemy>().becomestunned();
+                   }
+                   burst.reset();
+               }
+           }
     }
 
     public void takeDamage(int dmg) {
-        if (health > 0) { //assassins can cause death sound to play multiple times
-            health = inTutorial ? Mathf.Max(health - dmg, 1) : health - dmg;
+        if (health > 0) { //prevent assassins from playing death sound multiple times
+            health = canDie ? health - dmg : Mathf.Max(health - dmg, 1);
             if (health > 50) health = 50;
             HealthBar.sethealth(health);
-            if (health <= 0) {
-                AudioManager.instance.PlaySound(Sound.player_die);
-                enabled = false;
-                GetComponent<Collider2D>().enabled = false;
-                rb.velocity = Vector2.zero;
-                ChangeAnimationState(Player_die);
-                StartCoroutine(waitForGameOver());
-                IEnumerator waitForGameOver() {
-                    yield return new WaitForSeconds(0.575f);
-                    gameover();
-                }
-            }
+            if (health <= 0) Die();
         }
     }
 
@@ -266,26 +227,40 @@ public class Player : MonoBehaviour {
         UpdateVisuals(mousepos);
     }*/
 
-    public void gameover() {
-        sr.enabled = false;
-        dagger.GetComponent<SpriteRenderer>().enabled = false;
-        gunvisual.GetComponent<SpriteRenderer>().enabled = false;
-        burstvisual.GetComponent<SpriteRenderer>().enabled = false;
-        PlayerInfoCanvas.instance.GetComponent<Canvas>().enabled = false;
-        SceneManager.LoadScene("GameOver");
+    private void Die() {
+        AudioManager.instance.PlaySound(Sound.player_die);
+        enabled = false;
+        GetComponent<Collider2D>().enabled = false;
+        rb.velocity = Vector2.zero;
+        StartCoroutine(DeathScene());
+        IEnumerator DeathScene() {
+            ChangeAnimationState(Player_die);
+            yield return new WaitForSeconds(0.6f);
+            LoadLevelSelect();
+        }
     }
 
-    public void spawn(Vector2 pos, int health, int mana) {
+    public void LoadLevelSelect() {
+        EnableAllPlayerVisuals(false);
+        SceneManager.LoadScene(SceneManager.sceneCountInBuildSettings - 1);
+    }
+
+    public void Spawn(Vector2 pos, int health, int mana) {
         GetComponent<Collider2D>().enabled = true;
         rb.velocity = Vector2.zero;
         transform.position = pos;
         HealthBar.sethealth(this.health = health);
         ManaBar.instance.updateBars(currentmana = mana);
-        gun.initialize(); burst.initialize();
-        sr.enabled = true;
-        dagger.GetComponent<SpriteRenderer>().enabled = true;
-        gunvisual.GetComponent<SpriteRenderer>().enabled = true;
-        burstvisual.GetComponent<SpriteRenderer>().enabled = true;
+        gun.Initialize(); burst.Initialize();
+        EnableAllPlayerVisuals(true);
         enabled = true;
+    }
+
+    private void EnableAllPlayerVisuals(bool enable) {
+        sr.enabled = enable;
+        dagger.GetComponent<SpriteRenderer>().enabled = enable;
+        gunvisual.GetComponent<SpriteRenderer>().enabled = enable;
+        burstvisual.GetComponent<SpriteRenderer>().enabled = enable;
+        PlayerInfoCanvas.instance.GetComponent<Canvas>().enabled = enable;
     }
 }

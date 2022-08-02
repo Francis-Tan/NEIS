@@ -5,8 +5,10 @@ public class Checkpoint : MonoBehaviour
 {
     public static GameObject instance;
     public bool inTutorial = false;
+    private int floornum;
     private void Awake() {
         instance = gameObject;
+        floornum = SceneManager.GetActiveScene().buildIndex - 1;
     }
     private void OnTriggerEnter2D(Collider2D collision) {
         Player player = collision.GetComponent<Player>();
@@ -14,7 +16,7 @@ public class Checkpoint : MonoBehaviour
             AudioManager.instance.PlaySound(Sound.enter_checkpoint);
 
             if (!inTutorial) CheckPointManager.UpdateCheckpoint(
-                SceneManager.GetActiveScene().buildIndex, 
+                floornum,
                 player.health,
                 player.currentmana);
             
