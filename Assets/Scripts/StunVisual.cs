@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class BurstVisual : MonoBehaviour {
+public class StunVisual : MonoBehaviour {
     private Animator animator;
     private string currentState;
     const string
@@ -17,7 +17,12 @@ public class BurstVisual : MonoBehaviour {
         currentState = newState;
     }
     public void updateSprite(int mana) {
-        ChangeAnimationState(mana < 5 ? stun_notenoughmana : stun_enoughmana);
+        string newState = mana < 5 ? stun_notenoughmana : stun_enoughmana;
+        animator.Play(newState);
+        currentState = newState;
+        //when a deactivated object activates, its animator will go back to its default state (notenoughmana)
+        //for player spawn(), in the case where your saved mana and death mana are >= 5,
+        //the state check stops the default state from being corrected
     }
 
     public void PlayAttackAnimation() {

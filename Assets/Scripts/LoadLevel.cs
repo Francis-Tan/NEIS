@@ -34,9 +34,9 @@ public class LoadLevel : MonoBehaviour {
             Player.GetInstance().transform.position = spawnPosition;
             int nextSceneIndex = SceneManager.GetActiveScene().buildIndex + 1;
             if (nextSceneIndex == 2) {
-                SceneManager.LoadScene(0);
+                SceneMethods.GoToMenu();
             } else if (nextSceneIndex == SceneManager.sceneCountInBuildSettings - 1) {
-                other.GetComponent<Player>().LoadLevelSelect();
+                SceneMethods.GoToLevelSelect();
             } else {
                 SceneManager.LoadScene(nextSceneIndex);
             }

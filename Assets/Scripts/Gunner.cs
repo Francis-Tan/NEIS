@@ -53,8 +53,8 @@ public class Gunner : Enemy {
         hiticon.GetComponent<SpriteRenderer>().enabled = false;
         AudioManager.instance.PlaySound(Sound.gunner_die);
         ChangeAnimationState(Gunner_die);
-        StartCoroutine(selfdestruct());
-        IEnumerator selfdestruct() {
+        StartCoroutine(selfDestruct());
+        IEnumerator selfDestruct() {
             yield return new WaitForSeconds(0.5f);
             Destroy(gameObject);
         }

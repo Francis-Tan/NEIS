@@ -12,7 +12,7 @@ public class Narrator : MonoBehaviour
     private int currSpawner = 0;
     public StatusTile HPRefiller, manaRefiller;
     public Checkpoint checkpoint;
-    public Skill_Icon gun, burst;
+    public Skill_Icon gunIcon, stunIcon;
     private int currDialouge = 0;
     Player player;
 
@@ -22,6 +22,8 @@ public class Narrator : MonoBehaviour
         player = Player.GetInstance().GetComponent<Player>();
         ++LoadLevel.instance.enemycount;
         backButton.enabled = false;
+        gunIcon = PlayerInfo.instance.gunIcon;
+        stunIcon = PlayerInfo.instance.stunIcon;
     }
 
     private void Update() {
@@ -43,8 +45,8 @@ public class Narrator : MonoBehaviour
                         manaRefiller.enable();
                         break;
                     case 5:
-                        gun.gameObject.SetActive(true);
-                        player.gun = gun;
+                        gunIcon.show();
+                        //player.gunIcon = gunIcon;
                         ++player.skillLevel;
                         break;
                     case 6:
@@ -56,8 +58,8 @@ public class Narrator : MonoBehaviour
                         spawnSpawner();
                         break;
                     case 8:
-                        burst.gameObject.SetActive(true);
-                        player.burst = burst;
+                        stunIcon.show();
+                        //player.stunIcon = stunIcon;
                         ++player.skillLevel;
                         break;
                     case 10:
@@ -74,6 +76,7 @@ public class Narrator : MonoBehaviour
                     case 13:
                         Destroy(HPRefiller.gameObject);
                         Destroy(manaRefiller.gameObject);
+                        Destroy(checkpoint.gameObject);
                         break;
                     case 15:
                         //allow player to go to floor 1

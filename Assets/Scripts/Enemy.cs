@@ -8,7 +8,8 @@ public abstract class Enemy : MonoBehaviour {
     public GameObject stunicon;
     protected GameObject player;
     protected Rigidbody2D rb; //rigidbody movement better for collision
-    protected BoxCollider2D bc; //for detecting collisions with player - could replace with raycast box
+    protected BoxCollider2D bc; //for detecting collisions with
+                                //- could replace with raycast box
     protected SpriteRenderer sr;
     public float moveSpeed;
     protected Vector3 directionToPlayer;
@@ -93,10 +94,10 @@ public abstract class Enemy : MonoBehaviour {
             hiticon.GetComponent<SpriteRenderer>().material.color = c;
         } else { Death(); }
     }
-    public int getmana() {
+    public int getMana() {
         return mana;
     }
-    public void becomestunned() {
+    public void getStunned() {
         Color c = stunicon.GetComponent<SpriteRenderer>().material.color;
         c.a = 1;
         stunicon.GetComponent<SpriteRenderer>().material.color = c;

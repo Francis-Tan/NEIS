@@ -1,13 +1,11 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 public class Player : MonoBehaviour {
     // GetInstance must be called on start, otherwise the caller may awake before player
     public bool canDie;
-    public int skillLevel; // 0: dagger, 1: += gun, 2: += stun
+    public int skillLevel; // 0: dagger, 1: += gunIcon, 2: += stun
     private static GameObject instance;
-    private SpriteRenderer sr;
-    public static Renderer[] renderers;
+    private static SpriteRenderer sr;
     private Rigidbody2D rb; //rigidbody movement better for collision
     public float moveSpeed = 23;
     private Vector2 input_velocity;
@@ -19,12 +17,12 @@ public class Player : MonoBehaviour {
     public float stabradius = 0.4f;
     public float TimeBtwAttacks = 0;
     private float attackCooldown;
-    public Skill_Icon gun, burst;
-    private int guncost, burstcost;
+    public Skill_Icon gunIcon, stunIcon;
+    private int gunCost, stunCost;
     public GameObject projectile;
-    private Dagger dagger;
-    private GunVisual gunvisual;
-    private BurstVisual burstvisual;
+    private static Dagger dagger;
+    private static GunVisual gunVisual;
+    private static StunVisual stunVisual;
 
     private Animator animator;
     private string currentState;
@@ -40,34 +38,36 @@ public class Player : MonoBehaviour {
         Player_burst = "Player_burst",
         Player_grapple = "Player_grapple";
 
-    private void Awake() {
+    private void Start() { 
+        //start to ensure it retrieves icons from playerinfo, though could set in inspector
         if (instance != null) {
             Destroy(gameObject); return;
         }
-        instance = gameObject;
-        if (skillLevel > 0) DontDestroyOnLoad(instance);
+        instance = gameObject; 
+        CheckPointManager.UpdateCheckpoint(1, 50, 0);
+
+        DontDestroyOnLoad(instance);
         sr = GetComponent<SpriteRenderer>();
-        renderers = GetComponentsInChildren<Renderer>();
         rb = GetComponent<Rigidbody2D>();
         input_velocity = Vector2.zero;
         attackCooldown = TimeBtwAttacks;
         currentmana = 0;
         animator = GetComponent<Animator>();
-        guncost = gun.skillcost;
-        burstcost = burst.skillcost;
+
+        gunIcon = PlayerInfo.instance.gunIcon;
+        stunIcon = PlayerInfo.instance.stunIcon;
+        gunCost = gunIcon.skillcost;
+        stunCost = stunIcon.skillcost;
         dagger = GetComponentInChildren<Dagger>();
-        gunvisual = GetComponentInChildren<GunVisual>();
-        Color c = gunvisual.GetComponent<SpriteRenderer>().material.color;
+        gunVisual = GetComponentInChildren<GunVisual>();
+        Color c = gunVisual.GetComponent<SpriteRenderer>().material.color;
         c.a = 0;
-        gunvisual.GetComponent<SpriteRenderer>().material.color = c;
-        burstvisual = GetComponentInChildren<BurstVisual>();
-        c = burstvisual.GetComponent<SpriteRenderer>().material.color;
+        gunVisual.GetComponent<SpriteRenderer>().material.color = c;
+        stunVisual = GetComponentInChildren<StunVisual>();
+        c = stunVisual.GetComponent<SpriteRenderer>().material.color;
         c.a = 0;
-        burstvisual.GetComponent<SpriteRenderer>().material.color = c;
-        if (skillLevel == 0) {
-            gun = null;
-            burst = null;
-        }
+        stunVisual.GetComponent<SpriteRenderer>().material.color = c;
+        gameObject.SetActive(false);
     }
 
     public static GameObject GetInstance() {
@@ -82,7 +82,7 @@ public class Player : MonoBehaviour {
     }
     private void Update() {
         Vector3 mousepos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        mousepos.z = Camera.main.transform.position.z + Camera.main.nearClipPlane; //to make burstvisual be in the right z-pos
+        mousepos.z = Camera.main.transform.position.z + Camera.main.nearClipPlane; //to make stunVisual be in the right z-pos
         input_velocity.x = Input.GetAxisRaw("Horizontal");
         input_velocity.y = Input.GetAxisRaw("Vertical");
         attackpoint.RotateAround(transform.position, Vector3.forward,
@@ -97,25 +97,25 @@ public class Player : MonoBehaviour {
         //if we're not using that skill and we press its button, equip it
         //if we press that button again, go back to dagger
         if (Input.GetMouseButtonDown(1)) {
-            if (skillLevel >= 1) gun.pressed(false);
-            if (skillLevel >= 2) burst.pressed(false);
+            if (skillLevel >= 1) gunIcon.pressed(false);
+            if (skillLevel >= 2) stunIcon.pressed(false);
             attacktype = 0;
         } else if (skillLevel >= 1 && Input.GetKeyDown(KeyCode.Q)) {
             if (attacktype == 1) {
-                gun.pressed(false);
+                gunIcon.pressed(false);
                 attacktype = 0;
             } else {
-                gun.pressed(true);
-                if (skillLevel >= 2) burst.pressed(false);
+                gunIcon.pressed(true);
+                if (skillLevel >= 2) stunIcon.pressed(false);
                 attacktype = 1;
             }
         } else if (skillLevel >= 2 && Input.GetKeyDown(KeyCode.E)) {
             if (attacktype == 2) {
-                burst.pressed(false);
+                stunIcon.pressed(false);
                 attacktype = 0;
             } else {
-                gun.pressed(false);
-                burst.pressed(true);
+                gunIcon.pressed(false);
+                stunIcon.pressed(true);
                 attacktype = 2;
             }
         }
@@ -125,7 +125,7 @@ public class Player : MonoBehaviour {
     private void UpdateVisuals(Vector3 mousepos) {
         sr.flipX = mousepos.x < transform.position.x;
         dagger.GetComponent<SpriteRenderer>().flipY = sr.flipX;
-        gunvisual.GetComponent<SpriteRenderer>().flipY = sr.flipX;
+        gunVisual.GetComponent<SpriteRenderer>().flipY = sr.flipX;
         if (input_velocity.x == 0) {
             if (input_velocity.y > 0) {
                 ChangeAnimationState(Player_moveU);
@@ -147,15 +147,15 @@ public class Player : MonoBehaviour {
         c.a = attacktype == 0 ? 1 : 0;
         dagger.GetComponent<SpriteRenderer>().material.color = c;
 
-        c = gunvisual.GetComponent<SpriteRenderer>().material.color;
+        c = gunVisual.GetComponent<SpriteRenderer>().material.color;
         c.a = attacktype == 1 ? 1 : 0;
-        gunvisual.GetComponent<SpriteRenderer>().material.color = c;
+        gunVisual.GetComponent<SpriteRenderer>().material.color = c;
 
-        c = burstvisual.GetComponent<SpriteRenderer>().material.color;
+        c = stunVisual.GetComponent<SpriteRenderer>().material.color;
         c.a = attacktype == 2 ? 1 : 0;
-        burstvisual.GetComponent<SpriteRenderer>().material.color = c;
-        burstvisual.transform.rotation = Quaternion.identity;
-        if (attacktype == 2) burstvisual.transform.position = mousepos;
+        stunVisual.GetComponent<SpriteRenderer>().material.color = c;
+        stunVisual.transform.rotation = Quaternion.identity;
+        stunVisual.transform.position = mousepos;
     }
     private void Attack() {
            if (attacktype == 0) {
@@ -169,37 +169,37 @@ public class Player : MonoBehaviour {
                        yield return new WaitForSeconds(0.1f);
                        attackpoint.transform.position -= (attackpoint.transform.position - transform.position).normalized;
                    }
-                   Collider2D hitenemy = Physics2D.OverlapCircle(attackpoint.position,
+                   Collider2D enemyCollider = Physics2D.OverlapCircle(attackpoint.position,
                    stabradius, 8); //8 in binary so only sees layer 3 colliders
-                   if (hitenemy != null) {
+                   if (enemyCollider != null) {
                        dagger.PlayHitAnimation();
-                       Enemy enemy = hitenemy.gameObject.GetComponent<Enemy>();
-                       increaseMana(enemy.getmana());
+                       Enemy enemy = enemyCollider.GetComponent<Enemy>();
+                       increaseMana(enemy.getMana());
                        enemy.Death();
                    }
                    attackCooldown = TimeBtwAttacks;
                }
            } else if (attacktype == 1) {
-               if (currentmana >= guncost && gun.isready()) {
-                   gunvisual.PlayShootAnimation();
+               if (currentmana >= gunCost && gunIcon.isready()) {
+                   gunVisual.PlayShootAnimation();
                    AudioManager.instance.PlaySound(Sound.player_gunfire);
                    Instantiate(projectile, attackpoint.position, Quaternion.identity);
-                   increaseMana(-guncost);
-                   gun.reset();
+                   increaseMana(-gunCost);
+                   gunIcon.reset();
                } else {
                    AudioManager.instance.PlaySound(Sound.player_noammo);
                }
            } else {
-               if (currentmana >= burstcost && burst.isready()) {
-                   increaseMana(-burstcost);
-                   burstvisual.PlayAttackAnimation();
+               if (currentmana >= stunCost && stunIcon.isready()) {
+                   increaseMana(-stunCost);
+                   stunVisual.PlayAttackAnimation();
                    AudioManager.instance.PlaySound(Sound.player_burst);
-                   StartCoroutine(Camera.main.GetComponent<CameraEffects>().Shake());
-                   Collider2D[] enemies = Physics2D.OverlapCircleAll(burstvisual.transform.position, 4.35f, 8);
+                   Camera.main.GetComponent<CameraEffects>().Shake();
+                   Collider2D[] enemies = Physics2D.OverlapCircleAll(stunVisual.transform.position, 4.35f, 8);
                    for (int i = 0; i < enemies.Length; ++i) {
-                       enemies[i].gameObject.GetComponent<Enemy>().becomestunned();
+                       enemies[i].GetComponent<Enemy>().getStunned();
                    }
-                   burst.reset();
+                   stunIcon.reset();
                }
            }
     }
@@ -215,17 +215,8 @@ public class Player : MonoBehaviour {
 
     public void increaseMana(int amt) {
         ManaBar.instance.updateBars(currentmana = Mathf.Min(currentmana + amt, maxmana));
-        burstvisual.updateSprite(currentmana);
+        stunVisual.updateSprite(currentmana);
     }
-
-    /**public void switchToDagger() {
-        gun.pressed(false);
-        burst.pressed(false);
-        attacktype = 0;
-        Vector3 mousepos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        mousepos.z = Camera.main.transform.position.z + Camera.main.nearClipPlane;
-        UpdateVisuals(mousepos);
-    }*/
 
     private void Die() {
         AudioManager.instance.PlaySound(Sound.player_die);
@@ -236,31 +227,30 @@ public class Player : MonoBehaviour {
         IEnumerator DeathScene() {
             ChangeAnimationState(Player_die);
             yield return new WaitForSeconds(0.6f);
-            LoadLevelSelect();
+            SceneMethods.GoToLevelSelect();
         }
     }
 
-    public void LoadLevelSelect() {
-        EnableAllPlayerVisuals(false);
-        SceneManager.LoadScene(SceneManager.sceneCountInBuildSettings - 1);
-    }
-
-    public void Spawn(Vector2 pos, int health, int mana) {
+    public void Spawn(Vector2 pos, int health, int mana, int skillLevel, bool canDie = true) {
+        SetVisible(true);
         GetComponent<Collider2D>().enabled = true;
         rb.velocity = Vector2.zero;
         transform.position = pos;
         HealthBar.sethealth(this.health = health);
-        ManaBar.instance.updateBars(currentmana = mana);
-        gun.Initialize(); burst.Initialize();
-        EnableAllPlayerVisuals(true);
+        increaseMana(mana - currentmana);
+        this.skillLevel = skillLevel;
+        this.canDie = canDie;
+
+        //equip dagger
+        gunIcon.Initialize(); stunIcon.Initialize();
+        gunIcon.pressed(false);
+        stunIcon.pressed(false);
+        attacktype = 0; 
+
         enabled = true;
     }
 
-    private void EnableAllPlayerVisuals(bool enable) {
-        sr.enabled = enable;
-        dagger.GetComponent<SpriteRenderer>().enabled = enable;
-        gunvisual.GetComponent<SpriteRenderer>().enabled = enable;
-        burstvisual.GetComponent<SpriteRenderer>().enabled = enable;
-        PlayerInfoCanvas.instance.GetComponent<Canvas>().enabled = enable;
+    public static void SetVisible(bool visible) {
+        instance.SetActive(visible);
     }
 }

@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 public class Skill_Icon : MonoBehaviour {
     public int skillcost;
     public Image timerRing;
@@ -9,6 +8,14 @@ public class Skill_Icon : MonoBehaviour {
     public Sprite ready;
     public float cooldown = 1f;
     private float timer;
+
+    public void show() {
+        gameObject.SetActive(true);
+    }
+
+    public void hide() {
+        gameObject.SetActive(false);
+    }
 
     private void Start() {
         Initialize();

@@ -3,8 +3,8 @@ using System.Collections;
 public class CameraEffects : MonoBehaviour {
     public AnimationCurve curve;
     public float shakeDuration;
-    public float lookAheadFactor = 1f;
-    /**private float camZ;
+    /**public float lookAheadFactor = 1f;
+    private float camZ;
 
     private void Awake() {
         camZ = transform.position.z;
@@ -16,16 +16,19 @@ public class CameraEffects : MonoBehaviour {
         new_pos.z = camZ;
         transform.position = new_pos;
     }*/
-    public IEnumerator Shake() {
-        Vector3 startPos = transform.position;
-        float elapsedTime = 0f;
-        while (elapsedTime < shakeDuration) {
-            elapsedTime += Time.deltaTime;
-            float strength = curve.Evaluate(elapsedTime / shakeDuration);
-            Vector3 delta = Random.insideUnitCircle * strength;
-            transform.position = startPos + delta;
-            yield return null;
+    public void Shake() {
+        StartCoroutine(Shake());
+        IEnumerator Shake() {
+            Vector3 startPos = transform.position;
+            float elapsedTime = 0f;
+            while (elapsedTime < shakeDuration) {
+                elapsedTime += Time.deltaTime;
+                float strength = curve.Evaluate(elapsedTime / shakeDuration);
+                Vector3 delta = Random.insideUnitCircle * strength;
+                transform.position = startPos + delta;
+                yield return null;
+            }
+            transform.position = startPos;
         }
-        transform.position = startPos;
     }
 }

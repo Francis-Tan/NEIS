@@ -283,7 +283,7 @@ GameObject:
   - component: {fileID: 375674883066507759}
   - component: {fileID: 4808801962335995420}
   m_Layer: 8
-  m_Name: BurstVisual
+  m_Name: StunVisual
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -520,8 +520,8 @@ MonoBehaviour:
   attackpoint: {fileID: 4865906067203039791}
   stabradius: 0.3
   TimeBtwAttacks: 0
-  gun: {fileID: 0}
-  burst: {fileID: 0}
+  gunIcon: {fileID: 0}
+  stunIcon: {fileID: 0}
   projectile: {fileID: 1395363514749417121, guid: b1285a0604250f342929a8936a3c92da, type: 3}
 --- !u!95 &1018491810374817342
 Animator:

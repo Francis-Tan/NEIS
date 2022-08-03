@@ -7,6 +7,14 @@ public class HealthBar : MonoBehaviour {
     static float health, maxHealth;
     float lerpspeed;
 
+    public void show() {
+        gameObject.SetActive(true);
+    }
+
+    public void hide() {
+        gameObject.SetActive(false);
+    }
+
     private void Start() {
         healthText = GetComponentInChildren<TMP_Text>();
         maxHealth = Player.GetInstance().GetComponent<Player>().health;

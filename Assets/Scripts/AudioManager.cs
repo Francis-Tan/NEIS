@@ -1,5 +1,7 @@
 using UnityEngine;
 public enum Sound {
+    BGM_MainMenu,
+    BGM_MainLevels,
     //player_stab,
     player_gunfire,
     player_noammo,
@@ -24,16 +26,19 @@ public enum Sound {
 }
 public class AudioManager : MonoBehaviour
 {
+    //current AudioPlayer system is in 1st iteration for new menu
     public static AudioManager instance;
+    public AudioPlayer[] BGM;
     public AudioPlayer[] soundEffects;
-    public bool inTutorial;
+    private AudioPlayer currentBGM;
 
     [System.Serializable]
     public class AudioPlayer {
         public Sound sound;
         public AudioClip clip;
         [HideInInspector]
-        public AudioSource speaker;
+        private AudioSource speaker;
+        public bool isPlaying;
         [Range(0f, 1f)]
         public float volume = 1f;
         [Range(.1f, 3f)]
@@ -54,6 +59,18 @@ public class AudioManager : MonoBehaviour
         public void PlayOnce() {
             speaker.PlayOneShot(clip);
         }
+
+        public void PlayOnLoop() {
+            isPlaying = true;
+            speaker.loop = true;
+            speaker.Play();
+        }
+
+        public void StopPlaying() {
+            isPlaying = false;
+            speaker.loop = false;
+            speaker.Stop();
+        }
     }
     
     private void Awake() {
@@ -62,17 +79,28 @@ public class AudioManager : MonoBehaviour
             return;
         }
         instance = this;
-        if (!inTutorial) DontDestroyOnLoad(gameObject);
+        DontDestroyOnLoad(gameObject);
+        foreach (AudioPlayer ap in BGM) ap.Initialize();
         foreach (AudioPlayer ap in soundEffects) ap.Initialize();
+        currentBGM = BGM[(int)Sound.BGM_MainMenu];
+        PlayBGM(Sound.BGM_MainMenu);
     }
 
     private void Update() {
         if (Input.GetKeyDown(KeyCode.Z)) {
+            foreach (AudioPlayer ap in BGM) ap.Reset();
             foreach (AudioPlayer ap in soundEffects) ap.Reset();
         }
     }
-
+    public void PlayBGM(Sound sound) {
+        AudioPlayer bgm = BGM[(int)sound];
+        if (!bgm.isPlaying) {
+            currentBGM.StopPlaying();
+            bgm.PlayOnLoop();
+            currentBGM = bgm;
+        }
+    }
     public void PlaySound(Sound sound) {
-        soundEffects[(int)sound].PlayOnce();
+        soundEffects[(int)sound - 2].PlayOnce();
     }
 }

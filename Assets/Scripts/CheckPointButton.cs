@@ -19,9 +19,11 @@ public class CheckPointButton : MonoBehaviour, IPointerDownHandler {
 
     public void OnPointerDown(PointerEventData eventData) {
         if (playerData != null) {
+            AudioManager.instance.PlayBGM(Sound.BGM_MainLevels);
             SceneManager.LoadScene(FloorNumber + 1);
-            Player.GetInstance().GetComponent<Player>().Spawn(new Vector2(-10.65f, 6.73f), 
-                    playerData.hp, playerData.mana);
+            Player.GetInstance().GetComponent<Player>()
+                .Spawn(new Vector2(-10.65f, 6.73f), playerData.hp, playerData.mana, 2);
+            PlayerInfo.SetVisibleAll(true);
         }
     }
 }

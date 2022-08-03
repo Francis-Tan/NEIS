@@ -4,6 +4,15 @@ public class ManaBar : MonoBehaviour {
     public static ManaBar instance;
     public Image[] bars;
     private int currentBar = -1;
+
+    public void show() {
+        gameObject.SetActive(true);
+    }
+
+    public void hide() {
+        gameObject.SetActive(false);
+    }
+
     private void Awake() {
         if (instance != null) {
             Destroy(gameObject); 
