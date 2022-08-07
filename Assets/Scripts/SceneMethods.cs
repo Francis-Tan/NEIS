@@ -21,10 +21,10 @@ public class SceneMethods : MonoBehaviour {
     }
 
     public void PlayTutorial() {
-        SceneManager.LoadSceneAsync(1);
         Player.GetInstance()
             .Spawn(new Vector2(-0.8f, -1.8f), 50, 0, 0, false);
         PlayerInfo.ShowBarsOnly();
+        SceneManager.LoadSceneAsync(1);
     }
 
     public void QuitGame() {

@@ -170,7 +170,7 @@ public class Player : MonoBehaviour {
                        attackpoint.transform.position -= (attackpoint.transform.position - transform.position).normalized;
                    }
                    Collider2D enemyCollider = Physics2D.OverlapCircle(attackpoint.position,
-                   stabradius, 8); //8 in binary so only sees layer 3 colliders
+                   stabradius, 8); //8 in binary bits is 1000 so only sees layer 3 colliders
                    if (enemyCollider != null) {
                        dagger.PlayHitAnimation();
                        Enemy enemy = enemyCollider.GetComponent<Enemy>();

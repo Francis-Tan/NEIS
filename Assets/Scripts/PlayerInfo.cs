@@ -17,10 +17,15 @@ public class PlayerInfo : MonoBehaviour
         canvasGroup = GetComponent<CanvasGroup>();
         DontDestroyOnLoad(instance);
         gameObject.SetActive(false);
+        //this is on UI layer which is set to only detect default, enemy and player colliders
+        if (GetComponent<BoxCollider2D>().IsTouchingLayers()) {
+            ++num;
+            FadeOut();
+        }
     }
 
-    private void OnTriggerEnter2D(Collider2D collision) {
-        if (collision.GetComponent<Enemy>() != null || collision.GetComponent<Player>() != null) {
+    private void OnTriggerEnter2D(Collider2D collider) {
+        if (collider.GetComponent<Enemy>() != null || collider.GetComponent<Player>() != null) {
             if (num++ == 0) FadeOut();
         }
     }

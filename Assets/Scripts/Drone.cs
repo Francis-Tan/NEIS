@@ -30,7 +30,7 @@ public class Drone : Enemy {
         gameObject.layer = 0;
         gameObject.tag = "Blocking";
     }
-    protected override void unstunned_behaviour() {
+    protected override void default_behaviour() {
         rb.velocity = Vector2.zero;
         if (down) {
             timetillup -= Time.fixedDeltaTime;

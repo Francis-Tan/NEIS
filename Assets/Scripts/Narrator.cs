@@ -24,6 +24,7 @@ public class Narrator : MonoBehaviour
         backButton.enabled = false;
         gunIcon = PlayerInfo.instance.gunIcon;
         stunIcon = PlayerInfo.instance.stunIcon;
+        ResizePlayerInfoCollider(-268.1925f, 257.3529f);
     }
 
     private void Update() {
@@ -48,6 +49,7 @@ public class Narrator : MonoBehaviour
                         gunIcon.show();
                         //player.gunIcon = gunIcon;
                         ++player.skillLevel;
+                        ResizePlayerInfoCollider(-244.0188f, 305.7002f);
                         break;
                     case 6:
                         //spawn 3 gunners
@@ -61,6 +63,7 @@ public class Narrator : MonoBehaviour
                         stunIcon.show();
                         //player.stunIcon = stunIcon;
                         ++player.skillLevel;
+                        ResizePlayerInfoCollider(-219.8962f, 353.9455f);
                         break;
                     case 10:
                         //spawn gunners and assassins
@@ -92,6 +95,18 @@ public class Narrator : MonoBehaviour
             if (currDialouge == Dialouge.Length - 2) forwardButton.enabled = true;
             else if (currDialouge == 0) backButton.enabled = false;
         }
+    }
+
+    private void ResizePlayerInfoCollider(float offsetX, float sizeX) {
+        BoxCollider2D bc = PlayerInfo.instance.GetComponent<BoxCollider2D>();
+
+        Vector2 offset = bc.offset;
+        offset.x = offsetX;
+        bc.offset = offset;
+
+        Vector2 size = bc.size;
+        size.x = sizeX;
+        bc.size = size;
     }
 
     private void spawnSpawner() {

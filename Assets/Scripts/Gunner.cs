@@ -22,7 +22,7 @@ public class Gunner : Enemy {
         enabled = true;
     }
 
-    protected override void unstunned_behaviour() {
+    protected override void default_behaviour() {
         if (shooting_time > 0) {
             shooting_time -= Time.fixedDeltaTime;
             if (attackCooldown > 0) {

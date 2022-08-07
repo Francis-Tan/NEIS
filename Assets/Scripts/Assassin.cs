@@ -28,7 +28,7 @@ public class Assassin : Enemy {
         enabled = true;
     }
 
-    protected override void unstunned_behaviour() {
+    protected override void default_behaviour() {
         if (disappearTimer > 0) { disappearTimer -= Time.fixedDeltaTime; }
         else if (!sr.enabled) { appear(); }
         else if (appearTimer > 0) { attacking_behaviour(); appearTimer -= Time.fixedDeltaTime; }

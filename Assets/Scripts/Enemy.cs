@@ -55,9 +55,8 @@ public abstract class Enemy : MonoBehaviour {
         if (stunned) {
             rb.velocity = Vector2.zero;
             stunned_behaviour();
-        }
-        else {
-            unstunned_behaviour();
+        } else {
+            default_behaviour();
         }
     }
     private void stunned_behaviour() {
@@ -79,7 +78,7 @@ public abstract class Enemy : MonoBehaviour {
             stunned = false;
         }
     }
-    protected abstract void unstunned_behaviour();
+    protected abstract void default_behaviour();
     protected void ChangeAnimationState(string newState) {
         if (currentState == newState) return;
         animator.Play(newState);
@@ -92,7 +91,9 @@ public abstract class Enemy : MonoBehaviour {
             Color c = hiticon.GetComponent<SpriteRenderer>().material.color;
             c.a = 1;
             hiticon.GetComponent<SpriteRenderer>().material.color = c;
-        } else { Death(); }
+        } else { 
+            Death(); 
+        }
     }
     public int getMana() {
         return mana;

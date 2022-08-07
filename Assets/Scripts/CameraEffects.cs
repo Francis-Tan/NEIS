@@ -19,6 +19,9 @@ public class CameraEffects : MonoBehaviour {
         transform.position = new_pos;
     }
     */
+    private void Awake() {
+        PlayerInfo.instance.GetComponent<Canvas>().worldCamera = Camera.main;
+    }
     public void Shake() {
         StartCoroutine(Shake());
         IEnumerator Shake() {
