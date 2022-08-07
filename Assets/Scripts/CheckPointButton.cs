@@ -2,9 +2,9 @@ using UnityEngine;
 using UnityEngine.UI; //for Button class
 using UnityEngine.SceneManagement; //for SceneManager
 using TMPro; //for TextMeshProUGUI
-using UnityEngine.EventSystems;
+using System.Collections;
 
-public class CheckPointButton : MonoBehaviour, IPointerDownHandler {
+public class CheckPointButton : MonoBehaviour {
     public int FloorNumber;
     private CheckPointManager.PlayerData playerData;
 
@@ -17,12 +17,16 @@ public class CheckPointButton : MonoBehaviour, IPointerDownHandler {
         }
     }
 
-    public void OnPointerDown(PointerEventData eventData) {
-        if (playerData != null) {
-            AudioManager.instance.PlayBGM(Sound.BGM_MainLevels);
-            SceneManager.LoadScene(FloorNumber + 1);
-            Player.GetInstance().GetComponent<Player>()
-                .Spawn(new Vector2(-10.65f, 6.73f), playerData.hp, playerData.mana, 2);
+    public void LoadCheckPointLevel() {
+        Player.EnableStunSR(false);
+        AudioManager.instance.PlayBGM(Sound.BGM_MainLevels);
+        Player.GetInstance().Spawn(SceneMethods.MainLevelPos,
+            playerData.hp, playerData.mana, 2);
+        StartCoroutine(LoadNextLevel());
+        IEnumerator LoadNextLevel() {
+            yield return new WaitForSeconds(0f);
+            SceneManager.LoadSceneAsync(FloorNumber + 1);
+            Player.EnableStunSR(true); //must be under waitforseconds to be hidden
             PlayerInfo.SetVisibleAll(true);
         }
     }

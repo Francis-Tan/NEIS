@@ -6,7 +6,7 @@ public class SceneMethods : MonoBehaviour {
      * For each button, We could also set renderer.material.color to colors 
      * in the methods OnMouseEnter() OnMouseExit() OnMouseClick()
      */
-
+    public static Vector2 MainLevelPos = new Vector2(-12.7f, 6.73f);
     public static void GoToMenu() {
         Player.SetVisible(false);
         PlayerInfo.SetVisibleAll(false);
@@ -21,8 +21,8 @@ public class SceneMethods : MonoBehaviour {
     }
 
     public void PlayTutorial() {
-        SceneManager.LoadScene(1);
-        Player.GetInstance().GetComponent<Player>()
+        SceneManager.LoadSceneAsync(1);
+        Player.GetInstance()
             .Spawn(new Vector2(-0.8f, -1.8f), 50, 0, 0, false);
         PlayerInfo.ShowBarsOnly();
     }

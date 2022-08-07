@@ -1,8 +1,9 @@
 using UnityEngine;
+using UnityEngine.Audio;
 public enum Sound {
     BGM_MainMenu,
     BGM_MainLevels,
-    //player_stab,
+    player_stab,
     player_gunfire,
     player_noammo,
     bullet_hitwall,
@@ -28,9 +29,13 @@ public class AudioManager : MonoBehaviour
 {
     //current AudioPlayer system is in 1st iteration for new menu
     public static AudioManager instance;
+    public VolumeSlider BGMSlider, SFXSlider;
+    public AudioMixerGroup BGMMixer;
+    public AudioMixerGroup SFXMixer;
     public AudioPlayer[] BGM;
-    public AudioPlayer[] soundEffects;
     private AudioPlayer currentBGM;
+    public AudioPlayer[] soundEffects;
+
 
     [System.Serializable]
     public class AudioPlayer {
@@ -38,37 +43,43 @@ public class AudioManager : MonoBehaviour
         public AudioClip clip;
         [HideInInspector]
         private AudioSource speaker;
-        public bool isPlaying;
+        private bool playing;
         [Range(0f, 1f)]
         public float volume = 1f;
         [Range(.1f, 3f)]
         public float pitch = 1f;
 
-        public void Initialize() {
+        public void Initialize(AudioMixerGroup AudioMixer) {
             //sound = (Sound) Sound.Parse(typeof(Sound), clip.name);
             speaker = instance.gameObject.AddComponent<AudioSource>();
-            Reset();
+            speaker.outputAudioMixerGroup = AudioMixer;
+            ResetSpeakerSettings();
         }
 
-        public void Reset() {
+        public void ResetSpeakerSettings() {
             speaker.clip = clip;
             speaker.volume = volume;
             speaker.pitch = pitch;
         }
 
+        public bool isPlaying() {
+            return playing;
+        }
+
         public void PlayOnce() {
+            playing = true;
             speaker.PlayOneShot(clip);
         }
 
         public void PlayOnLoop() {
-            isPlaying = true;
             speaker.loop = true;
+            playing = true;
             speaker.Play();
         }
 
         public void StopPlaying() {
-            isPlaying = false;
             speaker.loop = false;
+            playing = false;
             speaker.Stop();
         }
     }
@@ -80,24 +91,26 @@ public class AudioManager : MonoBehaviour
         }
         instance = this;
         DontDestroyOnLoad(gameObject);
-        foreach (AudioPlayer ap in BGM) ap.Initialize();
-        foreach (AudioPlayer ap in soundEffects) ap.Initialize();
+        foreach (AudioPlayer ap in BGM) ap.Initialize(BGMMixer);
+        foreach (AudioPlayer ap in soundEffects) ap.Initialize(SFXMixer);
+        BGMSlider.Initialize();
+        SFXSlider.Initialize();
         currentBGM = BGM[(int)Sound.BGM_MainMenu];
         PlayBGM(Sound.BGM_MainMenu);
     }
 
     private void Update() {
         if (Input.GetKeyDown(KeyCode.Z)) {
-            foreach (AudioPlayer ap in BGM) ap.Reset();
-            foreach (AudioPlayer ap in soundEffects) ap.Reset();
+            foreach (AudioPlayer ap in BGM) ap.ResetSpeakerSettings();
+            foreach (AudioPlayer ap in soundEffects) ap.ResetSpeakerSettings();
         }
     }
     public void PlayBGM(Sound sound) {
         AudioPlayer bgm = BGM[(int)sound];
-        if (!bgm.isPlaying) {
+        if (!bgm.isPlaying()) {
             currentBGM.StopPlaying();
-            bgm.PlayOnLoop();
             currentBGM = bgm;
+            bgm.PlayOnLoop();
         }
     }
     public void PlaySound(Sound sound) {

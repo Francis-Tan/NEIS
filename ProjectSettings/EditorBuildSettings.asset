@@ -30,6 +30,6 @@ EditorBuildSettings:
     path: Assets/Scenes/LevelSelect.unity
     guid: ce419a0ee75bf09459fbdccec6b2cc67
   - enabled: 0
-    path: Assets/Scenes/Sound Options.unity
+    path: Assets/Scenes/Backup.unity
     guid: 086dc900591bbd44db53b1b309316ec8
   m_configObjects: {}

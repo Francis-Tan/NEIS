@@ -14,12 +14,12 @@ public class Narrator : MonoBehaviour
     public Checkpoint checkpoint;
     public Skill_Icon gunIcon, stunIcon;
     private int currDialouge = 0;
-    Player player;
+    private Player player;
 
     private void Start() {
         tmp = GetComponent<TextMeshProUGUI>();
         tmp.text = Dialouge[0];
-        player = Player.GetInstance().GetComponent<Player>();
+        player = Player.GetInstance();
         ++LoadLevel.instance.enemycount;
         backButton.enabled = false;
         gunIcon = PlayerInfo.instance.gunIcon;

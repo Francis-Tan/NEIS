@@ -304,9 +304,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 845417663}
-        m_TargetAssemblyTypeName: ButtonMethods, Assembly-CSharp
-        m_MethodName: PlayGame
+      - m_Target: {fileID: 2506806}
+        m_TargetAssemblyTypeName: CheckPointButton, Assembly-CSharp
+        m_MethodName: LoadCheckPointLevel
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -315,7 +315,7 @@ MonoBehaviour:
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
-        m_CallState: 0
+        m_CallState: 2
 --- !u!114 &2506806
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -808,9 +808,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 845417663}
-        m_TargetAssemblyTypeName: ButtonMethods, Assembly-CSharp
-        m_MethodName: Retry
+      - m_Target: {fileID: 1270331815}
+        m_TargetAssemblyTypeName: CheckPointButton, Assembly-CSharp
+        m_MethodName: LoadCheckPointLevel
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -819,7 +819,7 @@ MonoBehaviour:
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
-        m_CallState: 0
+        m_CallState: 2
 --- !u!114 &1270331817
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1206,9 +1206,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 845417663}
-        m_TargetAssemblyTypeName: ButtonMethods, Assembly-CSharp
-        m_MethodName: Retry
+      - m_Target: {fileID: 2019915370}
+        m_TargetAssemblyTypeName: CheckPointButton, Assembly-CSharp
+        m_MethodName: LoadCheckPointLevel
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1217,7 +1217,7 @@ MonoBehaviour:
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
-        m_CallState: 0
+        m_CallState: 2
 --- !u!114 &2019915372
 MonoBehaviour:
   m_ObjectHideFlags: 0

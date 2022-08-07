@@ -6,7 +6,7 @@ public abstract class Enemy : MonoBehaviour {
     protected bool stunned = false;
     public GameObject hiticon;
     public GameObject stunicon;
-    protected GameObject player;
+    protected Player player;
     protected Rigidbody2D rb; //rigidbody movement better for collision
     protected BoxCollider2D bc; //for detecting collisions with
                                 //- could replace with raycast box

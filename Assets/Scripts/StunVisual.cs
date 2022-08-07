@@ -30,6 +30,6 @@ public class StunVisual : MonoBehaviour {
     }
 
     public void StopAttackAnimation() {
-        updateSprite(Player.GetInstance().GetComponent<Player>().currentmana);
+        updateSprite(Player.GetInstance().currentmana);
     }
 }

@@ -4,7 +4,7 @@ public class Player : MonoBehaviour {
     // GetInstance must be called on start, otherwise the caller may awake before player
     public bool canDie;
     public int skillLevel; // 0: dagger, 1: += gunIcon, 2: += stun
-    private static GameObject instance;
+    private static Player instance;
     private static SpriteRenderer sr;
     private Rigidbody2D rb; //rigidbody movement better for collision
     public float moveSpeed = 23;
@@ -43,7 +43,7 @@ public class Player : MonoBehaviour {
         if (instance != null) {
             Destroy(gameObject); return;
         }
-        instance = gameObject; 
+        instance = GetComponent<Player>(); 
         CheckPointManager.UpdateCheckpoint(1, 50, 0);
 
         DontDestroyOnLoad(instance);
@@ -70,7 +70,7 @@ public class Player : MonoBehaviour {
         gameObject.SetActive(false);
     }
 
-    public static GameObject GetInstance() {
+    public static Player GetInstance() {
         return instance;
     }
 
@@ -159,7 +159,7 @@ public class Player : MonoBehaviour {
     }
     private void Attack() {
            if (attacktype == 0) {
-               if (attackCooldown > 0) attackCooldown -= Time.fixedDeltaTime;
+            if (attackCooldown > 0) attackCooldown -= Time.fixedDeltaTime;
                else {
                    StartCoroutine(attack());
                    IEnumerator attack() {
@@ -176,6 +176,8 @@ public class Player : MonoBehaviour {
                        Enemy enemy = enemyCollider.GetComponent<Enemy>();
                        increaseMana(enemy.getMana());
                        enemy.Death();
+                   } else {
+                    AudioManager.instance.PlaySound(Sound.player_stab);
                    }
                    attackCooldown = TimeBtwAttacks;
                }
@@ -251,6 +253,10 @@ public class Player : MonoBehaviour {
     }
 
     public static void SetVisible(bool visible) {
-        instance.SetActive(visible);
+        instance.gameObject.SetActive(visible);
+    }
+
+    public static void EnableStunSR(bool enable) {
+        stunVisual.GetComponent<SpriteRenderer>().enabled = enable;
     }
 }

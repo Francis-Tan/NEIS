@@ -3,13 +3,14 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 public class LoadLevel : MonoBehaviour {
     public static LoadLevel instance;
-    public Vector2 spawnPosition;
+    private Vector2 spawnPosition;
     public int enemycount;
     //should be able to cache this
     private void Awake() {
         GetComponent<Collider2D>().enabled = false;
         GetComponent<SpriteRenderer>().enabled = false;
         instance = GetComponent<LoadLevel>();
+        spawnPosition = SceneMethods.MainLevelPos;
     }
 
     public void takenoteof(Enemy enemy) {

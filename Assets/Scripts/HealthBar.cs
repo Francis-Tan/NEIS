@@ -17,7 +17,7 @@ public class HealthBar : MonoBehaviour {
 
     private void Start() {
         healthText = GetComponentInChildren<TMP_Text>();
-        maxHealth = Player.GetInstance().GetComponent<Player>().health;
+        maxHealth = Player.GetInstance().health;
         health = maxHealth;
     }
 

@@ -13,6 +13,9 @@ scopes = {
 	"last_search.7BEC51F9" = ""
 	"OpenInspectorPreview.7BEC51F9" = "0"
 	"currentGroup.7BEC51F9" = "asset"
+	"last_search.8440E7BB" = "audio mi"
+	"OpenInspectorPreview.8440E7BB" = "0"
+	"currentGroup.8440E7BB" = "all"
 }
 providers = {
 	adb = {
@@ -57,6 +60,7 @@ providers = {
 	}
 }
 recentSearches = [
+	"audio mi"
 ]
 searchItemFavorites = [
 ]
