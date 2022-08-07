@@ -2,8 +2,10 @@ using UnityEngine;
 using System.Collections;
 public class CameraEffects : MonoBehaviour {
     public AnimationCurve curve;
-    public float shakeDuration;
-    /**public float lookAheadFactor = 1f;
+    public float shakeDuration, shakeIntensity;
+    /**
+    camera following mouse
+    public float lookAheadFactor = 1f;
     private float camZ;
 
     private void Awake() {
@@ -15,7 +17,8 @@ public class CameraEffects : MonoBehaviour {
         Vector3 new_pos = player_pos + (mouse_pos - player_pos).normalized * lookAheadFactor;
         new_pos.z = camZ;
         transform.position = new_pos;
-    }*/
+    }
+    */
     public void Shake() {
         StartCoroutine(Shake());
         IEnumerator Shake() {
@@ -23,8 +26,8 @@ public class CameraEffects : MonoBehaviour {
             float elapsedTime = 0f;
             while (elapsedTime < shakeDuration) {
                 elapsedTime += Time.deltaTime;
-                float strength = curve.Evaluate(elapsedTime / shakeDuration);
-                Vector3 delta = Random.insideUnitCircle * strength;
+                float amplitude = shakeIntensity * curve.Evaluate(elapsedTime / shakeDuration);
+                Vector3 delta = amplitude * Random.insideUnitCircle;
                 transform.position = startPos + delta;
                 yield return null;
             }

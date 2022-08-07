@@ -45,8 +45,7 @@ public class Drone : Enemy {
                 gameObject.layer = 0;
                 gameObject.tag = "Blocking";
             }
-        }
-        else if (ammo > 0) {
+        } else if (ammo > 0) {
             directionToPlayer = (player.transform.position - transform.position).normalized;
             deltapos = moveSpeed * Time.fixedDeltaTime * new Vector2(directionToPlayer.x, directionToPlayer.y);
             float distFromPlayer = bc.Distance(player.GetComponent<Collider2D>()).distance;
@@ -57,8 +56,7 @@ public class Drone : Enemy {
                 attackCooldown = TimeBtwAttacks;
                 ammo--;
             }
-        }
-        else {
+        } else {
             if (attackCooldown > 0) attackCooldown -= Time.fixedDeltaTime;
             else {
                 //rb.isKinematic = true;

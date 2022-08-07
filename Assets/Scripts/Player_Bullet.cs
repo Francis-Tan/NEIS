@@ -42,8 +42,7 @@ public class Player_Bullet : MonoBehaviour {
                 runinto.GetComponent<Enemy>().takeDamage();
                 AudioManager.instance.PlaySound(Sound.player_bullet_hitenemy);
                 ChangeAnimationState(pb_explode);
-            }
-            else if (runinto.CompareTag("Blocking")) {
+            } else if (runinto.CompareTag("Blocking")) {
                 enabled = false;
                 AudioManager.instance.PlaySound(Sound.bullet_hitwall);
                 ChangeAnimationState(pb_explode);
