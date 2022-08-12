@@ -31,8 +31,10 @@ public class VolumeSlider : MonoBehaviour, IPointerUpHandler {
     }
 
     public void OnPointerUp(PointerEventData eventData) {
-        SaveVolume();
-        if (masterName == "SFXVol") AudioManager.instance.PlaySound(Sound.player_gunfire);
+        if (PauseMenu.paused) { //otherwise triggers even when pause menu closed
+            SaveVolume();
+            if (masterName == "SFXVol") AudioManager.instance.PlaySound(Sound.player_gunfire);
+        }
     }
 
     private void SaveVolume() {

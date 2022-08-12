@@ -221,7 +221,7 @@ Canvas:
   m_OverrideSorting: 1
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
-  m_AdditionalShaderChannelsFlag: 0
+  m_AdditionalShaderChannelsFlag: 25
   m_SortingLayerID: 0
   m_SortingOrder: -3
   m_TargetDisplay: 0
@@ -922,6 +922,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 576913497182725997, guid: cc011f4584aa5bd42a54f0177b6a66db, type: 3}
+      propertyPath: soundSettings
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 576913497182725997, guid: cc011f4584aa5bd42a54f0177b6a66db, type: 3}
       propertyPath: lookAheadFactor
       value: 1

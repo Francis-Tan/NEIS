@@ -122,4 +122,4 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   shakeDuration: 0.3
-  shakeIntensity: 2
+  shakeIntensity: 1.5

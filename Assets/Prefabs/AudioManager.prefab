@@ -50,12 +50,12 @@ MonoBehaviour:
   SFXMixer: {fileID: 24300002, guid: fa6de5e9d52f0d64a85ba993898cb82a, type: 2}
   BGM:
   - sound: 0
-    clip: {fileID: 8300000, guid: 14a00a06296518943b77fecab676a238, type: 3}
+    clip: {fileID: 8300000, guid: 4ff29526be9b6b54b8ba35969df99e7b, type: 3}
     volume: 0.3
     pitch: 1
   - sound: 1
-    clip: {fileID: 8300000, guid: 92d11fe4142f6824ab24a55df8742957, type: 3}
-    volume: 0.3
+    clip: {fileID: 8300000, guid: f7757e63b687d6645bfe82d54eb1920a, type: 3}
+    volume: 0.4
     pitch: 1
   soundEffects:
   - sound: 2

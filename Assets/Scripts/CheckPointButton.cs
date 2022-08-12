@@ -18,16 +18,6 @@ public class CheckPointButton : MonoBehaviour {
     }
 
     public void LoadCheckPointLevel() {
-        Player.EnableStunSR(false);
-        AudioManager.instance.PlayBGM(Sound.BGM_MainLevels);
-        Player.GetInstance().Spawn(SceneMethods.MainLevelPos,
-            playerData.hp, playerData.mana, 2);
-        StartCoroutine(LoadNextLevel());
-        IEnumerator LoadNextLevel() {
-            yield return new WaitForSeconds(0f);
-            SceneManager.LoadSceneAsync(FloorNumber + 1);
-            Player.EnableStunSR(true); //must be under waitforseconds to be hidden
-            PlayerInfo.SetVisibleAll(true);
-        }
+        SceneMethods.LoadCheckPointLevel(FloorNumber, playerData);
     }
 }

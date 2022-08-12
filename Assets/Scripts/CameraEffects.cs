@@ -4,7 +4,7 @@ public class CameraEffects : MonoBehaviour {
     public AnimationCurve curve;
     public float shakeDuration, shakeIntensity;
     /**
-    camera following mouse
+    below is for camera following mouse
     public float lookAheadFactor = 1f;
     private float camZ;
 
@@ -29,9 +29,11 @@ public class CameraEffects : MonoBehaviour {
             float elapsedTime = 0f;
             while (elapsedTime < shakeDuration) {
                 elapsedTime += Time.deltaTime;
-                float amplitude = shakeIntensity * curve.Evaluate(elapsedTime / shakeDuration);
-                Vector3 delta = amplitude * Random.insideUnitCircle;
-                transform.position = startPos + delta;
+                if (!PauseMenu.paused) {
+                    float amplitude = shakeIntensity * curve.Evaluate(elapsedTime / shakeDuration);
+                    Vector3 delta = amplitude * Random.insideUnitCircle;
+                    transform.position = startPos + delta;
+                }
                 yield return null;
             }
             transform.position = startPos;

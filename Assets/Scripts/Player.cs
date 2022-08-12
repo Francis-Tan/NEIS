@@ -85,12 +85,23 @@ public class Player : MonoBehaviour {
         mousepos.z = Camera.main.transform.position.z + Camera.main.nearClipPlane; //to make stunVisual be in the right z-pos
         input_velocity.x = Input.GetAxisRaw("Horizontal");
         input_velocity.y = Input.GetAxisRaw("Vertical");
-        attackpoint.RotateAround(transform.position, Vector3.forward,
-            Vector2.SignedAngle(attackpoint.position - transform.position, mousepos - transform.position));
         rb.MovePosition(rb.position + input_velocity * (moveSpeed * Time.fixedDeltaTime));
-        UpdateSkills();
-        UpdateVisuals(mousepos);
-        if (Input.GetMouseButtonDown(0)) Attack();
+        if (!PauseMenu.paused) {
+            UpdateSkills();
+            UpdateVisuals(mousepos);
+            if (Input.GetMouseButtonDown(0)) Attack();
+        }
+        if (Input.GetKeyDown(KeyCode.Escape)) Pause();
+        if (Input.GetKeyDown(KeyCode.F)) increaseMana(maxmana - currentmana);
+        if (Input.GetKeyDown(KeyCode.G)) Die();
+    }
+
+    private void Pause() {
+        if (PauseMenu.paused) {
+            PauseMenu.Close();
+        } else {
+            PauseMenu.Open();
+        }
     }
 
     private void UpdateSkills() {
@@ -119,10 +130,10 @@ public class Player : MonoBehaviour {
                 attacktype = 2;
             }
         }
-        if (Input.GetKeyDown(KeyCode.F)) increaseMana(maxmana - currentmana);
-        if (Input.GetKeyDown(KeyCode.G)) Die();
     }
     private void UpdateVisuals(Vector3 mousepos) {
+        attackpoint.RotateAround(transform.position, Vector3.forward,
+            Vector2.SignedAngle(attackpoint.position - transform.position, mousepos - transform.position));
         sr.flipX = mousepos.x < transform.position.x;
         dagger.GetComponent<SpriteRenderer>().flipY = sr.flipX;
         gunVisual.GetComponent<SpriteRenderer>().flipY = sr.flipX;
