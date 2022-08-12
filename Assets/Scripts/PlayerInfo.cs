@@ -30,14 +30,14 @@ public class PlayerInfo : MonoBehaviour
         }
     }
 
-    private void FadeOut() {
-        canvasGroup.alpha = 0.3f;
-    }
-
     private void OnTriggerExit2D(Collider2D collision) {
         if (collision.GetComponent<Enemy>() != null || collision.GetComponent<Player>() != null) {
             if (--num == 0) FadeIn();
         }
+    }
+
+    private void FadeOut() {
+        canvasGroup.alpha = 0.3f;
     }
 
     private void FadeIn() {
@@ -52,5 +52,17 @@ public class PlayerInfo : MonoBehaviour
         SetVisibleAll(true);
         instance.gunIcon.hide();
         instance.stunIcon.hide();
+    }
+
+    public static void ResizePlayerInfoCollider(float offsetX, float sizeX) {
+        BoxCollider2D bc = instance.GetComponent<BoxCollider2D>();
+
+        Vector2 offset = bc.offset;
+        offset.x = offsetX;
+        bc.offset = offset;
+
+        Vector2 size = bc.size;
+        size.x = sizeX;
+        bc.size = size;
     }
 }

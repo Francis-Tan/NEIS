@@ -43,6 +43,7 @@ public class PauseMenu : MonoBehaviour {
         paused = false;
         PlayerInfo.instance.gunIcon.show();
         PlayerInfo.instance.stunIcon.show();
+        PlayerInfo.ResizePlayerInfoCollider(-219.8962f, 353.9455f);
         Player.GetInstance().skillLevel = 2;
     }
 }
