@@ -6,11 +6,15 @@ public class GunVisual : MonoBehaviour {
     const string
         gun_idle = "gun_idle",
         gun_shoot = "gun_shoot";
+
     private void Awake() {
         animator = GetComponent<Animator>();
     }
+
     private void ChangeAnimationState(string newState) {
-        if (currentState == newState) return;
+        if (newState == currentState) {
+            return;
+        }
         animator.Play(newState);
         currentState = newState;
     }

@@ -4,6 +4,7 @@ public class Spawner : MonoBehaviour {
     [SerializeField] private Enemy[] enemies;
     private LoadLevel loadlevel;
     public StatusTile HPRefiller, manaRefiller;
+
     private void Start() {
         loadlevel = LoadLevel.instance;
         loadlevel.enemycount += enemies.Length;
@@ -12,8 +13,12 @@ public class Spawner : MonoBehaviour {
     private void OnTriggerEnter2D(Collider2D collision) {
         if (collision.GetComponent<Player>() != null) {
             Destroy(Checkpoint.instance);
-            if (HPRefiller != null) Destroy(HPRefiller.gameObject);
-            if (manaRefiller != null) Destroy(manaRefiller.gameObject);
+            if (HPRefiller != null) {
+                Destroy(HPRefiller.gameObject);
+            }
+            if (manaRefiller != null) {
+                Destroy(manaRefiller.gameObject);
+            }
             GetComponent<Collider2D>().enabled = false;
             GetComponent<SpriteRenderer>().enabled = false;
             StartBattle();

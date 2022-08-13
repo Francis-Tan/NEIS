@@ -3,19 +3,22 @@ using UnityEngine;
 public class StunVisual : MonoBehaviour {
     private Animator animator;
     private string currentState;
+    
     const string
         stun_notenoughmana = "stun_notenoughmana",
         stun_enoughmana = "stun_enoughmana",
         stun_attack = "stun_attack";
+
     private void Awake() {
         animator = GetComponent<Animator>();
     }
 
     private void ChangeAnimationState(string newState) {
-        if (currentState == newState) return;
+        if (newState == currentState) return;
         animator.Play(newState);
         currentState = newState;
     }
+
     public void updateSprite(int mana) {
         string newState = mana < 5 ? stun_notenoughmana : stun_enoughmana;
         animator.Play(newState);

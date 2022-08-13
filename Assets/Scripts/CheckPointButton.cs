@@ -1,8 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI; //for Button class
-using UnityEngine.SceneManagement; //for SceneManager
 using TMPro; //for TextMeshProUGUI
-using System.Collections;
 
 public class CheckPointButton : MonoBehaviour {
     public int FloorNumber;

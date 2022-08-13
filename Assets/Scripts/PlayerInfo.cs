@@ -1,13 +1,13 @@
 using UnityEngine;
 
-public class PlayerInfo : MonoBehaviour
-{
+public class PlayerInfo : MonoBehaviour {
     public static PlayerInfo instance;
     public HealthBar healthBar;
     public ManaBar manaBar;
     public Skill_Icon gunIcon, stunIcon;
     private CanvasGroup canvasGroup;
     private int num = 0;
+
     private void Awake() {
         if (instance != null) {
             Destroy(gameObject); 
@@ -26,13 +26,17 @@ public class PlayerInfo : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collider) {
         if (collider.GetComponent<Enemy>() != null || collider.GetComponent<Player>() != null) {
-            if (num++ == 0) FadeOut();
+            if (num++ == 0) {
+                FadeOut();
+            }
         }
     }
 
     private void OnTriggerExit2D(Collider2D collision) {
         if (collision.GetComponent<Enemy>() != null || collision.GetComponent<Player>() != null) {
-            if (--num == 0) FadeIn();
+            if (--num == 0) {
+                FadeIn();
+            }
         }
     }
 

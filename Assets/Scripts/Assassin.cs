@@ -29,10 +29,14 @@ public class Assassin : Enemy {
     }
 
     protected override void default_behaviour() {
-        if (disappearTimer > 0) { disappearTimer -= Time.fixedDeltaTime; }
-        else if (!sr.enabled) { appear(); }
-        else if (appearTimer > 0) { attacking_behaviour(); appearTimer -= Time.fixedDeltaTime; }
-        else {
+        if (disappearTimer > 0) { 
+            disappearTimer -= Time.fixedDeltaTime; 
+        } else if (!sr.enabled) { 
+            appear(); 
+        } else if (appearTimer > 0) { 
+            attacking_behaviour(); 
+            appearTimer -= Time.fixedDeltaTime; 
+        } else {
             canAttack = false;
             rb.velocity = Vector2.zero;
             disappear();
@@ -52,6 +56,7 @@ public class Assassin : Enemy {
             sr.enabled = false;
         }
     }
+
     private void appear() {
         float angle = Random.Range(0, 2 * Mathf.PI);
         transform.position = player.transform.position

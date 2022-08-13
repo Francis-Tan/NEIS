@@ -3,7 +3,6 @@ using UnityEngine;
 public class Drone_Pulse : MonoBehaviour {
     public int dmg = 3;
     public float detonate_time;
-
     private Animator animator;
     private string currentState;
     const string
@@ -13,6 +12,7 @@ public class Drone_Pulse : MonoBehaviour {
     private void Awake() {
         animator = GetComponent<Animator>();
     }
+
     private void FixedUpdate() {
         detonate_time -= Time.fixedDeltaTime;
         if (detonate_time <= 0) {

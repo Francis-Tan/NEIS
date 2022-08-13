@@ -1,7 +1,7 @@
 using UnityEngine;
 
 public class Gunner_Bullet : MonoBehaviour {
-    private Rigidbody2D rb; //rigidbody movement is to avoid moving in a rotated transform after rotation (old comment)
+    private Rigidbody2D rb; //didn't use transform because i think complications arose from rotating that
     private Vector2 dir = Vector2.down, newdir;
     public float moveSpeed = 16;
     public int dmg = 1;
@@ -40,7 +40,7 @@ public class Gunner_Bullet : MonoBehaviour {
     private void OnCollisionEnter2D(Collision2D other) {
         //would be faster to check layers
         //i guess collider should be turned off during EB_explode
-        //but code runs so fast it didn't matter
+        //but it runs so fast it didn't matter
         GameObject runinto = other.gameObject;
         if (runinto.CompareTag("Player")) {
             ChangeAnimationState(EB_explode);

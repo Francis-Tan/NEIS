@@ -7,9 +7,8 @@ public abstract class Enemy : MonoBehaviour {
     public GameObject hiticon;
     public GameObject stunicon;
     protected Player player;
-    protected Rigidbody2D rb; //rigidbody movement better for collision
-    protected BoxCollider2D bc; //for detecting collisions with
-                                //- could replace with raycast box
+    protected Rigidbody2D rb; //rigidbody movement better for collisions
+    protected BoxCollider2D bc; //could replace with raycast box
     protected SpriteRenderer sr;
     public float moveSpeed;
     protected Vector3 directionToPlayer;
@@ -17,9 +16,8 @@ public abstract class Enemy : MonoBehaviour {
     public float TimeBtwAttacks = 0.2f;
     protected float attackCooldown = 0.2f;
     protected float stunduration = 2f;
-    protected float stunscalemax; //refers to original scale of the stunbar
+    protected float stunscalemax; //refers to the stunbar's original scale 
     public event EventHandler OnEnemyDeath;
-
     protected Animator animator;
     protected string currentState;
 
@@ -30,10 +28,13 @@ public abstract class Enemy : MonoBehaviour {
         rb = GetComponent<Rigidbody2D>();
         bc = GetComponent<BoxCollider2D>();
         sr = GetComponent<SpriteRenderer>();
-        if (sr == null) sr = GetComponentInChildren<SpriteRenderer>();
+        if (sr == null) {
+            sr = GetComponentInChildren<SpriteRenderer>();
+        }
         animator = GetComponent<Animator>();
-        if (animator == null) animator = GetComponentInChildren<Animator>();
-        //you can set the alphas to zero in inspector then get rid of these for later optimisation
+        if (animator == null) {
+            animator = GetComponentInChildren<Animator>();
+        }
 
         Color c = sr.material.color;
         c.a = 0;
@@ -59,6 +60,7 @@ public abstract class Enemy : MonoBehaviour {
             default_behaviour();
         }
     }
+
     private void stunned_behaviour() {
         Transform stuntransform = stunicon.GetComponent<Transform>();
         if (stunduration > 0) {
@@ -66,8 +68,7 @@ public abstract class Enemy : MonoBehaviour {
             var newscale = stuntransform.localScale;
             newscale.x = stunscalemax * stunduration / 1.75f;
             stuntransform.localScale = newscale;
-        }
-        else {
+        } else {
             stunduration = 1.75f;
             Color c = stunicon.GetComponent<SpriteRenderer>().material.color;
             c.a = 0;
@@ -78,13 +79,17 @@ public abstract class Enemy : MonoBehaviour {
             stunned = false;
         }
     }
+
     protected abstract void default_behaviour();
+
     protected void ChangeAnimationState(string newState) {
         if (currentState == newState) return;
         animator.Play(newState);
         currentState = newState;
     }
+
     protected abstract void attack();
+
     public virtual void takeDamage() {
         if (not_hit) {
             not_hit = false;
@@ -95,9 +100,11 @@ public abstract class Enemy : MonoBehaviour {
             Death(); 
         }
     }
+
     public int getMana() {
         return mana;
     }
+
     public void getStunned() {
         Color c = stunicon.GetComponent<SpriteRenderer>().material.color;
         c.a = 1;
@@ -110,5 +117,6 @@ public abstract class Enemy : MonoBehaviour {
         OnEnemyDeath?.Invoke(this, EventArgs.Empty);
         Die();
     }
+
     public abstract void Die();
 }

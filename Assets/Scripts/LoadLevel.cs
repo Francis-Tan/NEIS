@@ -1,11 +1,12 @@
 using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+
 public class LoadLevel : MonoBehaviour {
     public static LoadLevel instance;
     private Vector2 spawnPosition;
     public int enemycount;
-    //should be able to cache this
+
     private void Awake() {
         GetComponent<Collider2D>().enabled = false;
         GetComponent<SpriteRenderer>().enabled = false;
@@ -18,12 +19,18 @@ public class LoadLevel : MonoBehaviour {
     }
 
     private void UpdateLift(object sender, EventArgs e) {
-        if (--enemycount == 0) enable();
+        if (--enemycount == 0) {
+            enable();
+        }
     }
 
+    /**
     private void Update() {
-        if (Input.GetKeyDown(KeyCode.N)) enable();
+        if (Input.GetKeyDown(KeyCode.N)) {
+            enable();
+        }
     }
+    */
 
     public void enable() {
         GetComponent<SpriteRenderer>().enabled = true;

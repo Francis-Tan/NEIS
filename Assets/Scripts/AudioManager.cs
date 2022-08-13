@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Audio;
+
 public enum Sound {
     BGM_MainMenu,
     BGM_MainLevels,
@@ -25,8 +26,8 @@ public enum Sound {
     drone_die,
     enter_checkpoint
 }
-public class AudioManager : MonoBehaviour
-{
+
+public class AudioManager : MonoBehaviour {
     //current AudioPlayer system is in 1st iteration for new menu
     public static AudioManager instance;
     public VolumeSlider BGMSlider, SFXSlider;
@@ -35,7 +36,6 @@ public class AudioManager : MonoBehaviour
     public AudioPlayer[] BGM;
     private AudioPlayer currentBGM;
     public AudioPlayer[] soundEffects;
-
 
     [System.Serializable]
     public class AudioPlayer {
@@ -99,12 +99,25 @@ public class AudioManager : MonoBehaviour
         PlayBGM(Sound.BGM_MainMenu);
     }
 
+    /**
     private void Update() {
+        //for adjusting audio during development
         if (Input.GetKeyDown(KeyCode.Z)) {
-            foreach (AudioPlayer ap in BGM) ap.ResetSpeakerSettings();
-            foreach (AudioPlayer ap in soundEffects) ap.ResetSpeakerSettings();
+            ResetAudio();
         }
     }
+    
+
+    private void ResetAudio() {
+        foreach (AudioPlayer ap in BGM) {
+            ap.ResetSpeakerSettings();
+        }
+        foreach (AudioPlayer ap in soundEffects) {
+            ap.ResetSpeakerSettings();
+        }
+    }
+    */
+
     public void PlayBGM(Sound sound) {
         AudioPlayer bgm = BGM[(int)sound];
         if (!bgm.isPlaying()) {

@@ -3,8 +3,7 @@ using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
 
-public class Narrator : MonoBehaviour
-{
+public class Narrator : MonoBehaviour {
     public static Narrator instance;
     private TextMeshProUGUI tmp;
     public Image backButton, forwardButton;
@@ -31,11 +30,15 @@ public class Narrator : MonoBehaviour
     }
 
     public static void HideOnPause() {
-        if (instance != null) instance.gameObject.SetActive(false);
+        if (instance != null) {
+            instance.gameObject.SetActive(false);
+        }
     }
 
     public static void ShowOnUnpause() {
-        if (instance != null) instance.gameObject.SetActive(true);
+        if (instance != null) {
+            instance.gameObject.SetActive(true);
+        }
     }
 
     private void Update() {
@@ -49,12 +52,16 @@ public class Narrator : MonoBehaviour
     public void Proceed() {
         tmp.text = Dialouge[++currDialouge];
 
-        if (currDialouge == Dialouge.Length - 1) forwardButton.enabled = false;
-        else if (currDialouge == 1) backButton.enabled = true;
+        if (currDialouge == Dialouge.Length - 1) {
+            forwardButton.enabled = false;
+        } else if (currDialouge == 1) {
+            backButton.enabled = true;
+        }
 
         if (currDialouge > maxDialougeReached) {
             maxDialougeReached = currDialouge;
             switch (currDialouge) {
+                //would be better to use an enum to store the cases, so adding new cases is easier and clearer
                 case 2:
                     //spawn gunner
                     spawnSpawner();
@@ -109,8 +116,11 @@ public class Narrator : MonoBehaviour
 
     public void GoBack() {
         tmp.text = Dialouge[--currDialouge];
-        if (currDialouge == Dialouge.Length - 2) forwardButton.enabled = true;
-        else if (currDialouge == 0) backButton.enabled = false;
+        if (currDialouge == Dialouge.Length - 2) {
+            forwardButton.enabled = true;
+        } else if (currDialouge == 0) {
+            backButton.enabled = false;
+        }
     }
 
     private void spawnSpawner() {

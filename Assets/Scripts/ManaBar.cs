@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+
 public class ManaBar : MonoBehaviour {
     public static ManaBar instance;
     public Image[] bars;
@@ -23,7 +24,11 @@ public class ManaBar : MonoBehaviour {
 
     public void updateBars(int newMana) {
         --newMana;
-        while (currentBar < newMana) bars[++currentBar].color = Color.cyan;
-        while (currentBar > newMana) bars[currentBar--].color = Color.black;
+        while (currentBar < newMana) {
+            bars[++currentBar].color = Color.cyan;
+        }
+        while (currentBar > newMana) {
+            bars[currentBar--].color = Color.black;
+        }
     }
 }

@@ -4,9 +4,9 @@ public class Player_Bullet : MonoBehaviour {
     private Rigidbody2D rb;
     private Vector2 dir;
     public float moveSpeed = 20;
-
     private Animator animator;
     private string currentState;
+
     const string
         pb_start = "pb_start",
         pb_fly = "pb_fly",
@@ -16,7 +16,8 @@ public class Player_Bullet : MonoBehaviour {
         Vector2 mousepos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Vector2 tpos = transform.position;
         Vector2 playerpos = Player.GetInstance().transform.position;
-        dir = (mousepos - playerpos).SqrMagnitude() >= (tpos - playerpos).SqrMagnitude() ? moveSpeed * (mousepos - tpos).normalized
+        dir = ((mousepos - playerpos).SqrMagnitude() >= (tpos - playerpos).SqrMagnitude()) 
+            ? moveSpeed * (mousepos - tpos).normalized
             : moveSpeed * (tpos - mousepos).normalized;
         transform.eulerAngles = new Vector3(0, 0, Vector2.SignedAngle(Vector2.right, dir));
         rb = GetComponent<Rigidbody2D>();
@@ -24,8 +25,9 @@ public class Player_Bullet : MonoBehaviour {
         ChangeAnimationState(pb_start);
         ChangeAnimationState(pb_fly);
     }
+
     private void ChangeAnimationState(string newState) {
-        if (currentState == newState) return;
+        if (newState == currentState) return;
         animator.Play(newState);
         currentState = newState;
     }

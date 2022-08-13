@@ -32,10 +32,14 @@ public class Gunner : Enemy {
                 attackCooldown = TimeBtwAttacks;
             }
         } else if (reload_time > 0) {
-            if (enabled) ChangeAnimationState(Gunner_reloadidle);
+            if (enabled) {
+                ChangeAnimationState(Gunner_reloadidle);
+            }
             reload_time -= Time.fixedDeltaTime;
         } else {
-            if (enabled) ChangeAnimationState(Gunner_idle);
+            if (enabled) {
+                ChangeAnimationState(Gunner_idle);
+            }
             attackCooldown = TimeBtwAttacks;
             shooting_time = 3f;
             reload_time = 1f;
@@ -43,7 +47,9 @@ public class Gunner : Enemy {
     }
 
     protected override void attack() {
-        if (enabled) ChangeAnimationState(Gunner_shoot);
+        if (enabled) {
+            ChangeAnimationState(Gunner_shoot);
+        }
         AudioManager.instance.PlaySound(Sound.gunner_shoot);
         gbullet_pooler.FireBullet();
     }

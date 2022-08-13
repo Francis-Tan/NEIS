@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+
 public class Player : MonoBehaviour {
     // GetInstance must be called on start, otherwise the caller may awake before player
     public bool canDie;
@@ -75,25 +76,35 @@ public class Player : MonoBehaviour {
     }
 
     private void ChangeAnimationState(string newState) {
-        if (currentState == newState) return;
         //Debug.Log(newState);
+        if (newState == currentState) {
+            return;
+        }
         animator.Play(newState);
         currentState = newState;
     }
+
     private void Update() {
         Vector3 mousepos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        mousepos.z = Camera.main.transform.position.z + Camera.main.nearClipPlane; //to make stunVisual be in the right z-pos
+        //need to correct stunVisual's z-pos
+        mousepos.z = Camera.main.transform.position.z + Camera.main.nearClipPlane; 
         input_velocity.x = Input.GetAxisRaw("Horizontal");
         input_velocity.y = Input.GetAxisRaw("Vertical");
         rb.MovePosition(rb.position + input_velocity * (moveSpeed * Time.fixedDeltaTime));
+        
         if (!PauseMenu.paused) {
             UpdateSkills();
             UpdateVisuals(mousepos);
-            if (Input.GetMouseButtonDown(0)) Attack();
+            if (Input.GetMouseButtonDown(0)) {
+                Attack();
+            }
         }
-        if (Input.GetKeyDown(KeyCode.Escape)) Pause();
-        if (Input.GetKeyDown(KeyCode.F)) increaseMana(maxmana - currentmana);
-        if (Input.GetKeyDown(KeyCode.G)) Die();
+
+        if (Input.GetKeyDown(KeyCode.Escape)) {
+            Pause();
+        }
+        //if (Input.GetKeyDown(KeyCode.F)) increaseMana(maxmana - currentmana);
+        //if (Input.GetKeyDown(KeyCode.G)) Die();
     }
 
     private void Pause() {
@@ -108,8 +119,12 @@ public class Player : MonoBehaviour {
         //if we're not using that skill and we press its button, equip it
         //if we press that button again, go back to dagger
         if (Input.GetMouseButtonDown(1)) {
-            if (skillLevel >= 1) gunIcon.pressed(false);
-            if (skillLevel >= 2) stunIcon.pressed(false);
+            if (skillLevel >= 1) {
+                gunIcon.pressed(false);
+            }
+            if (skillLevel >= 2) {
+                stunIcon.pressed(false);
+            }
             attacktype = 0;
         } else if (skillLevel >= 1 && Input.GetKeyDown(KeyCode.Q)) {
             if (attacktype == 1) {
@@ -117,7 +132,9 @@ public class Player : MonoBehaviour {
                 attacktype = 0;
             } else {
                 gunIcon.pressed(true);
-                if (skillLevel >= 2) stunIcon.pressed(false);
+                if (skillLevel >= 2) {
+                    stunIcon.pressed(false);
+                }
                 attacktype = 1;
             }
         } else if (skillLevel >= 2 && Input.GetKeyDown(KeyCode.E)) {
@@ -131,26 +148,26 @@ public class Player : MonoBehaviour {
             }
         }
     }
+
     private void UpdateVisuals(Vector3 mousepos) {
         attackpoint.RotateAround(transform.position, Vector3.forward,
-            Vector2.SignedAngle(attackpoint.position - transform.position, mousepos - transform.position));
+            Vector2.SignedAngle(attackpoint.position - transform.position, mousepos - transform.position)
+            );
         sr.flipX = mousepos.x < transform.position.x;
         dagger.GetComponent<SpriteRenderer>().flipY = sr.flipX;
         gunVisual.GetComponent<SpriteRenderer>().flipY = sr.flipX;
+
         if (input_velocity.x == 0) {
             if (input_velocity.y > 0) {
                 ChangeAnimationState(Player_moveU);
-            }
-            else if (input_velocity.y < 0) {
+            } else if (input_velocity.y < 0) {
                 ChangeAnimationState(Player_moveD);
-            }
-            else if (enabled) {
+            } else if (enabled) {
                 //check is to prevent overloading animator during death and making
                 //the death animation play under player_idle state
                 ChangeAnimationState(Player_idle);
             }
-        }
-        else {
+        } else {
             ChangeAnimationState(Player_moveLR);
         }
 
@@ -168,30 +185,32 @@ public class Player : MonoBehaviour {
         stunVisual.transform.rotation = Quaternion.identity;
         stunVisual.transform.position = mousepos;
     }
+
     private void Attack() {
            if (attacktype == 0) {
-            if (attackCooldown > 0) attackCooldown -= Time.fixedDeltaTime;
-               else {
-                   StartCoroutine(attack());
-                   IEnumerator attack() {
-                       //could use dagger.transform.localPosition which should be marginally faster
-                       //but local scaling shortens stab length
-                       attackpoint.transform.position += (attackpoint.transform.position - transform.position).normalized;
-                       yield return new WaitForSeconds(0.1f);
-                       attackpoint.transform.position -= (attackpoint.transform.position - transform.position).normalized;
-                   }
-                   Collider2D enemyCollider = Physics2D.OverlapCircle(attackpoint.position,
-                   stabradius, 8); //8 in binary bits is 1000 so only sees layer 3 colliders
-                   if (enemyCollider != null) {
-                       dagger.PlayHitAnimation();
-                       Enemy enemy = enemyCollider.GetComponent<Enemy>();
-                       increaseMana(enemy.getMana());
-                       enemy.Death();
-                   } else {
-                    AudioManager.instance.PlaySound(Sound.player_stab);
-                   }
-                   attackCooldown = TimeBtwAttacks;
-               }
+                if (attackCooldown > 0) {
+                    attackCooldown -= Time.fixedDeltaTime;
+                } else {
+                    StartCoroutine(attack());
+                    IEnumerator attack() {
+                        //could use dagger.transform.localPosition which should be marginally faster
+                        //but local scaling shortens stab length
+                        attackpoint.transform.position += (attackpoint.transform.position - transform.position).normalized;
+                        yield return new WaitForSeconds(0.1f);
+                        attackpoint.transform.position -= (attackpoint.transform.position - transform.position).normalized;
+                    }
+                    Collider2D enemyCollider = Physics2D.OverlapCircle(attackpoint.position,
+                    stabradius, 8); //8 in binary bits is 1000 so only sees layer 3 colliders
+                    if (enemyCollider != null) {
+                        dagger.PlayHitAnimation();
+                        Enemy enemy = enemyCollider.GetComponent<Enemy>();
+                        increaseMana(enemy.getMana());
+                        enemy.Death();
+                    } else {
+                        AudioManager.instance.PlaySound(Sound.player_stab);
+                    }
+                    attackCooldown = TimeBtwAttacks;
+                }
            } else if (attacktype == 1) {
                if (currentmana >= gunCost && gunIcon.isready()) {
                    gunVisual.PlayShootAnimation();
@@ -220,9 +239,13 @@ public class Player : MonoBehaviour {
     public void takeDamage(int dmg) {
         if (health > 0) { //prevent assassins from playing death sound multiple times
             health = canDie ? health - dmg : Mathf.Max(health - dmg, 1);
-            if (health > 50) health = 50;
+            if (health > 50) {
+                health = 50;
+            }
             HealthBar.sethealth(health);
-            if (health <= 0) Die();
+            if (health <= 0) {
+                Die();
+            }
         }
     }
 

@@ -3,6 +3,7 @@ using System.Collections;
 public class CameraEffects : MonoBehaviour {
     public AnimationCurve curve;
     public float shakeDuration, shakeIntensity;
+
     /**
     below is for camera following mouse
     public float lookAheadFactor = 1f;
@@ -19,9 +20,11 @@ public class CameraEffects : MonoBehaviour {
         transform.position = new_pos;
     }
     */
+
     private void Awake() {
         PlayerInfo.instance.GetComponent<Canvas>().worldCamera = Camera.main;
     }
+
     public void Shake() {
         StartCoroutine(Shake());
         IEnumerator Shake() {

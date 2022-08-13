@@ -4,6 +4,7 @@ using UnityEngine;
 public class gbullet_pooler : MonoBehaviour {
     public Gunner_Bullet gbullet;
     private List<Gunner_Bullet> bullets = new List<Gunner_Bullet>();
+
     private void Start() {
         if (gbullet == null) {
             Debug.LogError("Gunner bullet prefab is empty");
@@ -36,8 +37,11 @@ public class gbullet_pooler : MonoBehaviour {
 
     public void Die() {
         for (int i = 0; i < bullets.Count; ++i) {
-            if (bullets[i].gameObject.activeSelf) bullets[i].destroy = true;
-            else Destroy(bullets[i].gameObject);
+            if (bullets[i].gameObject.activeSelf) {
+                bullets[i].destroy = true;
+            } else {
+                Destroy(bullets[i].gameObject);
+            }
         }
         Destroy(gameObject);
     }

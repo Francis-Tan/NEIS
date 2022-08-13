@@ -30,6 +30,7 @@ public class Drone : Enemy {
         gameObject.layer = 0;
         gameObject.tag = "Blocking";
     }
+
     protected override void default_behaviour() {
         rb.velocity = Vector2.zero;
         if (down) {
@@ -40,7 +41,9 @@ public class Drone : Enemy {
                 down = false;
                 shield.enabled = true;
                 ammo = 3;
-                if (currentState == Drone_reactivating) ChangeAnimationState(Drone_hovering);
+                if (currentState == Drone_reactivating) {
+                    ChangeAnimationState(Drone_hovering);
+                }
                 timetillup = downtime;
                 gameObject.layer = 0;
                 gameObject.tag = "Blocking";
@@ -49,16 +52,20 @@ public class Drone : Enemy {
             directionToPlayer = (player.transform.position - transform.position).normalized;
             deltapos = moveSpeed * Time.fixedDeltaTime * new Vector2(directionToPlayer.x, directionToPlayer.y);
             float distFromPlayer = bc.Distance(player.GetComponent<Collider2D>()).distance;
-            if (distFromPlayer > 9) rb.MovePosition(rb.position + deltapos);
-            if (attackCooldown > 0) attackCooldown -= Time.fixedDeltaTime;
-            else if (distFromPlayer <= 13) {
+            if (distFromPlayer > 9) {
+                rb.MovePosition(rb.position + deltapos);
+            }
+            if (attackCooldown > 0) {
+                attackCooldown -= Time.fixedDeltaTime;
+            } else if (distFromPlayer <= 13) {
                 attack();
                 attackCooldown = TimeBtwAttacks;
                 ammo--;
             }
         } else {
-            if (attackCooldown > 0) attackCooldown -= Time.fixedDeltaTime;
-            else {
+            if (attackCooldown > 0) {
+                attackCooldown -= Time.fixedDeltaTime;
+            } else {
                 //rb.isKinematic = true;
                 AudioManager.instance.PlaySound(Sound.drone_deactivate);
                 down = true;

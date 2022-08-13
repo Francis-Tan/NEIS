@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+
 public class HealthBar : MonoBehaviour {
     public Image healthBar;
     private TMP_Text healthText;
@@ -31,6 +32,7 @@ public class HealthBar : MonoBehaviour {
 
         healthBar.color = Color.Lerp(Color.red, Color.green, health / maxHealth);
     }
+
     public static void sethealth(float amt) {
         health = amt;
     }
